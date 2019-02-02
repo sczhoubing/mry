@@ -53,9 +53,8 @@ public class MemCardMangeService {
 	
 	// 更新一条会员卡记录
 	public int updateMemCardManageInfo(MemCardManageParam params) {
-		int storeId = params.getStoreId();
-		
-		return storeId;
+		// 暂定
+		return params.getStoreId();
 	}
 	
 	// 根据 storeId 查询所有会员卡记录, 以及与会员卡关联的升级卡记录和尊享项目记录

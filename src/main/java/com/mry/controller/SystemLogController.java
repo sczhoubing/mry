@@ -9,12 +9,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
-
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.mry.enums.LogFile;
 import com.mry.exception.CommonException;
 import com.mry.model.SystemLog;
 
@@ -34,15 +34,9 @@ public class SystemLogController {
 	@ResponseBody
 	public Map<String, Object> getSystemLogList() {
 		Map<String, Object> result = new HashMap<String, Object>();
-		File logDir = new File("/alidata/log/mry");
+		File logDir = new File(LogFile.LOG_ADDIR.getInfo());
 		if (logDir.exists() && logDir.isDirectory()) {
-			List<File> logs = new ArrayList<File>();
-			for(File file : logDir.listFiles()) {
-				if(file.getName().endsWith(".log") || file.getName().endsWith(".gz")) {
-					logs.add(file);
-				}
-			}
-			result.put("logs", logs);
+			result.put("logs", logDir.listFiles());
 		}
 		return result;
 	}
@@ -75,21 +69,13 @@ public class SystemLogController {
 	public Map<String, Object> deleteLog(String fileName, String filePath) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			if(filePath.endsWith(".gz")) {
-				// 删除 log.gz 文件
-				File logGizFile = new File(filePath);
-				logGizFile.delete();
-				
-				// 删除解压后的临时文件
-				String tempLogFilePath = filePath.replace(".0.gz", "");
-				File tempLogFile = new File(tempLogFilePath);
-				tempLogFile.delete();
-			} else if(filePath.endsWith(".log")) {
-				// 删除 log.log 文件
-				File logTxtFile = new File(filePath);
-				logTxtFile.delete();
+			File logFile = new File(filePath);
+			if(logFile.exists()) {
+				logFile.delete();
+				result.put("msg", "delete Log: " + fileName + " successful !");
+			} else {
+				result.put("msg", fileName + " is not exist !");
 			}
-			result.put("msg", "delete Log: " + fileName + " successful !");
 		} catch (Exception e) {
 			result.put("msg", "delete Log: " + fileName + " fail, Exception: " + e.getMessage());
 		}
@@ -104,7 +90,7 @@ public class SystemLogController {
 			for(SystemLog log : systemLogs) {
 				deleteLog(log.getLogName(), log.getLogPath());
 			}
-			result.put("msg", "delete logs successful, total: " + systemLogs.size());
+			result.put("msg", "delete logs successful");
 		} catch(Exception e) {
 			result.put("msg", "delete logs fail, Exception: " + e.getMessage());
 		}
@@ -117,19 +103,14 @@ public class SystemLogController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		StringBuilder builder = new StringBuilder();
 		BufferedReader reader = null;
+		File tempLogFile = null;
 		try {
-			if(filePath.endsWith(".gz")) {
-				// 如果文件已经被解压过，就直接返回解压过的文件路径
-				String tempLogFilePath = filePath.replace(".0.gz", "");
-				File tempLogFile = new File(tempLogFilePath);
-				if(!tempLogFile.exists()) {
-					filePath = uncompressGzipFile(filePath);
-				} else {
-					filePath = tempLogFilePath;
-				}
+			if(filePath.endsWith(LogFile.LOG_GZ.getInfo())) {
+				filePath = uncompressGzipFile(filePath);
+				tempLogFile = new File(filePath);
 			}
-			File log = new File(filePath);
-			reader = new BufferedReader(new FileReader(log));
+			File logFile = new File(filePath);
+			reader = new BufferedReader(new FileReader(logFile));
 			String tempString = null;
 			while((tempString = reader.readLine()) != null) {
 				builder.append("<p>")
@@ -137,6 +118,10 @@ public class SystemLogController {
 					   .append("</p>");
 			}
 			result.put("logs", builder.toString());
+			// 删除解压后的文件
+			if(null != tempLogFile && tempLogFile.exists()) {
+				tempLogFile.delete();
+			}
 		} catch (IOException e) {
 			throw new CommonException(500, "open log fail, " + e.getMessage());
 		} finally {

@@ -28,7 +28,7 @@ public class UserManageController {
 		result.put("msg", userManageService.addUserManageInfo(userManage));
 		return result;
 	}
-	
+
 	@GetMapping("/store/{storeId}")
 	public Map<String, Object> getUserManageInfo(@PathVariable("storeId")Integer storeId, String userName, String idCard) {
 		Map<String, Object> result = new HashMap<String, Object>();
