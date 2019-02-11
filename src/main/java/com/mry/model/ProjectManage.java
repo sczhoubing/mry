@@ -1,7 +1,7 @@
 package com.mry.model;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -120,16 +120,19 @@ public class ProjectManage {
 		return true;
 	}
 	// 校验是否除了 id 之外其他属性相等的对象 
-	public static ProjectManage validdDuplicateProjectManage(List<ProjectManage> projectManages, ProjectManage projectManage) {
-		ProjectManage duplicateProjectManage = null;
-		for(ProjectManage tempProjectManage : projectManages) {
-			if(tempProjectManage.equals(projectManage)) {
-				duplicateProjectManage = tempProjectManage;
-				break;
+	public static List<ProjectManage> removeDuplicateProjectManages(List<ProjectManage> originProjectManages, List<ProjectManage> targetProjectManages) {
+		List<ProjectManage> resultProjectManages = new ArrayList<ProjectManage>();
+		resultProjectManages.addAll(targetProjectManages);
+		for(ProjectManage originProjectManage : originProjectManages) {
+			for(ProjectManage targetProjectManage : targetProjectManages) {
+				if(originProjectManage.equals(targetProjectManage)) {
+					resultProjectManages.remove(targetProjectManage);
+				}
 			}
 		}
-		return duplicateProjectManage;
+		return resultProjectManages;
 	}
+	
 	@Override
 	public String toString() {
 		return "ProjectManage [id=" + id + ", userId=" + userId + ", storeId=" + storeId + ", projectType="

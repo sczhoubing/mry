@@ -1,19 +1,14 @@
 package com.mry.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.mry.model.ProgramManage;
 import com.mry.param.ProgramManageParam;
 import com.mry.service.ProgramManageService;
 import com.mry.utils.CommonUtils;
@@ -33,14 +28,14 @@ public class ProgramManageController {
 	}
 	
 	@GetMapping("/store/{storeId}")
-	public Map<String, Object> getProgramManageInfo(@PathVariable("storeId")int storeId, int programType, String programName) {
+	public Map<String, Object> getProgramManageInfo(@PathVariable("storeId")int storeId, int programType, String programName, String symptom) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if(CommonUtils.isBlank(programName)) { 
-			List<ProgramManage> programManage = programManageService.getProgramManageInfoByStoreId(storeId, programType);
-			result.put("programManage", programManage);
-		} else {
-			ProgramManage programManage = programManageService.getProgramManageInfoByProgramName(storeId, programType, programName);
-			result.put("programManage", programManage);
+		if(!CommonUtils.isBlank(programName) && CommonUtils.isBlank(symptom)) {
+			result.put("programManage", programManageService.getProgramManageInfoByProgramName(storeId, programType, programName));
+		} else if(CommonUtils.isBlank(programName) && !CommonUtils.isBlank(symptom)) {
+			result.put("programManage", programManageService.getProgramManageInfoBySymptom(storeId, programType, symptom));
+		} else if(CommonUtils.isBlank(programName) && CommonUtils.isBlank(symptom)) {
+			result.put("programManage", programManageService.getProgramManageInfoByStoreId(storeId, programType));
 		}
 		return result;
 	}

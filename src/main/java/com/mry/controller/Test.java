@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,22 +44,17 @@ public class Test {
 		}
 
 	}
-
-	//Logger logger = LoggerFactory.getLogger(getClass());
-	/*@GetMapping("/test1")
-	public void test1() {
-		
-		SendSmsResponse response = sendSms.sendSms("15208325491", "66666");
-		System.out.println("Code=" + response.getCode());
-		System.out.println("Message=" + response.getMessage());
-		System.out.println("RequestId=" + response.getRequestId());
-		System.out.println("BizId=" + response.getBizId());
-		//logger.info("test logger ......");
-	}*/
 	
-	@GetMapping("/test2")
-	public Map<String, Object> test2() {
-		Map<String, Object> result = sendSms.sendSms("15208325491", "666666");
+	@GetMapping("/test2/{account}")
+	public Map<String, Object> test2(@PathVariable("account")String account) {
+		Map<String, Object> result = sendSms.sendSms(account, "SMS_146290287", "{\"code\":\"" + 666666 + "\"}");
+		return result;
+	}
+	
+	@GetMapping("/test3/{account}")
+	public Map<String, Object> test3(@PathVariable("account")String account) {
+		String message = "{\"userName\":\"" + account + "\",\"password\":\"" + 123456 + "\"}";
+		Map<String, Object> result = sendSms.sendSms(account, "SMS_157448717", message);
 		return result;
 	}
 }

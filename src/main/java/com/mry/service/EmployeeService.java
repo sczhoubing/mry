@@ -2,16 +2,15 @@ package com.mry.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.mry.config.SmsSetting;
 import com.mry.model.Customer;
 import com.mry.model.Employee;
 import com.mry.repository.CustomerRepository;
 import com.mry.repository.EmployeeRepository;
+import com.mry.sms.SendSms;
 
 @Service
 @Transactional
@@ -20,6 +19,10 @@ public class EmployeeService {
 	private EmployeeRepository employeeRepository;
 	@Resource
 	private CustomerRepository customerRepository;
+	@Resource
+	private SmsSetting smsSetting;
+	@Resource
+	private SendSms sendSms;
 	
 	// 添加一条员工信息
 	public int addEmployeeInfo(Employee employee) {
@@ -37,16 +40,19 @@ public class EmployeeService {
 		if(null != originCustomer) {
 			customer.setId(originCustomer.getId());
 		}
-		customer.setAccount(employee.getPhoneNum());
+		customer.setAccount(account);
 		// 初始密码是手机号码的后 6 位
 		String password = account.substring(5, account.length());
 		customer.setPassword(password);
-		customer.setName(employee.getEmpName());
+		customer.setUserName(account);
+		customer.setStaffName(employee.getEmpName());
 		customer.setRole(employee.getEmpType());
-		// 状态码为 1 表示用户处于可登陆状态
-		customer.setStatus("1");
-		
+		// 状态码为 2 表示用户处于临时状态，需要修改账户和密码
+		customer.setStatus("2");
 		customerRepository.save(customer);
+		// 发送临时账户和密码给用户，提醒修改账户信息
+		String message = "{\"userName\":\"" + account + "\",\"password\":\"" + password + "\"}";
+		sendSms.sendSms(account, smsSetting.getRemindMsg(), message);
 		return employee.getStoreId();
 	}
 	
@@ -70,7 +76,7 @@ public class EmployeeService {
 		Employee employee = employeeRepository.getEmployeeByIdCard(storeId, idCard);
 		int delEmp = 0, delCus = 0;
 		if(null != employee) {
-			delCus = customerRepository.deleteCustomer(employee.getPhoneNum());
+			delCus = customerRepository.deleteCustomerByAccount(employee.getPhoneNum());
 			delEmp = employeeRepository.deleteEmployeeByIdCard(storeId, idCard);
 		}
 		return delCus + delEmp;

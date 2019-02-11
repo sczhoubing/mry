@@ -19,6 +19,8 @@ public class ProgramManage {
 	private int id;
 	@Column(name="store_id")
 	private int storeId;
+	@Column(name="symptom")
+	private String symptom;
 	@Column(name="program_type")
 	private int programType;
 	@Column(name="program_name")
@@ -83,5 +85,11 @@ public class ProgramManage {
 			programManage.setProgramItems(items);
 		}
 		return programManages;
+	}
+	@Override
+	public String toString() {
+		return "ProgramManage [id=" + id + ", storeId=" + storeId + ", symptom=" + symptom + ", programType="
+				+ programType + ", programName=" + programName + ", programPrice=" + programPrice + ", programItems="
+				+ programItems + "]";
 	}
 }

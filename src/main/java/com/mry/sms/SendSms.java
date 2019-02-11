@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.aliyuncs.DefaultAcsClient;
@@ -18,11 +20,12 @@ import com.mry.config.SmsSetting;
 
 @Component
 public class SendSms {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource
 	private SmsSetting smsSetting;
 	
 	// 发送短信验证码
-    public Map<String, Object> sendSms(String phoneNumber, String code) {
+    public Map<String, Object> sendSms(String phoneNumber, String templateCode, String message) {
     	Map<String, Object> result = new HashMap<String, Object>();
         System.setProperty("sun.net.client.defaultConnectTimeout", smsSetting.getConnTime());
         System.setProperty("sun.net.client.defaultReadTimeout", smsSetting.getReadTime());
@@ -33,13 +36,19 @@ public class SendSms {
 	        SendSmsRequest request = new SendSmsRequest();
 	        request.setPhoneNumbers(phoneNumber);
 	        request.setSignName("华杨汇美");
-	        request.setTemplateCode(smsSetting.getTemplateCode());
-	        request.setTemplateParam("{\"code\":\"" + code + "\"}");
+	        //request.setTemplateCode(smsSetting.getTemplateCode());
+	        //request.setTemplateParam("{\"code\":\"" + code + "\"}");
+	        request.setTemplateCode(templateCode);
+	        request.setTemplateParam(message);
 	        
 	        SendSmsResponse response = acsClient.getAcsResponse(request);
 	        result.put("code", response.getCode());
 	        result.put("message", response.getMessage());
+	        
+	        logger.info("send sms details --> phoneNumber: " + phoneNumber + ", message: " + message);
+	        logger.info("send sms response --> " + response.getMessage());
 		} catch (ClientException e) {
+			logger.error("send sms exception: " + e.getMessage());
 			result.put("error", "发送短信验证码失败!");
 		}
         return result;

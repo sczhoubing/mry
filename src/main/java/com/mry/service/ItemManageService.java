@@ -42,6 +42,11 @@ public class ItemManageService {
 		return itemManageRepository.getItemManageByItemName(storeId, itemName);
 	}
 	
+	// 根据 storeId + symptom 返回同一症状的记录
+	public List<ItemManage> getItemManageBySymptom(int storeId, String symptom) {
+		return itemManageRepository.getItemManageBySymptom(storeId, symptom);
+	}
+	
 	// 根据 storeId 删除所有 ItemManage 信息
 	public int deleteItemManageByStoreId(int storeId) {
 		return itemManageRepository.deleteItemManageByStoreId(storeId);

@@ -13,6 +13,9 @@ public interface ProgramManageRepository extends JpaRepository<ProgramManage, In
 	@Query(value="select * from program_manage where store_id=:storeId and program_type=:programType and program_name=:programName", nativeQuery=true)
 	public ProgramManage getProgramManageInfoByProgramName(@Param("storeId")int storeId, @Param("programType")int programType, @Param("programName")String programName);
 	
+	@Query(value="select * from program_manage where store_id=:storeId and program_type=:programType and symptom=:symptom", nativeQuery=true)
+	public List<ProgramManage> getProgramManageInfoBySymptom(@Param("storeId")int storeId, @Param("programType")int programType, @Param("symptom")String symptom);
+	
 	@Query(value="select * from program_manage where store_id=:storeId and program_type=:programType", nativeQuery=true)
 	public List<ProgramManage> getProgramManageInfoByStoreId(@Param("storeId")int storeId, @Param("programType")int programType);
 	

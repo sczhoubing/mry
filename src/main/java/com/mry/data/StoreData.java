@@ -42,13 +42,15 @@ public class StoreData {
 	@Transient
 	private String account;
 	@Transient
-	private String name;
+	private String userName;
+	@Transient
+	private String staffName;
 	@Transient
 	private String role;
 	public StoreData(int id, String telephone, String storeName, String franchType, String address,
 			String managementCycle, String storeType, String operationMode, String storeStatus, String storeDesc,
 			String cityId, String cityName, String provinceId, String provinceName, String manageStatus, int customerId,
-			String account, String name, String role) {
+			String account, String userName, String staffName, String role) {
 		this.id = id;
 		this.telephone = telephone;
 		this.storeName = storeName;
@@ -66,7 +68,8 @@ public class StoreData {
 		this.manageStatus = manageStatus;
 		this.customerId = customerId;
 		this.account = account;
-		this.name = name;
+		this.userName = userName;
+		this.staffName = staffName;
 		this.role = role;
 	}
 	public int getId() {
@@ -171,11 +174,17 @@ public class StoreData {
 	public void setAccount(String account) {
 		this.account = account;
 	}
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return userName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getStaffName() {
+		return staffName;
+	}
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
 	}
 	public String getRole() {
 		return role;
@@ -190,6 +199,7 @@ public class StoreData {
 				+ storeType + ", operationMode=" + operationMode + ", storeStatus=" + storeStatus + ", storeDesc="
 				+ storeDesc + ", cityId=" + cityId + ", cityName=" + cityName + ", provinceId=" + provinceId
 				+ ", provinceName=" + provinceName + ", manageStatus=" + manageStatus + ", customerId=" + customerId
-				+ ", account=" + account + ", name=" + name + ", role=" + role + "]";
+				+ ", account=" + account + ", userName=" + userName + ", staffName=" + staffName + ", role=" + role
+				+ "]";
 	}
 }

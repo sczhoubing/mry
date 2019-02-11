@@ -15,6 +15,9 @@ public interface ItemManageRepository extends JpaRepository<ItemManage, Integer>
 	@Query(value="select * from item_manage where store_id=:storeId and item_name=:itemName", nativeQuery=true)
 	public ItemManage getItemManageByItemName(@Param("storeId")int storeId, @Param("itemName")String itemName);
 	
+	@Query(value="select * from item_manage where store_id=:storeId and symptom=:symptom", nativeQuery=true)
+	public List<ItemManage> getItemManageBySymptom(@Param("storeId")int storeId, @Param("symptom")String symptom);
+	
 	@Query(value="delete from item_manage where store_id=:storeId", nativeQuery=true)
 	@Modifying
 	public int deleteItemManageByStoreId(@Param("storeId")int storeId);

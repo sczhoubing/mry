@@ -45,7 +45,7 @@ public class ProgramManageService {
 	// 根据 storeId 获取所有的方案以及关联的项目信息
 	public List<ProgramManage> getProgramManageInfoByStoreId(int storeId, int programType) {
 		List<ProgramManage> programManages = programManageRepository.getProgramManageInfoByStoreId(storeId, programType);
-		if(programManages.size() > 0) {
+		if(!programManages.isEmpty()) {
 			List<ProgramItem> programItems = programItemRepository.getProgramItemsByStoreId(storeId, programType);
 			List<ProgramManage> programManageInfo = ProgramManage.bindProgramItem(programManages, programItems);
 			return programManageInfo;
@@ -61,6 +61,17 @@ public class ProgramManageService {
 			programManage.setProgramItems(programItems);
 		}
 		return programManage;
+	}
+	
+	// 根据 storeId + programType + symptom 获取方案的以及关联的项目信息
+	public List<ProgramManage> getProgramManageInfoBySymptom(int storeId, int programType, String symptom) {
+		List<ProgramManage> programManages = programManageRepository.getProgramManageInfoBySymptom(storeId, programType, symptom);
+		if (!programManages.isEmpty()) {
+			List<ProgramItem> programItems = programItemRepository.getProgramItemsByStoreId(storeId, programType);
+			List<ProgramManage> programManageInfo = ProgramManage.bindProgramItem(programManages, programItems);
+			return programManageInfo;
+		}
+		return null;
 	}
 
 	// 根据 storeId + programType 删除所有的方案以及所有关联的项目

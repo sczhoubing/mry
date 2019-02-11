@@ -19,6 +19,8 @@ public class ProblemAnalysis {
 	private int storeId;
 	@Column(name="user_id")
 	private int userId;
+	@Column(name="scheme")
+	private String scheme;
 	@Column(name="describes")
 	private String describes;
 	@Column(name="solution")
@@ -45,6 +47,12 @@ public class ProblemAnalysis {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+	public String getScheme() {
+		return scheme;
+	}
+	public void setScheme(String scheme) {
+		this.scheme = scheme;
+	}
 	public String getDescribes() {
 		return describes;
 	}
@@ -70,11 +78,6 @@ public class ProblemAnalysis {
 		this.addDate = addDate;
 	}
 	@Override
-	public String toString() {
-		return "ProblemAnalysis [id=" + id + ", storeId=" + storeId + ", userId=" + userId + ", describes=" + describes
-				+ ", solution=" + solution + ", status=" + status + ", addDate=" + addDate + "]";
-	}
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -95,6 +98,11 @@ public class ProblemAnalysis {
 			return false;
 		/*if (id != other.id)
 			return false;*/
+		if (scheme == null) {
+			if (other.scheme != null)
+				return false;
+		} else if (!scheme.equals(other.scheme))
+			return false;
 		if (solution == null) {
 			if (other.solution != null)
 				return false;
@@ -121,5 +129,11 @@ public class ProblemAnalysis {
 			}
 		}
 		return duplicateProblemAnalysis;
+	}
+	@Override
+	public String toString() {
+		return "ProblemAnalysis [id=" + id + ", storeId=" + storeId + ", userId=" + userId + ", scheme=" + scheme
+				+ ", describes=" + describes + ", solution=" + solution + ", status=" + status + ", addDate=" + addDate
+				+ "]";
 	}
 }

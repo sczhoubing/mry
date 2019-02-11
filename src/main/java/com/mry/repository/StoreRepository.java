@@ -29,13 +29,13 @@ public interface StoreRepository extends PagingAndSortingRepository<Store, Integ
 		   countQuery="select count(*) from store where store_status=:status",
 		   nativeQuery=true)*/
 	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
-			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.name, cu.role) from Store s left join City c on "
+			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
 			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.storeStatus=:status")
 	public Page<StoreData> getStoreByPageAndCondition(Pageable pageRequest, @Param("status")String status);
 	
 	
 	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
-			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.name, cu.role) from Store s left join City c on "
+			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
 			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.storeStatus=:status and s.storeName like %:storeName%")
 	public Page<StoreData> getStoreByPageAndStoreName(Pageable pageRequest, @Param("status")String status, @Param("storeName")String storeName);
 	
@@ -44,12 +44,12 @@ public interface StoreRepository extends PagingAndSortingRepository<Store, Integ
 	public int auditStore(@Param("storeId")int storeId, @Param("status")String status, @Param("desc")String desc);
 	
 	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
-			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.name, cu.role) from Store s left join City c on "
+			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
 			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.storeStatus='0' or s.storeStatus='2'")
 	public List<StoreData> getStoreByReview();
 	
 	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
-			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.name, cu.role) from Store s left join City c on "
+			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
 			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.id=:storeId")
 	public StoreData getStoreDataByStoreId(@Param("storeId")int storeId);
 }

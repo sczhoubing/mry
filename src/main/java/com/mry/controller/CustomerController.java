@@ -17,12 +17,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.mry.model.Customer;
 import com.mry.service.CustomerService;
 import com.mry.service.StoreService;
+import com.mry.utils.CommonUtils;
 
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	@Resource
 	private CustomerService customerService;
 	@Resource
@@ -36,21 +36,36 @@ public class CustomerController {
 		return result;
 	}
 	
+	@GetMapping("/userName/{userName}")
+	public Map<String, Object> getCustomerByUserName(@PathVariable("userName")String userName) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Customer customer = customerService.getCustomerByUserName(userName);
+		result.put("customer", customer);
+		return result;
+	}
+	
 	@PostMapping("/login")
 	public Map<String, Object> customerLogin(@RequestBody JSONObject params, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		String account = params.getString("account");
+		String userName = params.getString("userName");
 		String password = params.getString("password");
 		
-		logger.info("login info: account --> " + account + ", password --> " + password);
+		logger.info("login info: userName --> " + userName + ", password --> " + password);
 		
-		Customer customer = customerService.getCustomerByAccount(account);
+		Customer customer = customerService.getCustomerByUserName(userName);
+		// 用户不存在
 		if(null == customer) {
 			result.put("msg", 1);
+		// 密码不正确
 		} else if(!customer.getPassword().equals(password)) {
 			result.put("msg", 2);
+		// 登录状态被锁，无法登录
 		} else if(customer.getStatus().equals("0")) {
 			result.put("msg", 3);
+		// 登录状态为临时状态，需用户修改用户名和密码
+		} else if(customer.getStatus().equals("2")) {
+			result.put("msg", 4);
+		// 登录成功
 		} else {
 			result.put("msg", 0);
 			result.put("customer", customer);
@@ -80,11 +95,15 @@ public class CustomerController {
 		return result;
 	}
 	
-	@GetMapping("/delete/{account}")
-	public Map<String, Object> deleteCustomer(@PathVariable("account")String account) {
+	@GetMapping("/delete")
+	public Map<String, Object> deleteCustomer(String account, String userName) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		int code = customerService.deleteCustomer(account);
-		result.put("msg", code);
+		if(!CommonUtils.isBlank(account) && CommonUtils.isBlank(userName)) {
+			result.put("msg", customerService.deleteCustomerByAccount(account));
+		} else if(CommonUtils.isBlank(account) && !CommonUtils.isBlank(userName)) {
+			result.put("msg", customerService.deleteCustomerByUserName(userName));
+		}
 		return result;
 	}
+	
 }

@@ -1,19 +1,14 @@
 package com.mry.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.mry.model.ItemManage;
 import com.mry.param.ItemManageParam;
 import com.mry.service.ItemManageService;
 import com.mry.utils.CommonUtils;
@@ -32,15 +27,13 @@ public class ItemManageController {
 	}
 	
 	@GetMapping("/store/{storeId}")
-	public Map<String, Object> getItemManagesByStoreId(@PathVariable("storeId")int storeId, String itemName) {
+	public Map<String, Object> getItemManagesByStoreId(@PathVariable("storeId")int storeId, String itemName, String symptom) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if(CommonUtils.isBlank(itemName)) {
-			List<ItemManage> itemManages = itemManageService.getItemManagesByStoreId(storeId);
-			result.put("itemManages", itemManages);
-		} else {
-			ItemManage itemManage = itemManageService.getItemManageByItemName(storeId, itemName);
-			result.put("itemManage", itemManage);
-		}
+		if(!CommonUtils.isBlank(itemName) && CommonUtils.isBlank(symptom)) {
+			result.put("itemManage", itemManageService.getItemManageByItemName(storeId, itemName));
+		} else if(CommonUtils.isBlank(itemName) && !CommonUtils.isBlank(symptom)) {
+			result.put("itemManage", itemManageService.getItemManageBySymptom(storeId, symptom));
+		} 
 		return result;
 	}
 	

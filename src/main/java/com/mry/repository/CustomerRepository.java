@@ -15,17 +15,24 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	@Query(value="select * from customer where account=:account", nativeQuery=true)
 	public Customer getCustomerByAccount(@Param("account")String account);
 	
+	@Query(value="select * from customer where user_name=:userName", nativeQuery=true)
+	public Customer getCustomerByUserName(@Param("userName")String userName);
+	
 	@Query(value="update customer set password=:password where account=:account", nativeQuery=true)
 	@Modifying
 	public void updateCustomerPassword(@Param("account")String account, @Param("password")String password);
 	
 	@Query(value="delete from customer where account=:account", nativeQuery=true)
 	@Modifying
-	public int deleteCustomer(@Param("account")String account);
+	public int deleteCustomerByAccount(@Param("account")String account);
 	
 	@Query(value="delete from customer where account in(:accounts)", nativeQuery=true)
 	@Modifying
 	public int deleteCustomer(@Param("accounts")List<String> accounts);
+	
+	@Query(value="delete from customer where user_name=:userName", nativeQuery=true)
+	@Modifying
+	public int deleteCustomerByUserName(@Param("userName")String userName);
 	
 	@Query(value="update customer set status='0' where account=:account", nativeQuery=true)
 	@Modifying

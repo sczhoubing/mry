@@ -17,8 +17,10 @@ public class Customer {
 	private String account;
 	@Column(name="password")
 	private String password;
-	@Column(name="name")
-	private String name;
+	@Column(name="user_name")
+	private String userName;
+	@Column(name="staff_name")
+	private String staffName;
 	@Column(name="role")
 	private String role;
 	@Column(name="status")
@@ -41,11 +43,17 @@ public class Customer {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return userName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getStaffName() {
+		return staffName;
+	}
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
 	}
 	public String getRole() {
 		return role;
@@ -61,7 +69,7 @@ public class Customer {
 	}
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", account=" + account + ", password=" + password + ", name=" + name + ", role="
-				+ role + ", status=" + status + "]";
+		return "Customer [id=" + id + ", account=" + account + ", password=" + password + ", userName=" + userName
+				+ ", staffName=" + staffName + ", role=" + role + ", status=" + status + "]";
 	}
 }

@@ -15,6 +15,8 @@ public class ItemManage {
 	private int id;
 	@Column(name="store_id")
 	private int storeId;
+	@Column(name="symptom")
+	private String symptom;
 	@Column(name="face")
 	private String face;
 	@Column(name="body")
@@ -189,9 +191,9 @@ public class ItemManage {
 	}
 	@Override
 	public String toString() {
-		return "ItemManage [id=" + id + ", storeId=" + storeId + ", face=" + face + ", body=" + body + ", itemName="
-				+ itemName + ", itemPrice=" + itemPrice + ", designCourse=" + designCourse + ", courseTimes="
-				+ courseTimes + ", coursePrice=" + coursePrice + ", courseCharges=" + courseCharges
+		return "ItemManage [id=" + id + ", storeId=" + storeId + ", symptom=" + symptom + ", face=" + face + ", body="
+				+ body + ", itemName=" + itemName + ", itemPrice=" + itemPrice + ", designCourse=" + designCourse
+				+ ", courseTimes=" + courseTimes + ", coursePrice=" + coursePrice + ", courseCharges=" + courseCharges
 				+ ", courseInterval=" + courseInterval + ", highFreq=" + highFreq + ", presents=" + presents
 				+ ", superposition=" + superposition + ", strongEfficacy=" + strongEfficacy + ", generalProps="
 				+ generalProps + ", resolveProblem=" + resolveProblem + ", proDescription=" + proDescription

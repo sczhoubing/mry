@@ -21,8 +21,10 @@ public class SmsSetting {
 	private String accessKeyId;
 	@Value("${ali.sms.accessKeySecret}")
 	private String accessKeySecret;
-	@Value("${ali.sms.templateCode}")
-	private String templateCode;
+	@Value("${ali.sms.templateCode.validCode}")
+	private String validCode;
+	@Value("${ali.sms.templateCode.remindMsg}")
+	private String remindMsg;
 	public String getProduct() {
 		return product;
 	}
@@ -59,10 +61,16 @@ public class SmsSetting {
 	public void setAccessKeySecret(String accessKeySecret) {
 		this.accessKeySecret = accessKeySecret;
 	}
-	public String getTemplateCode() {
-		return templateCode;
+	public String getValidCode() {
+		return validCode;
 	}
-	public void setTemplateCode(String templateCode) {
-		this.templateCode = templateCode;
+	public void setValidCode(String validCode) {
+		this.validCode = validCode;
+	}
+	public String getRemindMsg() {
+		return remindMsg;
+	}
+	public void setRemindMsg(String remindMsg) {
+		this.remindMsg = remindMsg;
 	}
 }

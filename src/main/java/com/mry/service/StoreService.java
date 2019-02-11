@@ -141,27 +141,21 @@ public class StoreService {
 		String account = customer.getAccount();
 		// 判断用户是否已经存在
 		Customer originCustomer = customerRepository.getCustomerByAccount(account);
-		
 		if(null != originCustomer) {
 			customer.setId(originCustomer.getId());
 		}
-		// 初始密码是手机号码的后 6 位
-		String password = account.substring(5, account.length());
-		customer.setPassword(password);
 		customerRepository.save(customer);
-		int customerId = customer.getId();
-		
 		// 注册门店
 		Store store = params.getStore();
 		// 判断门店是否已经存在
-		Store originStore = storeRepository.getStoreByCustomerId(customerId);
+		Store originStore = storeRepository.getStoreByCustomerId(customer.getId());
 		
 		if(null != originStore) {
 			// 覆盖原来的门店信息
 			store.setId(originStore.getId());
 		}
 		// 关联门店联系人
-		store.setCustomerId(customerId);
+		store.setCustomerId(customer.getId());
 		storeRepository.save(store);
 		
 		return store.getId();

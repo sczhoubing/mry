@@ -1,9 +1,9 @@
 package com.mry.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +21,9 @@ public class ProjectManageController {
 	private ProjectManageService projectManageService;
 	
 	@PostMapping("/add")
-	public Map<String, Object> addProjectManageInfo(@RequestBody ProjectManage projectManage) {
+	public Map<String, Object> addProjectManageInfo(@RequestBody List<ProjectManage> projectManages) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("msg", projectManageService.addProjectManageInfo(projectManage));
+		result.put("msg", projectManageService.addProjectManageInfo(projectManages));
 		return result;
 	}
 	

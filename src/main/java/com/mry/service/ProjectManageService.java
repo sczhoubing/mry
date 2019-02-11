@@ -1,11 +1,9 @@
 package com.mry.service;
 
 import java.util.List;
-
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mry.model.ProjectManage;
 import com.mry.repository.ProjectManageRepository;
 
@@ -16,15 +14,16 @@ public class ProjectManageService {
 	private ProjectManageRepository projectManageRepository;
 	
 	// 添加一条项目计划信息
-	public int addProjectManageInfo(ProjectManage projectManage) {
-		List<ProjectManage> projectManages = projectManageRepository.getProjectManageByUserId(projectManage.getStoreId(), projectManage.getUserId());
-		// 如果发现有重复的数据就将其覆盖
-		ProjectManage duplicateProjectManage = ProjectManage.validdDuplicateProjectManage(projectManages, projectManage);
-		if(null != duplicateProjectManage) {
-			projectManage.setId(duplicateProjectManage.getId());
+	public int addProjectManageInfo(List<ProjectManage> projectManages) {
+		int storeId = projectManages.get(0).getStoreId();
+		int userId = projectManages.get(0).getUserId();
+		List<ProjectManage> originProjectManages = projectManageRepository.getProjectManageByUserId(storeId, userId);
+		// 去掉重复记录
+		List<ProjectManage> resultProjectManages = ProjectManage.removeDuplicateProjectManages(originProjectManages, projectManages);
+		if(!resultProjectManages.isEmpty()) {
+			projectManageRepository.saveAll(resultProjectManages);
 		}
-		projectManageRepository.save(projectManage);
-		return projectManage.getStoreId();
+		return storeId;
 	}
 	
 	// 编辑一条项目计划信息
