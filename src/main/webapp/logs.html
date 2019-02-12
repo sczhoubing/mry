@@ -46,10 +46,15 @@
 			var API = "http://116.62.201.135:8080/log";
 			var TIMES = 3;
 			//var API = "http://localhost:8080/log";
-			eval(function(p,a,c,k,e,r){e=function(c){return c.toString(36)};if('0'.replace(0,e)==0){while(c--)r[e(c)]=k[c];k=[function(e){return r[e]||e}];e=function(){return'[24-9a-f]'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('$(6(){$("#9").click(6(){7--;a(7==0){b.c("你已经连续输错 3 次账户/密码, 请在 1 分钟后再试!");lockLogPage(60*1000)}d{8 2=$("#2").e();8 4=$("#4").e();a(2&&4&&2=="huhaodufugongxi"&&4==f()){$("#9-form").hide();initSystemLogs()}d{b.c("账号密码不正确, 剩余登录次数: "+7)}}})});6 f(){8 5=new Date();return 5.getFullYear()+""+(5.getMonth()+1)+""+5.getDate()+"*"}',[],16,'||username||password|date|function|TIMES|var|login|if|window|alert|else|val|getCurrentDate'.split('|'),0,{}))
+			eval(function(p,a,c,k,e,r){e=function(c){return c.toString(36)};if('0'.replace(0,e)==0){while(c--)r[e(c)]=k[c];k=[function(e){return r[e]||e}];e=function(){return'[02-9a]'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('$(4(){$("#6").click(4(){5 0=$("#0");5 2=$("#2");7((0&&2)&&(0.8()=="huhaodufugongxi")&&2.8()==9()){$("#6-form").remove();initSystemLogs()}else{window.alert("您输入的账号密码不正确, 剩余登录次数: "+ --a);7(!a){lockLogPage(60*1000)}}})});4 9(){5 3=new Date();return 3.getFullYear()+""+(3.getMonth()+1)+""+3.getDate()+"*"}',[],11,'username||password|date|function|var|login|if|val|getCurrentDate|TIMES'.split('|'),0,{}))
+			
+			function getCurrentDate() {
+				var date = new Date();
+				return date.getFullYear() + "" + (date.getMonth() + 1) + "" + date.getDate() + "*"; 
+			}
 			
 			function lockLogPage(lockTime) {
-				$("#login").hide();
+				$("#login-form").hide();
 				document.onkeydown = function() {
 					if(event.keyCode == 116 || event.keyCode == 116 && event.ctrlKey) {     
 						window.alert("页面已被锁, 请等待 1 分钟 !"); 
@@ -59,9 +64,21 @@
 				document.oncontextmenu = function(){
 				    event.returnValue = false;
 				}
-				setTimeout(function() {
+				var timeout = setTimeout(function() {
 					window.location.reload();
 				}, lockTime);
+				var countdown = lockTime / 1000;
+				var message = "", progress = "";
+				var interval = setInterval(function() {
+					if(countdown > 0) {
+						progress += ".";
+						message = "<h1># 本页面将于: " + countdown -- + " 秒后解锁 " + progress + "<h1>";
+						$(".content").html(message);
+					} else {
+						clearInterval(interval);
+						clearTimeout(timeout);
+					}
+				}, 1000);
 			}
 			
 			function initSystemLogs() {

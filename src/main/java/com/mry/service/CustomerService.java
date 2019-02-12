@@ -36,10 +36,10 @@ public class CustomerService {
 	}
 	
 	// 修改用户名和密码
-	public void editCustomerUserNameAndPassword(String account, String userName, String password) {
-		customerRepository.editCustomerUserNameAndPassword(account, userName, password);
+	public void editCustomerUserNameAndPassword(String account, String userName, String password, String status) {
+		customerRepository.editCustomerUserNameAndPassword(account, userName, password, status);
 		// 发短信给用户提醒修改用户名和密码成功
-		String message = "{\"userName\":\"" + account + "\",\"password\":\"" + password + "\"}";
+		String message = "{\"userName\":\"" + userName + "\",\"password\":\"" + password + "\"}";
 		sendSms.sendSms(account, smsSetting.getEdPassMsg(), message);
 	}
 	

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.mry.model.Customer;
 import com.mry.model.CustomerIpAddress;
@@ -21,6 +20,7 @@ import com.mry.service.CustomerIpAddressService;
 import com.mry.service.CustomerService;
 import com.mry.service.StoreService;
 import com.mry.utils.CommonUtils;
+
 
 @RestController
 @RequestMapping("/customer")
@@ -100,8 +100,13 @@ public class CustomerController {
 			// 用户不存在
 			result.put("msg", 1);
 		} else {
-			// 修改用户名和密码成功
-			customerService.editCustomerUserNameAndPassword(account, userName, password);
+			String status = customer.getStatus();
+			// 如果用户是临时状态, 则需要取消用户的临时状态, 修改用户的状态为 1
+			if(status.equals("2")) { 
+				status = "1";
+			}
+			// 修改用户名和密码
+			customerService.editCustomerUserNameAndPassword(account, userName, password, status);
 			result.put("msg", 0);
 		}
 		return result;
