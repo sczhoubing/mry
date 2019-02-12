@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -81,9 +83,9 @@ public class StoreController {
 	
 	@PostMapping("/register")
 	// 传输过来的数据类型必须要准确
-	public Map<String, Object> registerStore(@RequestBody StoreParam params) {
+	public Map<String, Object> registerStore(@RequestBody StoreParam params, HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		int storeId = storeService.registerStore(params);
+		int storeId = storeService.registerStore(params, request);
 		result.put("storeId", storeId);
 		return result;
 	}

@@ -1,18 +1,24 @@
 package com.mry.service;
 
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mry.config.SmsSetting;
 import com.mry.data.StoreData;
+import com.mry.enums.DateFormat;
 import com.mry.model.Brand;
 import com.mry.model.Card;
 import com.mry.model.Client;
 import com.mry.model.Customer;
+import com.mry.model.CustomerIpAddress;
 import com.mry.model.Extension;
 import com.mry.model.Instrument;
 import com.mry.model.Item;
@@ -35,6 +41,7 @@ import com.mry.param.WaterParam;
 import com.mry.repository.BrandRepository;
 import com.mry.repository.CardRepository;
 import com.mry.repository.ClientRepository;
+import com.mry.repository.CustomerIpAddressRepository;
 import com.mry.repository.CustomerRepository;
 import com.mry.repository.ExtensionRepository;
 import com.mry.repository.InstrumentRepository;
@@ -47,11 +54,12 @@ import com.mry.repository.RoomTypeRepository;
 import com.mry.repository.SalaryRepository;
 import com.mry.repository.StoreRepository;
 import com.mry.repository.WaterInfoRepository;
+import com.mry.sms.SendSms;
+import com.mry.utils.CommonUtils;
 
 @Service
 @Transactional
 public class StoreService {
-	
 	@Resource
 	private StoreRepository storeRepository;
 	@Resource
@@ -82,6 +90,12 @@ public class StoreService {
 	private ExtensionRepository extensionRepository;
 	@Resource
 	private RegistStatusRepository registStatusRepository;
+	@Resource
+	private CustomerIpAddressRepository customerIpAddressRepository; 
+	@Resource
+	private SmsSetting smsSetting;
+	@Resource
+	private SendSms sendSms;
 	
 	// 根据 storeId 获取门店联系人的信息
 	public Customer getCustomerByStoreId(int storeId) {
@@ -110,6 +124,7 @@ public class StoreService {
 		return storeParam;
 	}
 	
+	// 根据 storeId 返回 store 信息
 	public StoreData getStoreDataByStoreId(int storeId) {
 		return storeRepository.getStoreDataByStoreId(storeId);
 	}
@@ -135,21 +150,29 @@ public class StoreService {
 	}
 	
 	// 注册店铺信息
-	public int registerStore(StoreParam params) {
+	public int registerStore(StoreParam params, HttpServletRequest request) {
 		// 注册用户
 		Customer customer = params.getCustomer();
 		String account = customer.getAccount();
 		// 判断用户是否已经存在
 		Customer originCustomer = customerRepository.getCustomerByAccount(account);
 		if(null != originCustomer) {
+			// 覆盖已存在的用户信息
 			customer.setId(originCustomer.getId());
+			// 如果用户已存在，那么其 IP 地址很可能已被记录，需要清空
+			customerIpAddressRepository.deleteCustomerIpAddressByCustomerId(customer.getId());
 		}
 		customerRepository.save(customer);
+		// 重新记录当前用户的 IP 地址
+		CustomerIpAddress customerIpAddress = new CustomerIpAddress();
+		customerIpAddress.setCustomerId(customer.getId());
+		customerIpAddress.setIpAddress(CommonUtils.getIpAddr(request));
+		customerIpAddress.setRecordDate(CommonUtils.formatDate(new Date(), DateFormat.FORMAT1.getFormat()));
+		customerIpAddressRepository.save(customerIpAddress);
 		// 注册门店
 		Store store = params.getStore();
 		// 判断门店是否已经存在
 		Store originStore = storeRepository.getStoreByCustomerId(customer.getId());
-		
 		if(null != originStore) {
 			// 覆盖原来的门店信息
 			store.setId(originStore.getId());
@@ -157,7 +180,11 @@ public class StoreService {
 		// 关联门店联系人
 		store.setCustomerId(customer.getId());
 		storeRepository.save(store);
-		
+		// 发短信提醒用户门店注册成功
+		String message = "{\"userName\":\"" + customer.getUserName() + "\",\"password\":\"" 
+					   + customer.getPassword() + "\",\"storeName\":\"" + store.getStoreName() 
+					   + "\"}";
+		sendSms.sendSms(account, smsSetting.getRigstMsg(), message);
 		return store.getId();
 	}
 	

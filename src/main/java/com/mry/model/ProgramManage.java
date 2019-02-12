@@ -41,6 +41,12 @@ public class ProgramManage {
 	public void setStoreId(int storeId) {
 		this.storeId = storeId;
 	}
+	public String getSymptom() {
+		return symptom;
+	}
+	public void setSymptom(String symptom) {
+		this.symptom = symptom;
+	}
 	public int getProgramType() {
 		return programType;
 	}

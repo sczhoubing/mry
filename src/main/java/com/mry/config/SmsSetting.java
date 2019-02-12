@@ -25,6 +25,10 @@ public class SmsSetting {
 	private String validCode;
 	@Value("${ali.sms.templateCode.remindMsg}")
 	private String remindMsg;
+	@Value("${ali.sms.templateCode.edPassMsg}")
+	private String edPassMsg;
+	@Value("${ali.sms.templateCode.registMsg}")
+	private String rigstMsg;
 	public String getProduct() {
 		return product;
 	}
@@ -72,5 +76,17 @@ public class SmsSetting {
 	}
 	public void setRemindMsg(String remindMsg) {
 		this.remindMsg = remindMsg;
+	}
+	public String getEdPassMsg() {
+		return edPassMsg;
+	}
+	public void setEdPassMsg(String edPassMsg) {
+		this.edPassMsg = edPassMsg;
+	}
+	public String getRigstMsg() {
+		return rigstMsg;
+	}
+	public void setRigstMsg(String rigstMsg) {
+		this.rigstMsg = rigstMsg;
 	}
 }

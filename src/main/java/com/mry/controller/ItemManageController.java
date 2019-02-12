@@ -33,7 +33,9 @@ public class ItemManageController {
 			result.put("itemManage", itemManageService.getItemManageByItemName(storeId, itemName));
 		} else if(CommonUtils.isBlank(itemName) && !CommonUtils.isBlank(symptom)) {
 			result.put("itemManage", itemManageService.getItemManageBySymptom(storeId, symptom));
-		} 
+		} else if(CommonUtils.isBlank(itemName) && CommonUtils.isBlank(symptom)) {
+			result.put("itemManage", itemManageService.getItemManagesByStoreId(storeId));
+		}
 		return result;
 	}
 	

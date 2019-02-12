@@ -69,6 +69,12 @@ public class ItemManage {
 	public void setStoreId(int storeId) {
 		this.storeId = storeId;
 	}
+	public String getSymptom() {
+		return symptom;
+	}
+	public void setSymptom(String symptom) {
+		this.symptom = symptom;
+	}
 	public String getFace() {
 		return face;
 	}

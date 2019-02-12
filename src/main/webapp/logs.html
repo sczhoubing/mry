@@ -7,6 +7,11 @@
 		<link rel="stylesheet" href="/resource/style/normalize.css">
         <link rel="stylesheet" href="/resource/style/pagination.css">
 		<style>
+			#login-form {
+				float:none;
+				margin:5% auto;
+				width:30%;
+			}
 			#log-list {
 				margin-top: 2%;
 			}
@@ -15,6 +20,7 @@
 				font-size: 11px;
 			}
 			#batch-action {
+				display:none;
 				float:left;
 				margin-left:5.6%;
 				margin-top:-1%;
@@ -38,10 +44,25 @@
 		<script src="/resource/script/jquery.pagination.min.js"></script>
 		<script>
 			var API = "http://116.62.201.135:8080/log";
+			var TIMES = 3;
 			//var API = "http://localhost:8080/log";
-			$(function() {
-				initSystemLogs();
-			});
+			eval(function(p,a,c,k,e,r){e=function(c){return c.toString(36)};if('0'.replace(0,e)==0){while(c--)r[e(c)]=k[c];k=[function(e){return r[e]||e}];e=function(){return'[24-9a-f]'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('$(6(){$("#9").click(6(){7--;a(7==0){b.c("你已经连续输错 3 次账户/密码, 请在 1 分钟后再试!");lockLogPage(60*1000)}d{8 2=$("#2").e();8 4=$("#4").e();a(2&&4&&2=="huhaodufugongxi"&&4==f()){$("#9-form").hide();initSystemLogs()}d{b.c("账号密码不正确, 剩余登录次数: "+7)}}})});6 f(){8 5=new Date();return 5.getFullYear()+""+(5.getMonth()+1)+""+5.getDate()+"*"}',[],16,'||username||password|date|function|TIMES|var|login|if|window|alert|else|val|getCurrentDate'.split('|'),0,{}))
+			
+			function lockLogPage(lockTime) {
+				$("#login").hide();
+				document.onkeydown = function() {
+					if(event.keyCode == 116 || event.keyCode == 116 && event.ctrlKey) {     
+						window.alert("页面已被锁, 请等待 1 分钟 !"); 
+						event.returnValue = false;
+					} 
+				}
+				document.oncontextmenu = function(){
+				    event.returnValue = false;
+				}
+				setTimeout(function() {
+					window.location.reload();
+				}, lockTime);
+			}
 			
 			function initSystemLogs() {
 				$.ajax({
@@ -57,6 +78,7 @@
 						if(data && data.logs && data.logs.length) {
 							var logs = sortSystemLogs(data.logs);
 							initPagination(logs);
+							$("#batch-action").show();
 						} else {
 							$(".content").html("<h4>没有日志记录 ...</h4>");
 						}
@@ -296,10 +318,21 @@
 	</head>
 	<body>
 		<div class="container content">
+			<div id="login-form">
+				<div class="form-group">
+					<label for="name">账号</label>
+					<input type="text" id="username" class="form-control" placeholder="请输入账号">
+				</div>
+				<div class="form-group">
+					<label for="password">密码</label>
+					<input type="password" id="password" class="form-control" placeholder="请输入密码">
+				</div>
+				<input type="button" id="login" class="btn btn-success" value="登录">
+			</div>
 			<div id="log-list"></div>
 			<div id="batch-action">
-					<button name="batch_action" title="batch_download" class="btn btn-default btn-font">批量下载</button>
-					<button name="batch_action" title="batch_delete" class="btn btn-default btn-font">批量删除</button>
+				<button name="batch_action" title="batch_download" class="btn btn-default btn-font">批量下载</button>
+				<button name="batch_action" title="batch_delete" class="btn btn-default btn-font">批量删除</button>
 			</div>
 			<div id="pagination">
 				<div id="page" class="M-box"></div>
