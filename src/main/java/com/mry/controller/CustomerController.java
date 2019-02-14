@@ -1,5 +1,6 @@
 package com.mry.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
+import com.mry.enums.DateFormat;
 import com.mry.model.Customer;
 import com.mry.model.CustomerIpAddress;
 import com.mry.service.CustomerIpAddressService;
@@ -64,26 +66,34 @@ public class CustomerController {
 		// 登录状态被锁，无法登录
 		} else if(customer.getStatus().equals("0")) {
 			result.put("msg", 3);
-		// 登录状态为临时状态，需用户修改用户名和密码
-		} else if(customer.getStatus().equals("2")) {
-			result.put("msg", 4);
 		} else {
-			// 获取当前用户已记录的 IP 地址
-			CustomerIpAddress customerIpAddress = customerIpAddressService.getCustomerIpAddressByCustomerId(customer.getId());
 			// 获取当前用户的真实 IP 地址
 			String currentIpAddress = CommonUtils.getIpAddr(request);
-			// 用户已记录的 IP 地址和 当前真实 IP 地址不匹配
-			if(null == customerIpAddress || !customerIpAddress.getIpAddress().equals(currentIpAddress)) {
-				result.put("msg", 5);
-				// 修改用户的 IP 地址
-				customerIpAddressService.editCustomerIpAddressByCustomerId(customer.getId(), currentIpAddress);
-			} else {
-				// 登录成功
-				result.put("msg", 0);
-				result.put("customer", customer);
-				result.put("storeId", storeService.getStoreIdByCustomerId(customer.getId()));
-				logger.info("user login system: " + customer);
-				logger.info("user remote ipAddress: " + currentIpAddress);
+			// 登录状态为临时状态，需要提醒用户修改用户名和密码
+			if(customer.getStatus().equals("2")) {
+				// 保存用户的真实 IP 地址
+				CustomerIpAddress customerIpAddress = new CustomerIpAddress();
+				customerIpAddress.setCustomerId(customer.getId());
+				customerIpAddress.setIpAddress(currentIpAddress);
+				customerIpAddress.setRecordDate(CommonUtils.formatDate(new Date(), DateFormat.FORMAT1.getFormat()));
+				customerIpAddressService.saveCustomerIpAddress(customerIpAddress);
+				result.put("msg", 4);
+			} else if(customer.getStatus().equals("1")) {
+				// 获取当前用户已记录的 IP 地址
+				CustomerIpAddress customerIpAddress = customerIpAddressService.getCustomerIpAddressByCustomerId(customer.getId());
+				// 用户已记录的 IP 地址和 当前真实 IP 地址不匹配
+				if(null == customerIpAddress || !customerIpAddress.getIpAddress().equals(currentIpAddress)) {
+					result.put("msg", 5);
+					// 修改用户的 IP 地址
+					customerIpAddressService.editCustomerIpAddressByCustomerId(customer.getId(), currentIpAddress);
+				} else {
+					// 登录成功
+					result.put("msg", 0);
+					result.put("customer", customer);
+					result.put("storeId", storeService.getStoreIdByCustomerId(customer.getId()));
+					logger.info("user login system: " + customer);
+					logger.info("user remote ipAddress: " + currentIpAddress);
+				}
 			}
 		}
 		return result;
