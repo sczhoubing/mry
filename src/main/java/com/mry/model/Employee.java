@@ -33,6 +33,8 @@ public class Employee {
 	private String sex;
 	@Column(name="status")
 	private String status;
+	@Column(name="role")
+	private String role;
 	public int getId() {
 		return id;
 	}
@@ -99,10 +101,16 @@ public class Employee {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", storeId=" + storeId + ", idCard=" + idCard + ", empName=" + empName
 				+ ", phoneNum=" + phoneNum + ", empType=" + empType + ", serviceDesc=" + serviceDesc + ", gradeId="
-				+ gradeId + ", age=" + age + ", sex=" + sex + ", status=" + status + "]";
+				+ gradeId + ", age=" + age + ", sex=" + sex + ", status=" + status + ", role=" + role + "]";
 	}
 }

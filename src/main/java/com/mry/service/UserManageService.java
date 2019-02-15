@@ -38,8 +38,13 @@ public class UserManageService {
 			desTechnician.setEmpName(tempDesTechnicians.get(0).getEmpName());
 			desTechnicianRepository.save(desTechnician);
 		}
-		
 		return userManage.getStoreId();
+	}
+	
+	// 编辑顾客信息
+	public int editUserManageInfo(UserManage userManage) {
+		userManageRepository.save(userManage);
+		return userManage.getId();
 	}
 	
 	// 根据 storeId + userName 获取该门店下一条顾客信息

@@ -79,6 +79,7 @@ public class CustomerController {
 				customerIpAddressService.saveCustomerIpAddress(customerIpAddress);
 				result.put("msg", 4);
 			} else if(customer.getStatus().equals("1")) {
+				result.put("customer", customer);
 				// 获取当前用户已记录的 IP 地址
 				CustomerIpAddress customerIpAddress = customerIpAddressService.getCustomerIpAddressByCustomerId(customer.getId());
 				// 用户已记录的 IP 地址和 当前真实 IP 地址不匹配
@@ -89,7 +90,6 @@ public class CustomerController {
 				} else {
 					// 登录成功
 					result.put("msg", 0);
-					result.put("customer", customer);
 					result.put("storeId", storeService.getStoreIdByCustomerId(customer.getId()));
 					logger.info("user login system: " + customer);
 					logger.info("user remote ipAddress: " + currentIpAddress);

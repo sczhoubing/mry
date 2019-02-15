@@ -28,6 +28,13 @@ public class UserManageController {
 		result.put("msg", userManageService.addUserManageInfo(userManage));
 		return result;
 	}
+	
+	@PostMapping("/edit")
+	public Map<String, Object> editUserManageInfo(@RequestBody UserManage userManage) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("msg", userManageService.editUserManageInfo(userManage));
+		return result;
+	}
 
 	@GetMapping("/store/{storeId}")
 	public Map<String, Object> getUserManageInfo(@PathVariable("storeId")Integer storeId, String userName, String idCard) {
