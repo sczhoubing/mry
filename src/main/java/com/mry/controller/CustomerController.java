@@ -83,10 +83,8 @@ public class CustomerController {
 				// 获取当前用户已记录的 IP 地址
 				CustomerIpAddress customerIpAddress = customerIpAddressService.getCustomerIpAddressByCustomerId(customer.getId());
 				// 用户已记录的 IP 地址和 当前真实 IP 地址不匹配
-				if(null == customerIpAddress || !customerIpAddress.getIpAddress().equals(currentIpAddress)) {
+				if(!customerIpAddress.getIpAddress().equals(currentIpAddress)) {
 					result.put("msg", 5);
-					// 修改用户的 IP 地址
-					customerIpAddressService.editCustomerIpAddressByCustomerId(customer.getId(), currentIpAddress);
 				} else {
 					// 登录成功
 					result.put("msg", 0);
@@ -98,6 +96,21 @@ public class CustomerController {
 		}
 		return result;
 	} 
+	
+	@PostMapping("/valid/ip")
+	public Map<String, Object> validCustomerIpAddress(@RequestBody JSONObject params, HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		int customerId = params.getInteger("customerId");
+		int validResult = params.getInteger("validResult");
+		if(validResult == 0) {
+			// 修改用户的 IP 地址
+			customerIpAddressService.editCustomerIpAddressByCustomerId(customerId, CommonUtils.getIpAddr(request));
+			result.put("msg", 0);
+		} else {
+			result.put("msg", 1);
+		}
+		return result;
+	}
 	
 	@PostMapping("/edit")
 	public Map<String, Object> editCustomer(@RequestBody JSONObject params) {
