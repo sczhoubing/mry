@@ -52,4 +52,16 @@ public interface StoreRepository extends PagingAndSortingRepository<Store, Integ
 			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
 			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.id=:storeId")
 	public StoreData getStoreDataByStoreId(@Param("storeId")int storeId);
+	
+	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
+			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
+			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.customerId=:customerId ")
+	public List<StoreData> getStoreDataByCustomerId(@Param("customerId")int customerId);
+	
+	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
+			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
+			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.customerId=:customerId and s.storeStatus=:status")
+	public List<StoreData> getStoreDataByCustomerIdAndStoreStatus(@Param("customerId")int customerId, @Param("status")String status);
+	
+	
 }

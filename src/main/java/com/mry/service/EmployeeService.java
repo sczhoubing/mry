@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.mry.config.SmsSetting;
+import com.mry.enums.DateFormat;
 import com.mry.model.Customer;
 import com.mry.model.Employee;
 import com.mry.repository.CustomerRepository;
@@ -31,6 +32,8 @@ public class EmployeeService {
 		if(null != originEmployee) {
 			employee.setId(originEmployee.getId());
 		}
+		employee.setStartTime(DateFormat.FORMAT3.getFormat());
+		employee.setEndTime(DateFormat.FORMAT3.getFormat());
 		employeeRepository.save(employee);
 
 		// 同时需要添加到 customer 表，用户才可以登陆
@@ -56,6 +59,14 @@ public class EmployeeService {
 		return employee.getStoreId();
 	}
 	
+	// 修改一条员工信息
+	public int editEmployee(Employee employee) {
+		employee.setStartTime(DateFormat.FORMAT3.getFormat());
+		employee.setEndTime(DateFormat.FORMAT3.getFormat());
+		employeeRepository.save(employee);
+		return employee.getId();
+	}
+	
 	// 根据 empName 查询员工信息
 	public List<Employee> getEmployeeByEmpName(int storeId, String empName) {
 		return employeeRepository.getEmployeeByEmpName(storeId, empName);
@@ -69,6 +80,11 @@ public class EmployeeService {
 	// 根据 storeId 查询门店下所有员工信息
 	public List<Employee> getEmployeeByStoreId(int storeId) {
 		return employeeRepository.getEmployeeByStoreId(storeId);
+	}
+	
+	// 根据 storeId + startTime + endTime 返回不在该时间段的员工信息
+	public List<Employee> getEmployeeByStartTimeAndEndTime(int storeId, String startTime, String endTime) {
+		return employeeRepository.getEmployeeByStartTimeAndEndTime(storeId, startTime, endTime);
 	}
 	
 	// 根据 idCard 删除一条员工信息
@@ -102,11 +118,5 @@ public class EmployeeService {
 		}
 		employeeRepository.editEmployeeStatusById(storeId, id, status);
 		return id;
-	}
-	
-	// 修改一条员工信息
-	public int editEmployee(Employee employee) {
-		employeeRepository.save(employee);
-		return employee.getId();
 	}
 }

@@ -35,6 +35,10 @@ public class Employee {
 	private String status;
 	@Column(name="role")
 	private String role;
+	@Column(name="start_time")
+	private String startTime;
+	@Column(name="end_time")
+	private String endTime;
 	public int getId() {
 		return id;
 	}
@@ -107,10 +111,23 @@ public class Employee {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", storeId=" + storeId + ", idCard=" + idCard + ", empName=" + empName
 				+ ", phoneNum=" + phoneNum + ", empType=" + empType + ", serviceDesc=" + serviceDesc + ", gradeId="
-				+ gradeId + ", age=" + age + ", sex=" + sex + ", status=" + status + ", role=" + role + "]";
+				+ gradeId + ", age=" + age + ", sex=" + sex + ", status=" + status + ", role=" + role + ", startTime="
+				+ startTime + ", endTime=" + endTime + "]";
 	}
 }

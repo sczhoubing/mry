@@ -48,6 +48,24 @@ public class StoreController {
 		return result;
 	}
 	
+	@GetMapping("/store/{storeId}")
+	public Map<String, Object> getStoreByStoreId(@PathVariable("storeId")int storeId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("storeInfo", storeService.getStoreDataByStoreId(storeId));
+		return result;
+	}
+	
+	@GetMapping("/owner/{customerId}")
+	public Map<String, Object> getStoreByCustomer(@PathVariable("customerId")int customerId, String status) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if(!CommonUtils.isBlank(status)) {
+			result.put("storeInfo", storeService.getStoreDataByCustomerIdAndStoreStatus(customerId, status));
+		} else {
+			result.put("storeInfo", storeService.getStoreDataByCustomerId(customerId));
+		}
+		return result;
+	}
+	
 	@GetMapping("/page/{pageNumber}")
 	public Page<StoreData> getStoreByPage(@PathVariable("pageNumber")int pageNumber, String status, String storeName) {
 		Pageable pageRequest = PageRequest.of(pageNumber - 1, 10);

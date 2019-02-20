@@ -42,6 +42,17 @@ public class EmployeeController {
 		return result;
 	}
 	
+	@GetMapping("/available/{storeId}")
+	public Map<String, Object> getAvailableEmployeeInfo(@PathVariable("storeId")int storeId, String startTime, String endTime) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if(!CommonUtils.isBlank(startTime) && !CommonUtils.isBlank(endTime)) {
+			result.put("empInfo", employeeService.getEmployeeByStartTimeAndEndTime(storeId, startTime, endTime));
+		} else {
+			result.put("empInfo", "The parameters: startTime and endTime can't be null!");
+		}
+		return result;
+	}
+	
 	@GetMapping("/delete/{storeId}")
 	public Map<String, Object> deleteEmployeeInfo(@PathVariable("storeId")Integer storeId, String idCard) {
 		Map<String, Object> result = new HashMap<String, Object>();

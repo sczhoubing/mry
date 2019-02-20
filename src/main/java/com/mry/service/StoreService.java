@@ -124,9 +124,18 @@ public class StoreService {
 		return storeParam;
 	}
 	
-	// 根据 storeId 返回 store 信息
+	// 根据 storeId 返回 一条 store 信息
 	public StoreData getStoreDataByStoreId(int storeId) {
 		return storeRepository.getStoreDataByStoreId(storeId);
+	}
+	
+	public List<StoreData> getStoreDataByCustomerId(int customerId) {
+		return storeRepository.getStoreDataByCustomerId(customerId);
+	}
+	
+	// 根据 customerId + status 返回  store 信息
+	public List<StoreData> getStoreDataByCustomerIdAndStoreStatus(int customerId, String status) {
+		return storeRepository.getStoreDataByCustomerIdAndStoreStatus(customerId, status);
 	}
 	
 	// 根据审核状态分页获取 store 信息

@@ -36,17 +36,14 @@ public class SendSms {
 	        SendSmsRequest request = new SendSmsRequest();
 	        request.setPhoneNumbers(phoneNumber);
 	        request.setSignName("华杨汇美");
-	        //request.setTemplateCode(smsSetting.getTemplateCode());
-	        //request.setTemplateParam("{\"code\":\"" + code + "\"}");
 	        request.setTemplateCode(templateCode);
 	        request.setTemplateParam(message);
 	        
 	        SendSmsResponse response = acsClient.getAcsResponse(request);
 	        result.put("code", response.getCode());
 	        result.put("message", response.getMessage());
-	        
-	        logger.info("send sms details --> phoneNumber: " + phoneNumber + ", message: " + message);
-	        logger.info("send sms response --> " + response.getMessage());
+	        logger.info("send sms response --> " + response.getMessage() 
+	        			+ "; send sms details --> phoneNumber: " + phoneNumber + ", message: " + message);
 		} catch (ClientException e) {
 			logger.error("send sms exception: " + e.getMessage());
 			result.put("error", "发送短信验证码失败!");
