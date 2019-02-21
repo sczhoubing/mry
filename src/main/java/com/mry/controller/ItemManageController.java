@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.mry.enums.SystemSpec;
 import com.mry.param.ItemManageParam;
 import com.mry.service.ItemManageService;
 import com.mry.utils.CommonUtils;
@@ -35,6 +37,17 @@ public class ItemManageController {
 			result.put("itemManage", itemManageService.getItemManageBySymptom(storeId, symptom));
 		} else if(CommonUtils.isBlank(itemName) && CommonUtils.isBlank(symptom)) {
 			result.put("itemManage", itemManageService.getItemManagesByStoreId(storeId));
+		}
+		return result;
+	}
+	
+	@GetMapping("/group/{storeId}")
+	public Map<String, Object> getItemManagesByGroup(@PathVariable("storeId")int storeId, String typeAndName) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if(!CommonUtils.isBlank(typeAndName) && typeAndName.contains(SystemSpec.SEPARATOR2.getCode())) {
+			result.put("itemManage", itemManageService.getItemManageByItemTypeAndName(storeId, typeAndName));
+		} else {
+			result.put("itemManage", itemManageService.getItemManagesByGroup(storeId));
 		}
 		return result;
 	}

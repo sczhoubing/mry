@@ -51,7 +51,7 @@ public class StoreController {
 	@GetMapping("/store/{storeId}")
 	public Map<String, Object> getStoreByStoreId(@PathVariable("storeId")int storeId) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("storeInfo", storeService.getStoreDataByStoreId(storeId));
+		result.put("content", storeService.getStoreDataByStoreId(storeId));
 		return result;
 	}
 	
@@ -59,9 +59,9 @@ public class StoreController {
 	public Map<String, Object> getStoreByCustomer(@PathVariable("customerId")int customerId, String status) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if(!CommonUtils.isBlank(status)) {
-			result.put("storeInfo", storeService.getStoreDataByCustomerIdAndStoreStatus(customerId, status));
+			result.put("content", storeService.getStoreDataByCustomerIdAndStoreStatus(customerId, status));
 		} else {
-			result.put("storeInfo", storeService.getStoreDataByCustomerId(customerId));
+			result.put("content", storeService.getStoreDataByCustomerId(customerId));
 		}
 		return result;
 	}

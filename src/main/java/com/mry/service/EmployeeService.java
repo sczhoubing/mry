@@ -6,7 +6,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.mry.config.SmsSetting;
+import com.mry.enums.CustomerStatus;
 import com.mry.enums.DateFormat;
+import com.mry.enums.EmpStatus;
 import com.mry.model.Customer;
 import com.mry.model.Employee;
 import com.mry.repository.CustomerRepository;
@@ -51,7 +53,7 @@ public class EmployeeService {
 		customer.setStaffName(employee.getEmpName());
 		customer.setRole(employee.getEmpType());
 		// 状态码为 2 表示用户处于临时状态，需要修改账户和密码
-		customer.setStatus("2");
+		customer.setStatus(CustomerStatus.TEMP.getCode());
 		customerRepository.save(customer);
 		// 发送临时账户和密码给用户，提醒修改账户信息
 		String message = "{\"userName\":\"" + account + "\",\"password\":\"" + password + "\"}";
@@ -113,7 +115,7 @@ public class EmployeeService {
 	// 标记员工状态
 	public int markEmpStatus(int storeId, int id, String account, String status) {
 		// 当状态等于 5 的时候表示离职状态
-		if(status.equals("5")) {
+		if(status.equals(EmpStatus.LEAVE.getCode())) {
 			customerRepository.lockCustomerLoginAccess(account);
 		}
 		employeeRepository.editEmployeeStatusById(storeId, id, status);

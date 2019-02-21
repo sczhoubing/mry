@@ -15,7 +15,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	@Query(value="select * from customer where account=:account", nativeQuery=true)
 	public Customer getCustomerByAccount(@Param("account")String account);
 	
-	@Query(value="select * from customer where user_name=:userName", nativeQuery=true)
+	@Query(value="select * from customer where user_name=:userName and status != '-1'", nativeQuery=true)
 	public Customer getCustomerByUserName(@Param("userName")String userName);
 
 	@Query(value="update customer set user_name=:userName, password=:password, status=:status where account=:account", nativeQuery=true)
@@ -33,6 +33,14 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	@Query(value="delete from customer where user_name=:userName", nativeQuery=true)
 	@Modifying
 	public int deleteCustomerByUserName(@Param("userName")String userName);
+	
+	@Query(value="update customer set status=:status where account=:account", nativeQuery=true)
+	@Modifying
+	public void unsubscribeByAccount(@Param("account")String account, @Param("status")String status);
+	
+	@Query(value="update customer set status=:status where user_name=:userName", nativeQuery=true)
+	@Modifying
+	public void unsubscribeByUserName(@Param("userName")String userName, @Param("status")String status);
 	
 	@Query(value="update customer set status='0' where account=:account", nativeQuery=true)
 	@Modifying

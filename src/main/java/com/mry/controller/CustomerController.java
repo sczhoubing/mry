@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
+import com.mry.enums.CustomerStatus;
 import com.mry.enums.DateFormat;
 import com.mry.model.Customer;
 import com.mry.model.CustomerIpAddress;
@@ -64,13 +65,13 @@ public class CustomerController {
 		} else if(!customer.getPassword().equals(password)) {
 			result.put("msg", 2);
 		// 登录状态被锁，无法登录
-		} else if(customer.getStatus().equals("0")) {
+		} else if(customer.getStatus().equals(CustomerStatus.LOCK.getCode())) {
 			result.put("msg", 3);
 		} else {
 			// 获取当前用户的真实 IP 地址
 			String currentIpAddress = CommonUtils.getIpAddr(request);
 			// 登录状态为临时状态，需要提醒用户修改用户名和密码
-			if(customer.getStatus().equals("2")) {
+			if(customer.getStatus().equals(CustomerStatus.TEMP.getCode())) {
 				// 保存用户的真实 IP 地址
 				CustomerIpAddress customerIpAddress = new CustomerIpAddress();
 				customerIpAddress.setCustomerId(customer.getId());
@@ -78,7 +79,7 @@ public class CustomerController {
 				customerIpAddress.setRecordDate(CommonUtils.formatDate(new Date(), DateFormat.FORMAT1.getFormat()));
 				customerIpAddressService.saveCustomerIpAddress(customerIpAddress);
 				result.put("msg", 4);
-			} else if(customer.getStatus().equals("1")) {
+			} else if(customer.getStatus().equals(CustomerStatus.NORMAL.getCode())) {
 				result.put("customer", customer);
 				// 获取当前用户已记录的 IP 地址
 				CustomerIpAddress customerIpAddress = customerIpAddressService.getCustomerIpAddressByCustomerId(customer.getId());
@@ -125,8 +126,8 @@ public class CustomerController {
 		} else {
 			String status = customer.getStatus();
 			// 如果用户是临时状态, 则需要取消用户的临时状态, 修改用户的状态为 1
-			if(status.equals("2")) { 
-				status = "1";
+			if(status.equals(CustomerStatus.TEMP.getCode())) { 
+				status = CustomerStatus.NORMAL.getCode();
 			}
 			// 修改用户名和密码
 			customerService.editCustomerUserNameAndPassword(account, userName, password, status);
@@ -146,4 +147,14 @@ public class CustomerController {
 		return result;
 	}
 	
+	@GetMapping("/unsubscribe")
+	public Map<String, Object> unsubscribeCustomer(String account, String userName) { 
+		Map<String, Object> result = new HashMap<String, Object>();
+		if(!CommonUtils.isBlank(account) && CommonUtils.isBlank(userName)) {
+			result.put("msg", customerService.unsubscribeByAccount(account));
+		} else if(CommonUtils.isBlank(account) && !CommonUtils.isBlank(userName)) {
+			result.put("msg", customerService.unsubscribeByUserName(userName));
+		}
+		return result;
+	}
 }

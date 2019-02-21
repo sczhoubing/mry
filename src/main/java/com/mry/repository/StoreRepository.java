@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
-
 import com.mry.data.StoreData;
 import com.mry.model.Store;
 
@@ -45,7 +44,7 @@ public interface StoreRepository extends PagingAndSortingRepository<Store, Integ
 	
 	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
 			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
-			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.storeStatus='0' or s.storeStatus='2'")
+			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.storeStatus in('0', '2')")
 	public List<StoreData> getStoreByReview();
 	
 	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
@@ -55,7 +54,7 @@ public interface StoreRepository extends PagingAndSortingRepository<Store, Integ
 	
 	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
 			+ "s.storeDesc, s.cityId, c.cityName, s.provinceId, p.provinceName, s.manageStatus, s.customerId, cu.account, cu.userName, cu.staffName, cu.role) from Store s left join City c on "
-			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.customerId=:customerId ")
+			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.customerId=:customerId and s.storeStatus != '-1'")
 	public List<StoreData> getStoreDataByCustomerId(@Param("customerId")int customerId);
 	
 	@Query("select new StoreData(s.id, s.telephone, s.storeName, s.franchType, s.address, s.managementCycle, s.storeType, s.operationMode, s.storeStatus, "
@@ -63,5 +62,7 @@ public interface StoreRepository extends PagingAndSortingRepository<Store, Integ
 			+ "s.cityId=c.id left join Province p on s.provinceId=p.id left join Customer cu on s.customerId=cu.id where s.customerId=:customerId and s.storeStatus=:status")
 	public List<StoreData> getStoreDataByCustomerIdAndStoreStatus(@Param("customerId")int customerId, @Param("status")String status);
 	
-	
+	@Query(value="update store set store_status=:status where customer_id=:customerId", nativeQuery=true)
+	@Modifying
+	public void unsubscribeStore(@Param("customerId")int customerId, @Param("status")String status);
 }
