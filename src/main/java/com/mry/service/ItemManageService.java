@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mry.enums.ItemType;
-import com.mry.enums.SystemSpec;
 import com.mry.model.ItemManage;
 import com.mry.model.ItemTypeManage;
 import com.mry.param.ItemManageParam;
@@ -56,17 +52,15 @@ public class ItemManageService {
 		return itemManageRepository.getItemManageBySymptom(storeId, symptom);
 	}
 	
-	// 根据 itemType + itemName 返回同一类别的记录
-	// 参数格式： 1@美白 --> 面部美白
-	public Map<String, Object> getItemManageByItemTypeAndName(int storeId, String typeAndName) {
+	// 根据 type + name 返回同一类别的记录
+	public Map<String, Object> getItemManageByItemTypeAndName(int storeId, String type, String name) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		String[] typeAndNames = typeAndName.split(SystemSpec.SEPARATOR2.getCode());
-		ItemTypeManage itemTypeManage = itemTypeManageRepository.getItemTypeManageByTypeName(storeId, typeAndNames[0], typeAndNames[1]);
+		ItemTypeManage itemTypeManage = itemTypeManageRepository.getItemTypeManageByTypeName(storeId, type, name);
 		if(null != itemTypeManage) {
 			if(itemTypeManage.getItemType().equals(ItemType.TYPE_FACE.getCode())) {
-				result.put(ItemType.TYPE_FACE.getDesc() + "-" + typeAndNames[1], itemManageRepository.getItemManageByItemFace(storeId, itemTypeManage.getId() + ""));
+				result.put(ItemType.TYPE_FACE.getDesc() + "-" + name, itemManageRepository.getItemManageByItemFace(storeId, itemTypeManage.getId() + ""));
 			} else if(itemTypeManage.getItemType().equals(ItemType.TYPE_BODY.getCode())) {
-				result.put(ItemType.TYPE_BODY.getDesc() + "-" + typeAndNames[1], itemManageRepository.getItemManageByItemBody(storeId, itemTypeManage.getId() + ""));
+				result.put(ItemType.TYPE_BODY.getDesc() + "-" + name, itemManageRepository.getItemManageByItemBody(storeId, itemTypeManage.getId() + ""));
 			}
 		}
 		return result;
