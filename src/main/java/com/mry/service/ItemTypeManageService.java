@@ -19,7 +19,9 @@ public class ItemTypeManageService {
 		List<ItemTypeManage> originItemTypeManages = itemTypeManageRepository.getItemTypeManageByStoreId(storeId);
 		// 去除已经存在的项目类别管理信息
 		List<ItemTypeManage> resultItemTypeManages = ItemTypeManage.removeDuplicateItemTypeManages(originItemTypeManages, itemTypeManages);
-		itemTypeManageRepository.saveAll(resultItemTypeManages);
+		if(!resultItemTypeManages.isEmpty()) {
+			itemTypeManageRepository.saveAll(resultItemTypeManages);
+		}
 		return storeId;
 	}
 	

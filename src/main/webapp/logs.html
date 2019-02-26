@@ -199,8 +199,8 @@
 							success: function(data) {
 								if(data && data.logs) {
 									var content = "<h4 style='cursor:pointer;'>"
-											    + "<span class='glyphicon glyphicon-print' name='print_log' title='打印日志'></a>&nbsp;"
-												+ "<span name='log_details' title='点击  打开 / 收起日志'>" + " 打开 / 收起日志 -- " +o.html() + ": </span>"
+											    + "<span class='glyphicon glyphicon-print' name='print_log' title='打印日志'></span>&nbsp;"
+												+ "<span name='log_details' title='点击  打开/收起日志'>" + " 打开 / 收起日志 -- " + o.html() + ": </span>"
 												+ "</h4>";
 									$("#log-logs").html(content);
 									$("#log_details").html(data.logs);

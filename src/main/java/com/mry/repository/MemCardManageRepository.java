@@ -10,11 +10,19 @@ import org.springframework.data.repository.query.Param;
 import com.mry.model.MemCardManage;
 
 public interface MemCardManageRepository extends JpaRepository<MemCardManage, Integer> {
+	
 	@Query(value="select * from membership_card_manage where store_id=:storeId", nativeQuery=true)
 	public List<MemCardManage> getMemCardManageByStoreId(@Param("storeId")int storeId);
 	
 	@Query(value="select * from membership_card_manage where store_id=:storeId and card_name=:cardName", nativeQuery=true)
 	public MemCardManage getMemCardManageByCardName(@Param("storeId")int storeId, @Param("cardName")String cardName);
+	
+	@Query(value="select * from membership_card_manage where store_id=:storeId and card_status=:cardStatus", nativeQuery=true)
+	public List<MemCardManage> getMemCardManageInfoByCardStatus(@Param("storeId")int storeId, @Param("cardStatus")String cardStatus);
+	
+	@Query(value="delete from membership_card_manage where store_id=:storeId and id=:id", nativeQuery=true)
+	@Modifying
+	public int deleteMemCardManageInfoById(@Param("storeId")int storeId, @Param("id")int id);
 	
 	@Query(value="delete from membership_card_manage where store_id=:storeId", nativeQuery=true)
 	@Modifying

@@ -1,6 +1,7 @@
 package com.mry.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.mry.enums.DateFormat;
+import com.mry.utils.CommonUtils;
 
 @Entity
 @Table(name="membership_card_manage")
@@ -29,6 +33,10 @@ public class MemCardManage {
 	private String productDiscount;
 	@Column(name="expiry_date")
 	private String expiryDate;
+	@Column(name="riscard_ex_date")
+	private String risCardExpDate;
+	@Column(name="riscard_money")
+	private String risCardMoney;
 	@Column(name="ris_card_rule")
 	private String risCardRule;
 	@Column(name="allow_recharge")
@@ -51,8 +59,10 @@ public class MemCardManage {
 	private String rebateExpire;
 	@Column(name="considerations")
 	private String considerations;
-	@Transient
-	private List<MemCardRising> memCardRisings;
+	@Column(name="card_status")
+	private String cardStatus;
+	@Column(name="create_date")
+	private String createDate;
 	@Transient
 	private List<MemCardItems> memCardItems;
 	public int getId() {
@@ -96,6 +106,18 @@ public class MemCardManage {
 	}
 	public void setExpiryDate(String expiryDate) {
 		this.expiryDate = expiryDate;
+	}
+	public String getRisCardExpDate() {
+		return risCardExpDate;
+	}
+	public void setRisCardExpDate(String risCardExpDate) {
+		this.risCardExpDate = risCardExpDate;
+	}
+	public String getRisCardMoney() {
+		return risCardMoney;
+	}
+	public void setRisCardMoney(String risCardMoney) {
+		this.risCardMoney = risCardMoney;
 	}
 	public String getRisCardRule() {
 		return risCardRule;
@@ -163,11 +185,17 @@ public class MemCardManage {
 	public void setConsiderations(String considerations) {
 		this.considerations = considerations;
 	}
-	public List<MemCardRising> getMemCardRisings() {
-		return memCardRisings;
+	public String getCardStatus() {
+		return cardStatus;
 	}
-	public void setMemCardRisings(List<MemCardRising> memCardRisings) {
-		this.memCardRisings = memCardRisings;
+	public void setCardStatus(String cardStatus) {
+		this.cardStatus = cardStatus;
+	}
+	public String getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
 	}
 	public List<MemCardItems> getMemCardItems() {
 		return memCardItems;
@@ -175,37 +203,48 @@ public class MemCardManage {
 	public void setMemCardItems(List<MemCardItems> memCardItems) {
 		this.memCardItems = memCardItems;
 	}
+	// 去掉重复的会员卡记录
+	public static List<MemCardManage> removeDuplicateMemCardManage(List<MemCardManage> originMemCardManages, List<MemCardManage> targetMemCardManages) {
+		List<MemCardManage> resultMemCardManages = new ArrayList<MemCardManage>();
+		resultMemCardManages.addAll(targetMemCardManages);
+		for(MemCardManage originMemCardManage : originMemCardManages) {
+			for(MemCardManage targetMemCardManage : targetMemCardManages) {
+				if(originMemCardManage.getCardName().equals(targetMemCardManage.getCardName())) {
+					resultMemCardManages.remove(targetMemCardManage);
+				}
+			}
+		}
+		return resultMemCardManages;
+	}
+	// 批量设置会员卡建卡日期
+	public static List<MemCardManage> setCardCreateDate(List<MemCardManage> memCardManages) {
+		for(MemCardManage memCardManage : memCardManages) {
+			memCardManage.setCreateDate(CommonUtils.formatDate(new Date(), DateFormat.FORMAT1.getFormat()));
+		}
+		return memCardManages;
+	}
+	// 绑定会员卡和尊享项目
+	public static List<MemCardManage> bindMemCardItems(List<MemCardManage> memCardManages, List<MemCardItems> memCardItems) {
+		for(MemCardManage memCardManage : memCardManages) {
+			List<MemCardItems> bindMemCardItems = new ArrayList<MemCardItems>();
+			for(MemCardItems memCardItem: memCardItems) {
+				if(memCardManage.getId() == memCardItem.getMemCardId()) {
+					bindMemCardItems.add(memCardItem);
+				}
+			}
+			memCardManage.setMemCardItems(bindMemCardItems);
+		}
+		return memCardManages;
+	}
 	@Override
 	public String toString() {
 		return "MemCardManage [id=" + id + ", storeId=" + storeId + ", cardName=" + cardName + ", memPrice=" + memPrice
 				+ ", singleDiscount=" + singleDiscount + ", productDiscount=" + productDiscount + ", expiryDate="
-				+ expiryDate + ", risCardRule=" + risCardRule + ", allowRecharge=" + allowRecharge + ", memDate="
-				+ memDate + ", memTimes=" + memTimes + ", memItems=" + memItems + ", memDiscount=" + memDiscount
+				+ expiryDate + ", risCardExpDate=" + risCardExpDate + ", risCardMoney=" + risCardMoney
+				+ ", risCardRule=" + risCardRule + ", allowRecharge=" + allowRecharge + ", memDate=" + memDate
+				+ ", memTimes=" + memTimes + ", memItems=" + memItems + ", memDiscount=" + memDiscount
 				+ ", rebateTimes=" + rebateTimes + ", rebateItems=" + rebateItems + ", rebateCash=" + rebateCash
-				+ ", rebateExpire=" + rebateExpire + ", considerations=" + considerations + ", memCardRisings="
-				+ memCardRisings + ", memCardItems=" + memCardItems + "]";
-	}
-	// 将会员卡信息与对应的升级卡信息关联
-	public static List<MemCardManage> bindMemCardRisingAndCardItems(List<MemCardManage> memCardManages, List<MemCardRising> memCardRisings, List<MemCardItems> memCardItems) {
-		for(MemCardManage memCardManage : memCardManages) {
-			List<MemCardRising> tempMemCardRisings = new ArrayList<MemCardRising>();
-			for(MemCardRising memCardRising : memCardRisings) {
-				if(memCardManage.getId() == memCardRising.getMemCardId()) {
-					tempMemCardRisings.add(memCardRising);
-				}
-			}
-			memCardManage.setMemCardRisings(tempMemCardRisings);
-		}
-		// 将会员卡信息与对应的尊享项目信息关联
-		for(MemCardManage memCardManage : memCardManages) {
-			List<MemCardItems> tempMemCardItems = new ArrayList<MemCardItems>();
-			for(MemCardItems memCardItem : memCardItems) {
-				if(memCardManage.getId() == memCardItem.getMemCardId()) {
-					tempMemCardItems.add(memCardItem);
-				}
-			}
-			memCardManage.setMemCardItems(tempMemCardItems);
-		}
-		return memCardManages;
+				+ ", rebateExpire=" + rebateExpire + ", considerations=" + considerations + ", cardStatus=" + cardStatus
+				+ ", createDate=" + createDate + "]";
 	}
 }

@@ -16,6 +16,9 @@ public interface MemCardItemsRepository extends JpaRepository<MemCardItems, Inte
 	@Query(value="select * from membership_card_items where store_id=:storeId and mem_card_id=:memCardId", nativeQuery=true)
 	public List<MemCardItems> getMemCardItemsByMemCardId(@Param("storeId")int storeId, @Param("memCardId")int memCardId);
 	
+	@Query(value="select * from membership_card_items where store_id=:storeId and mem_card_id in(:memCardIds)", nativeQuery=true)
+	public List<MemCardItems> getMemCardItemsByMemCardIds(@Param("storeId")int storeId, @Param("memCardIds")List<Integer>memCardIds);
+	
 	@Query(value="delete from membership_card_items where store_id=:storeId", nativeQuery=true)
 	@Modifying
 	public int deleteMemCardItemsByStoreId(@Param("storeId")int storeId);
@@ -23,6 +26,4 @@ public interface MemCardItemsRepository extends JpaRepository<MemCardItems, Inte
 	@Query(value="delete from membership_card_items where store_id=:storeId and mem_card_id=:memCardId", nativeQuery=true)
 	@Modifying
 	public int deleteMemCardItemsByMemCardId(@Param("storeId")int storeId, @Param("memCardId")int memCardId);
-	
-	
 }

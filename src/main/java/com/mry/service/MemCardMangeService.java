@@ -1,19 +1,18 @@
 package com.mry.service;
 
+import java.util.Date;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.mry.enums.DateFormat;
 import com.mry.model.MemCardItems;
 import com.mry.model.MemCardManage;
-import com.mry.model.MemCardRising;
 import com.mry.param.MemCardManageParam;
 import com.mry.repository.MemCardItemsRepository;
 import com.mry.repository.MemCardManageRepository;
-import com.mry.repository.MemCardRisingRepository;
+import com.mry.utils.CommonUtils;
 
 @Service
 @Transactional
@@ -21,83 +20,112 @@ public class MemCardMangeService {
 	@Resource
 	private MemCardManageRepository memCardManageRepository;
 	@Resource
-	private MemCardRisingRepository memCardRisingRepository;
-	@Resource
 	private MemCardItemsRepository memCardItemsRepository;
 	
-	// 添加一条会员卡管理记录
-	public int addMemCardManageInfo(MemCardManageParam params) {
-		// 如果数据库已经存在 card_name 相同的记录, 原来的记录将被覆盖
-		int storeId = params.getStoreId();
-		MemCardManage memCardManage = params.getMemCardManage();
-		MemCardManage originMemCardManage = memCardManageRepository.getMemCardManageByCardName(storeId, memCardManage.getCardName());
-		if(null != originMemCardManage) {
-			memCardManage.setId(originMemCardManage.getId());
-			// 将与会员卡记录关联的升级卡信息全部删除
-			memCardRisingRepository.deleteMemCardRisingByMemCardId(storeId, memCardManage.getId());
-			// 将与会员卡记录关联的尊享项目信息全部删除
-			memCardItemsRepository.deleteMemCardItemsByMemCardId(storeId, memCardManage.getId());
-		}
-		// 保存会员卡管理记录基本信息
-		memCardManage.setStoreId(storeId);
-		memCardManageRepository.save(memCardManage);
-		// 设置升级卡记录的 storeId 并保存
-		List<MemCardRising> memCardRisings = params.setMemCardIdForMemCardRisings(memCardManage.getId());
-		memCardRisingRepository.saveAll(memCardRisings);
-		
-		// 设置尊享项目记录的  storeId 并保存
-		List<MemCardItems> memCardItems = params.setMemCardIdForMemCardItems(memCardManage.getId());
-		memCardItemsRepository.saveAll(memCardItems);
+	
+	// 添加一组会员卡管理记录
+	public int addMemCardManageInfo(List<MemCardManage> memCardManages) {
+		int storeId = memCardManages.get(0).getStoreId();
+		List<MemCardManage> originMemCardManages = memCardManageRepository.getMemCardManageByStoreId(storeId);
+		// 去掉重复记录
+		List<MemCardManage> uniqueMemCardManages = MemCardManage.removeDuplicateMemCardManage(originMemCardManages, memCardManages);
+		// 批量设置建卡日期
+		List<MemCardManage> resultMemCardManages = MemCardManage.setCardCreateDate(uniqueMemCardManages);
+		memCardManageRepository.saveAll(resultMemCardManages);
 		return storeId;
 	} 
 	
 	// 更新一条会员卡记录
-	public int updateMemCardManageInfo(MemCardManageParam params) {
-		// 暂定
-		return params.getStoreId();
-	}
-	
-	// 根据 storeId 查询所有会员卡记录, 以及与会员卡关联的升级卡记录和尊享项目记录
-	public List<MemCardManage> getMemCardManageInfoByStoreId(int storeId) {
-		List<MemCardManage> memCardManages = memCardManageRepository.getMemCardManageByStoreId(storeId);
-		if(memCardManages.size() > 0) {
-			List<MemCardRising> memCardRisings = memCardRisingRepository.getMemCardRisingByStoreId(storeId);
-			List<MemCardItems> memCardItems = memCardItemsRepository.getMemCardItemsByStoreId(storeId);
-			List<MemCardManage> memCardManagesInfo = MemCardManage.bindMemCardRisingAndCardItems(memCardManages, memCardRisings, memCardItems);
-			return memCardManagesInfo;
+	public int editMemCardManageInfo(MemCardManageParam memCardManageParam) {
+		MemCardManage memCardManage = memCardManageParam.getMemCardManage();
+		// 如果前端没有传递日期，后台将保存当前日期为建卡日期
+		if(CommonUtils.isBlank(memCardManage.getCreateDate())) {
+			memCardManage.setCreateDate(CommonUtils.formatDate(new Date(), DateFormat.FORMAT1.getFormat()));
 		}
-		return null;
+		// 保存会员卡基本信息
+		memCardManageRepository.save(memCardManage);
+		// 获取传递过来的会员卡尊享项目
+		List<MemCardItems> memCardItems = memCardManageParam.getMemCardItems();
+		// 获取会员卡可能已存在的会员卡尊享项目
+		List<MemCardItems> originMemCardItems = memCardItemsRepository.getMemCardItemsByMemCardId(memCardManage.getStoreId(), memCardManage.getId());
+		// 如果已经存在有会员卡尊享项目，就先清空，重新添加
+		if(!originMemCardItems.isEmpty()) {
+			memCardItemsRepository.deleteAll(originMemCardItems);
+		}
+		// 保存会员卡尊享项目
+		memCardItemsRepository.saveAll(memCardItems);
+		return memCardManage.getId();
 	}
 	
-	// 根据 storeId + 会员卡名 查询一条会员卡记录, 以及与会员卡关联的升级卡记录和尊享项目记录
+	// 根据 storeId + 会员卡名查询一条会员卡记录, 以及与会员卡关联的尊享项目记录
 	public MemCardManage getMemCardManageInfoByCardName(int storeId, String cardName) {
+		// 获取会员卡基本信息
 		MemCardManage memCardManage = memCardManageRepository.getMemCardManageByCardName(storeId, cardName);
 		if(null != memCardManage) {
-			List<MemCardRising> memCardRisings = memCardRisingRepository.getCardRisingByMemCardId(storeId, memCardManage.getId());
 			List<MemCardItems> memCardItems = memCardItemsRepository.getMemCardItemsByMemCardId(storeId, memCardManage.getId());
-			memCardManage.setMemCardRisings(memCardRisings);
 			memCardManage.setMemCardItems(memCardItems);
 			return memCardManage;
 		}
 		return null;
 	}
 	
-	// 根据 storeId 删除所有会员卡记录, 以及与会员卡关联的升级卡记录和尊享项目记录
-	public int deleteMemCardManageInfoByStoreId(int storeId) {
-		int delMemCard = memCardManageRepository.deleteMemCardManageByStoreId(storeId);
-		int delCardRising = memCardRisingRepository.deleteMemCardRisingByStoreId(storeId);
-		int delCardItems = memCardItemsRepository.deleteMemCardItemsByStoreId(storeId);
-		return delMemCard + delCardRising + delCardItems;
+	// 根据 storeId 查询所有会员卡记录, 以及与会员卡关联的尊享项目记录
+	public List<MemCardManage> getMemCardManageInfoByStoreId(int storeId) {
+		// 获取会员卡基本信息
+		List<MemCardManage> memCardManages = memCardManageRepository.getMemCardManageByStoreId(storeId);
+		if(!memCardManages.isEmpty()) {
+			// 取出查询出的会员卡的 id
+			List<Integer> memCardIds = memCardManages.stream().map(MemCardManage::getId).collect(Collectors.toList());
+			// 获取会员卡尊享项目
+			List<MemCardItems> memCardItems = memCardItemsRepository.getMemCardItemsByMemCardIds(storeId, memCardIds);
+			// 绑定会员卡和对应的尊享项目
+			return MemCardManage.bindMemCardItems(memCardManages, memCardItems);
+		}
+		return null;
 	}
 	
-	// 根据 storeId + 会员卡名 删除一条记录, 以及与会员卡关联的升级卡记录和尊享项目记录
+	// 根据 storeId + 会员卡状态查询一组会员卡记录，以及与会员卡关联的尊享项目记录
+	public List<MemCardManage> getMemCardManageInfoByCardStatus(int storeId, String cardStatus) {
+		// 获取会员卡基本信息
+		List<MemCardManage> memCardManages = memCardManageRepository.getMemCardManageInfoByCardStatus(storeId, cardStatus);
+		if(!memCardManages.isEmpty()) {
+			// 取出查询出的会员卡的 id
+			List<Integer> memCardIds = memCardManages.stream().map(MemCardManage::getId).collect(Collectors.toList());
+			// 获取会员卡尊享项目
+			List<MemCardItems> memCardItems = memCardItemsRepository.getMemCardItemsByMemCardIds(storeId, memCardIds);
+			// 绑定会员卡和对应的尊享项目
+			return MemCardManage.bindMemCardItems(memCardManages, memCardItems);
+		}
+		return null;
+	}
+	
+	// 根据 storeId + id 删除一条会员卡记录以及与会员卡关联的尊享项目记录
+	public int deleteMemCardManageInfoById(int storeId, int id) {
+		// 删除基本的会员卡信息
+		int deleteMemCardNum = memCardManageRepository.deleteMemCardManageInfoById(storeId, id);
+		// 删除会员卡关联的尊享项目记录
+		int deleteMemCardItemsNum = memCardItemsRepository.deleteMemCardItemsByMemCardId(storeId, id);
+		return deleteMemCardNum + deleteMemCardItemsNum;
+	}
+	
+	// 根据 storeId 删除所有会员卡记录, 以及与会员卡关联的尊享项目记录
+	public int deleteMemCardManageInfoByStoreId(int storeId) {
+		// 删除基本的会员卡信息
+		int deleteMemCardNum = memCardManageRepository.deleteMemCardManageByStoreId(storeId);
+		// 删除会员卡关联的尊享项目记录
+		int deleteMemCardItemsNum = memCardItemsRepository.deleteMemCardItemsByStoreId(storeId);
+		return deleteMemCardNum + deleteMemCardItemsNum;
+	}
+	
+	// 根据 storeId + 会员卡名 删除一条记录, 以及与会员卡关联的尊享项目记录
 	public int deleteMemCardManageInfoByCardName(int storeId, String cardName) {
 		MemCardManage memCardManage = memCardManageRepository.getMemCardManageByCardName(storeId, cardName);
 		if(null != memCardManage) {
-			int delMemCard = memCardManageRepository.deleteMemCardManageByCardName(storeId, cardName);
-			int delCardRising = memCardRisingRepository.deleteMemCardRisingByMemCardId(storeId, memCardManage.getId());
-			int delCardItems = memCardItemsRepository.deleteMemCardItemsByMemCardId(storeId, memCardManage.getId());
-			return delMemCard + delCardRising + delCardItems;
+			// 删除基本的会员卡信息
+			int deleteMemCardNum = memCardManageRepository.deleteMemCardManageByCardName(storeId, cardName);
+			// 删除会员卡关联的尊享项目记录
+			int deleteMemCardItemsNum = memCardItemsRepository.deleteMemCardItemsByMemCardId(storeId, memCardManage.getId());
+			return deleteMemCardNum + deleteMemCardItemsNum; 
 		}
 		return 0;
 	}
