@@ -30,6 +30,8 @@ public class RoomType {
 	private String showerAndBubble;
 	@Column(name="shower_toilet_bubble")
 	private String showerAndToiletAndBubble;
+	@Column(name="no_facilities")
+	private String noFacilities;
 	@Column(name="store_id")
 	private int storeId;
 	public int getId() {
@@ -86,6 +88,12 @@ public class RoomType {
 	public void setShowerAndToiletAndBubble(String showerAndToiletAndBubble) {
 		this.showerAndToiletAndBubble = showerAndToiletAndBubble;
 	}
+	public String getNoFacilities() {
+		return noFacilities;
+	}
+	public void setNoFacilities(String noFacilities) {
+		this.noFacilities = noFacilities;
+	}
 	public int getStoreId() {
 		return storeId;
 	}
@@ -97,12 +105,12 @@ public class RoomType {
 		return "RoomType [id=" + id + ", type=" + type + ", onlyShower=" + onlyShower + ", onlyToilet=" + onlyToilet
 				+ ", onlyBubble=" + onlyBubble + ", showerAndToilet=" + showerAndToilet + ", bubbleAndToilet="
 				+ bubbleAndToilet + ", showerAndBubble=" + showerAndBubble + ", showerAndToiletAndBubble="
-				+ showerAndToiletAndBubble + ", storeId=" + storeId + "]";
+				+ showerAndToiletAndBubble + ", noFacilities=" + noFacilities + ", storeId=" + storeId + "]";
 	}
 	// 计算房间总数
 	public int getRoomNumbers() {
 		int count = 0;
-		String[] types = new String[]{onlyShower, onlyToilet, onlyBubble, showerAndToilet, bubbleAndToilet, showerAndBubble, showerAndToiletAndBubble};
+		String[] types = new String[]{onlyShower, onlyToilet, onlyBubble, showerAndToilet, bubbleAndToilet, showerAndBubble, showerAndToiletAndBubble, noFacilities};
 		for(String type : types) {
 			if(!CommonUtils.isBlank(type)) {
 				count += Integer.parseInt(type);
