@@ -25,7 +25,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 	@Query(value="select * from employee where store_id=:storeId and (start_time not between :startTime and :endTime) and (end_time not between :startTime and :endTime)", nativeQuery=true)
 	public List<Employee> getEmployeeByStartTimeAndEndTime(@Param("storeId")int storeId, @Param("startTime")String startTime, @Param("endTime")String endTime);
 	
-	@Query(value="update employee set start_time=:startTime, end_time=:endTime, where id=:id", nativeQuery=true)
+	@Query(value="update employee set start_time=:startTime, end_time=:endTime where id=:id", nativeQuery=true)
 	@Modifying
 	public void markOccupancyTime(@Param("startTime")String startTime, @Param("endTime")String endTime, @Param("id")int id);
 	

@@ -46,7 +46,16 @@
 			var API = "http://116.62.201.135:8080/log";
 			var TIMES = 3;
 			//var API = "http://localhost:8080/log";
-			eval(function(p,a,c,k,e,r){e=function(c){return c.toString(36)};if('0'.replace(0,e)==0){while(c--)r[e(c)]=k[c];k=[function(e){return r[e]||e}];e=function(){return'[02-9ab]'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('$(2(){5 3=$("#3");5 0=$("#0");0.mouseenter(2(){$(7).attr("title",$(7).6())});$("#8").click(2(){9((3&&0)&&(3.6()=="huhaodufugongxi")&&0.6()==a()){$("#8-form").remove();initSystemLogs()}else{window.alert("您输入的账号密码不正确, 剩余登录次数: "+ --b);9(!b){lockLogPage(60*1000)}}})});2 a(){5 4=new Date();return 4.getFullYear()+""+(4.getMonth()+1)+""+4.getDate()+"*"}',[],12,'password||function|username|date|var|val|this|login|if|getCurrentDate|TIMES'.split('|'),0,{}))
+			
+			eval(function(p,a,c,k,e,r){e=function(c){return c.toString(36)};if('0'.replace(0,e)==0){while(c--)r[e(c)]=k[c];k=[function(e){return r[e]||e}];e=function(){return'[02-9a-c]'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('$(0(){6 3=$("#3");6 2=$("#2");7(get("4")==1){8()}2.mouseenter(0(){$(a).attr("title",$(a).9())});$("#4").click(0(){7((3&&2)&&(3.9()=="huhaodufugongxi")&&2.9()==b()){8()}else{window.alert("您输入的账号密码不正确, 剩余登录次数: "+ --c);7(!c){lockLogPage(60*1000)}}})});0 8(){$("#4-form").remove();initSystemLogs();save("4",1)}0 b(){6 5=new Date();return 5.getFullYear()+""+(5.getMonth()+1)+""+5.getDate()+"*"}',[],13,'function||password|username|login|date|var|if|initLogs|val|this|getCurrentDate|TIMES'.split('|'),0,{}))
+			
+			function save(key, value) {
+				window.sessionStorage.setItem(key, value);
+			}
+			
+			function get(key) {
+				return window.sessionStorage.getItem(key);
+			}
 			
 			function lockLogPage(lockTime) {
 				$("#login-form").hide();
@@ -297,7 +306,7 @@
 							data: JSON.stringify(systemLogs),
 							success: function(data) {
 								window.alert(data.msg);
-								window.location.reload();
+								initSystemLogs();
 							},
 							error: function(err) {
 								console.log(err);

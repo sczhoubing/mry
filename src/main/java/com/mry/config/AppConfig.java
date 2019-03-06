@@ -23,6 +23,7 @@ public class AppConfig {
         corsConfiguration.addAllowedHeader("*"); 
         corsConfiguration.addAllowedMethod("*"); 
         corsConfiguration.setAllowCredentials(true); 
+        corsConfiguration.setMaxAge(3600L);
         source.registerCorsConfiguration("/**", corsConfiguration); 
         return new CorsFilter(source);
     }

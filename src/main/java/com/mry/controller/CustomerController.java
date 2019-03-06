@@ -24,7 +24,6 @@ import com.mry.service.CustomerService;
 import com.mry.service.StoreService;
 import com.mry.utils.CommonUtils;
 
-
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
