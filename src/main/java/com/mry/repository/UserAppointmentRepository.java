@@ -12,6 +12,9 @@ public interface UserAppointmentRepository extends JpaRepository<UserAppointment
 	@Modifying
 	public void markUserAppointmentInfo(@Param("id")int id, @Param("status") String status);
 	
+	@Query(value="select * from user_appointment where store_id=:storeId and id=:id", nativeQuery=true)
+	public UserAppointment getUserAppointmentById(@Param("storeId")int storeId, @Param("id")int id);
+	
 	@Query(value="select * from user_appointment where store_id=:storeId and user_id=:userId and start_time like %:startTime%", nativeQuery=true)
 	public List<UserAppointment> getUserAppointmentByStartTime(@Param("storeId")int storeId, @Param("userId")int userId, @Param("startTime")String startTime);
 	

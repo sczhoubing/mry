@@ -45,10 +45,8 @@ public class UserAppointmentService {
 	public int editUserAppointmentInfo(UserAppointment userAppointment) {
 		// 如果状态表示已完成，应当解除床位和技师被占用的时间段；如果服务被取消也应解除床位和技师被占用的时间段
 		if(userAppointment.getStatus().equals("1") || userAppointment.getStatus().equals("2")) {
-			// 解除床位被占用时间段
-			bedInfoManageRepository.markOccupancyTime(DateFormat.FORMAT3.getFormat(), DateFormat.FORMAT3.getFormat(), userAppointment.getBedId());
-			// 解除技师被占用时间段
-			employeeRepository.markOccupancyTime(DateFormat.FORMAT3.getFormat(), DateFormat.FORMAT3.getFormat(), userAppointment.getTechnicianId());
+			// 解除床位和技师被占用时间
+			markBedAndTechnicianOccupancyTime(userAppointment.getBedId(), userAppointment.getTechnicianId());
 		}
 		userAppointmentRepository.save(userAppointment);
 		return userAppointment.getId();
@@ -59,10 +57,8 @@ public class UserAppointmentService {
 		userAppointmentRepository.markUserAppointmentInfo(id, status);
 		// 1 表示完成服务，2 表示取消服务
 		if(status.equals("1") || status.equals("2")) {
-			// 解除床位被占用时间段
-			bedInfoManageRepository.markOccupancyTime(DateFormat.FORMAT3.getFormat(), DateFormat.FORMAT3.getFormat(), bedId);
-			// 解除技师被占用时间段
-			employeeRepository.markOccupancyTime(DateFormat.FORMAT3.getFormat(), DateFormat.FORMAT3.getFormat(), technicianId);
+			// 解除床位和技师被占用时间
+			markBedAndTechnicianOccupancyTime(bedId, technicianId);
 		}
 		return id;
 	}
@@ -102,16 +98,43 @@ public class UserAppointmentService {
 	
 	// 根据 用户预约信息 记录的 id 删除一条记录
 	public int deleteUserAppointmentById(int storeId, int id) {
+		UserAppointment userAppointment = userAppointmentRepository.getUserAppointmentById(storeId, id);
+		if(null != userAppointment) {
+			// 解除床位和技师被占用时间
+			markBedAndTechnicianOccupancyTime(userAppointment.getBedId(), userAppointment.getTechnicianId());
+		}
 		return userAppointmentRepository.deleteUserAppointmentById(storeId, id);
 	}
 	
 	// 根据 storeId + userId 删除该用户下所有预约信息
 	public int deleteUserAppointmentByUserId(int storeId, int userId) {
+		List<UserAppointment> userAppointments = userAppointmentRepository.getUserAppointmentByUserId(storeId, userId);
+		if(userAppointments.isEmpty()) {
+			for(UserAppointment userAppointment : userAppointments) {
+				// 解除床位和技师被占用时间
+				markBedAndTechnicianOccupancyTime(userAppointment.getBedId(), userAppointment.getTechnicianId());
+			}
+		}
 		return userAppointmentRepository.deleteUserAppointmentByUserId(storeId, userId);
 	}
 	
 	// 根据 storeId 删除该门店下所有用户预约信息
 	public int deleteUserAppointmentByStoreId(int storeId) {
+		List<UserAppointment> userAppointments = userAppointmentRepository.getgetUserAppointmentByStoreId(storeId);
+		if(userAppointments.isEmpty()) {
+			for(UserAppointment userAppointment : userAppointments) {
+				// 解除床位和技师被占用时间
+				markBedAndTechnicianOccupancyTime(userAppointment.getBedId(), userAppointment.getTechnicianId());
+			}
+		}
 		return userAppointmentRepository.deleteUserAppointmentByStoreId(storeId);
+	}
+	
+	// 解除技师和床位被占用时间段
+	public void markBedAndTechnicianOccupancyTime(int bedId, int technicianId) {
+		// 解除床位被占用时间段
+		bedInfoManageRepository.markOccupancyTime(DateFormat.FORMAT3.getFormat(), DateFormat.FORMAT3.getFormat(), bedId);
+		// 解除技师被占用时间段
+		employeeRepository.markOccupancyTime(DateFormat.FORMAT3.getFormat(), DateFormat.FORMAT3.getFormat(), technicianId);
 	}
 }
