@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mry.model.ProblemAnalysis;
+import com.mry.param.ProblemAnalysisParam;
 import com.mry.service.ProblemAnalysisService;
 
 @RestController
@@ -22,16 +22,16 @@ public class ProblemAnalysisController {
 	private ProblemAnalysisService problemAnalysisService;
 	
 	@PostMapping("/add")
-	public Map<String, Object> addProblemAnalysisInfo(@RequestBody ProblemAnalysis problemAnalysis) {
+	public Map<String, Object> addProblemAnalysisInfo(@RequestBody ProblemAnalysisParam problemAnalysisParam) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("msg", problemAnalysisService.addProblemAnalysisInfo(problemAnalysis));
+		result.put("msg", problemAnalysisService.addProblemAnalysisInfo(problemAnalysisParam));
 		return result;
 	}
 	
 	@PostMapping("/edit")
-	public Map<String, Object> editProblemAnalysisInfo(@RequestBody ProblemAnalysis problemAnalysis) {
+	public Map<String, Object> editProblemAnalysisInfo(@RequestBody ProblemAnalysisParam problemAnalysisParam) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("msg", problemAnalysisService.editProblemAnalysisInfo(problemAnalysis));
+		result.put("msg", problemAnalysisService.editProblemAnalysisInfo(problemAnalysisParam));
 		return result;
 	}
 	

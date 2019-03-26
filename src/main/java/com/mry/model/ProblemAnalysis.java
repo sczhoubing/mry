@@ -1,5 +1,6 @@
 package com.mry.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="problem_analysis")
@@ -23,12 +25,12 @@ public class ProblemAnalysis {
 	private String scheme;
 	@Column(name="describes")
 	private String describes;
-	@Column(name="solution")
-	private String solution;
 	@Column(name="status")
 	private String status;
 	@Column(name="add_date")
 	private String addDate;
+	@Transient
+	private List<UserSolutions> userSolutions;
 	public int getId() {
 		return id;
 	}
@@ -59,12 +61,6 @@ public class ProblemAnalysis {
 	public void setDescribes(String describes) {
 		this.describes = describes;
 	}
-	public String getSolution() {
-		return solution;
-	}
-	public void setSolution(String solution) {
-		this.solution = solution;
-	}
 	public String getStatus() {
 		return status;
 	}
@@ -76,6 +72,12 @@ public class ProblemAnalysis {
 	}
 	public void setAddDate(String addDate) {
 		this.addDate = addDate;
+	}
+	public List<UserSolutions> getUserSolutions() {
+		return userSolutions;
+	}
+	public void setUserSolutions(List<UserSolutions> userSolutions) {
+		this.userSolutions = userSolutions;
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -103,11 +105,6 @@ public class ProblemAnalysis {
 				return false;
 		} else if (!scheme.equals(other.scheme))
 			return false;
-		if (solution == null) {
-			if (other.solution != null)
-				return false;
-		} else if (!solution.equals(other.solution))
-			return false;
 		if (status == null) {
 			if (other.status != null)
 				return false;
@@ -130,10 +127,26 @@ public class ProblemAnalysis {
 		}
 		return duplicateProblemAnalysis;
 	}
-	@Override
-	public String toString() {
-		return "ProblemAnalysis [id=" + id + ", storeId=" + storeId + ", userId=" + userId + ", scheme=" + scheme
-				+ ", describes=" + describes + ", solution=" + solution + ", status=" + status + ", addDate=" + addDate
-				+ "]";
+	// 关联与问题分析相关的用户方案记录
+	public static List<UserSolutions> relateUserSolutions(int storeId, int userId, int problemId, List<UserSolutions> userSolutions) {
+		for(UserSolutions userSolution : userSolutions) {
+			userSolution.setStoreId(storeId);
+			userSolution.setUserId(userId);
+			userSolution.setProblemId(problemId);
+		}
+		return userSolutions;
+	}
+	// 关联一组问题分析和用户方案组
+	public static List<ProblemAnalysis> bindProblemAnalysisAndUserSolutions(List<ProblemAnalysis> problemAnalysiss, List<UserSolutions> userSolutions) {
+		for(ProblemAnalysis problemAnalysis : problemAnalysiss) {
+			List<UserSolutions> tempUserSolutions = new ArrayList<UserSolutions>();
+			for(UserSolutions userSolution : userSolutions) {
+				if(problemAnalysis.getId() == userSolution.getProblemId()) {
+					tempUserSolutions.add(userSolution);
+				}
+			}
+			problemAnalysis.setUserSolutions(tempUserSolutions);
+		}
+		return problemAnalysiss;
 	}
 }
