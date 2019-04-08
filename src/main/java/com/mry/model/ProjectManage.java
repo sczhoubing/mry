@@ -29,6 +29,8 @@ public class ProjectManage {
 	private String projectDate;
 	@Column(name="project_status")
 	private String projectStatus;
+	@Column(name="symptom")
+	private String symptom;
 	public int getId() {
 		return id;
 	}
@@ -77,6 +79,12 @@ public class ProjectManage {
 	public void setProjectStatus(String projectStatus) {
 		this.projectStatus = projectStatus;
 	}
+	public String getSymptom() {
+		return symptom;
+	}
+	public void setSymptom(String symptom) {
+		this.symptom = symptom;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -115,6 +123,11 @@ public class ProjectManage {
 			return false;
 		if (storeId != other.storeId)
 			return false;
+		if (symptom == null) {
+			if (other.symptom != null)
+				return false;
+		} else if (!symptom.equals(other.symptom))
+			return false;
 		if (userId != other.userId)
 			return false;
 		return true;
@@ -132,11 +145,10 @@ public class ProjectManage {
 		}
 		return resultProjectManages;
 	}
-	
 	@Override
 	public String toString() {
 		return "ProjectManage [id=" + id + ", userId=" + userId + ", storeId=" + storeId + ", projectType="
 				+ projectType + ", projectName=" + projectName + ", projectPrice=" + projectPrice + ", projectDate="
-				+ projectDate + ", projectStatus=" + projectStatus + "]";
+				+ projectDate + ", projectStatus=" + projectStatus + ", symptom=" + symptom + "]";
 	}
 }
