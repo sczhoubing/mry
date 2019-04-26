@@ -2,6 +2,7 @@ package com.mry.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,9 +26,11 @@ public class CommonController {
 	@PostMapping("/save")
 	public Map<String, Object> save(@RequestBody JSONObject param, HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		session.setAttribute(param.getString("key"), param.getString("value"));
+		String key = UUID.randomUUID().toString();
+		session.setAttribute(key, param.getString("value"));
 		session.setMaxInactiveInterval(param.getIntValue("expire"));
 		result.put("msg", 0);
+		result.put("key", key);
 		return result;
 	}
 	
