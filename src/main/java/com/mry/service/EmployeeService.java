@@ -29,7 +29,8 @@ public class EmployeeService {
 	
 	// 添加一条员工信息
 	public int addEmployeeInfo(Employee employee) {
-		Employee originEmployee = employeeRepository.getEmployeeByIdCard(employee.getStoreId(), employee.getIdCard());
+		//Employee originEmployee = employeeRepository.getEmployeeByIdCard(employee.getStoreId(), employee.getIdCard());
+		Employee originEmployee = employeeRepository.getEmployeeByPhoneNum(employee.getStoreId(), employee.getPhoneNum());
 		// 员工已经存在的话将会覆盖
 		if(null != originEmployee) {
 			employee.setId(originEmployee.getId());
@@ -90,7 +91,7 @@ public class EmployeeService {
 	}
 	
 	// 根据 idCard 删除一条员工信息
-	public int deleteEmployeeByIdCard(int storeId, String idCard) {
+	/*public int deleteEmployeeByIdCard(int storeId, String idCard) {
 		Employee employee = employeeRepository.getEmployeeByIdCard(storeId, idCard);
 		int delEmp = 0, delCus = 0;
 		if(null != employee) {
@@ -98,6 +99,17 @@ public class EmployeeService {
 			delEmp = employeeRepository.deleteEmployeeByIdCard(storeId, idCard);
 		}
 		return delCus + delEmp;
+	}*/
+	
+	// 根据 phoneNum 删除一条员工信息
+	public int deleteEmployeeByPhoneNum(int storeId, String phoneNum) {
+		Employee employee = employeeRepository.getEmployeeByPhoneNum(storeId, phoneNum);
+		int delEmp = 0, delCus = 0;
+		if(null != employee) {
+			delCus = customerRepository.deleteCustomerByAccount(employee.getPhoneNum());
+			delEmp = employeeRepository.deleteEmployeeByPhoneNum(storeId, phoneNum);
+		}
+		return delEmp + delCus;
 	}
 	
 	// 根据 storeId 删除门店下所有员工信息

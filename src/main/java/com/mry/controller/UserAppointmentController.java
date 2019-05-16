@@ -44,7 +44,7 @@ public class UserAppointmentController {
 		return result;
 	}
 	
-	@GetMapping("/store/{storeId}")
+/*	@GetMapping("/store/{storeId}")
 	public Map<String, Object> getUserAppointmentInfo(@PathVariable("storeId")int storeId, Integer userId, String startTime, String phoneNum, String idCard) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if(null != userId && !CommonUtils.isBlank(startTime) && CommonUtils.isBlank(phoneNum) && CommonUtils.isBlank(idCard)) {
@@ -56,6 +56,21 @@ public class UserAppointmentController {
 		} else if(null == userId && CommonUtils.isBlank(startTime) && CommonUtils.isBlank(phoneNum) && !CommonUtils.isBlank(idCard)) {
 			result.put("userAppointmentInfo", userAppointmentService.getUserAppointmentByUserIdCard(storeId, idCard));
 		} else if(null == userId && CommonUtils.isBlank(startTime) && CommonUtils.isBlank(phoneNum) && CommonUtils.isBlank(idCard)) {
+			result.put("userAppointmentInfo", userAppointmentService.getUserAppointmentByStoreId(storeId));
+		}
+		return result;
+	}*/
+	
+	@GetMapping("/store/{storeId}")
+	public Map<String, Object> getUserAppointmentInfo(@PathVariable("storeId")int storeId, Integer userId, String startTime, String phoneNum) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if(null != userId && !CommonUtils.isBlank(startTime) && CommonUtils.isBlank(phoneNum)) {
+			result.put("userAppointmentInfo", userAppointmentService.getUserAppointmentByStartTime(storeId, userId, startTime));
+		} else if(null != userId && CommonUtils.isBlank(startTime) && CommonUtils.isBlank(phoneNum)) {
+			result.put("userAppointmentInfo", userAppointmentService.getUserAppointmentByUserId(storeId, userId));
+		} else if(null == userId && CommonUtils.isBlank(startTime) && !CommonUtils.isBlank(phoneNum)) {
+			result.put("userAppointmentInfo", userAppointmentService.getUserAppointmentByUserPhoneNumber(storeId, phoneNum));
+		} else if(null == userId && CommonUtils.isBlank(startTime) && CommonUtils.isBlank(phoneNum)) {
 			result.put("userAppointmentInfo", userAppointmentService.getUserAppointmentByStoreId(storeId));
 		}
 		return result;

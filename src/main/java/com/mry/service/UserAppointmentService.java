@@ -88,13 +88,13 @@ public class UserAppointmentService {
 	}
 	
 	// 根据 storeId + 用户身份证号码 返回该用户下所有预约信息
-	public List<UserAppointment> getUserAppointmentByUserIdCard(int storeId, String idCard) {
+	/*public List<UserAppointment> getUserAppointmentByUserIdCard(int storeId, String idCard) {
 		UserManage userManage = userManageRepository.getUserManageByIdCard(storeId, idCard);
 		if(null != userManage) {
 			return userAppointmentRepository.getUserAppointmentByUserId(storeId, userManage.getId());
 		}
 		return null;
-	}
+	}*/
 	
 	// 根据 用户预约信息 记录的 id 删除一条记录
 	public int deleteUserAppointmentById(int storeId, int id) {

@@ -20,7 +20,8 @@ public class UserManageService {
 	
 	// 添加一条顾客的信息
 	public int addUserManageInfo(UserManage userManage) {
-		UserManage originUserManage = userManageRepository.getUserManageByIdCard(userManage.getStoreId(), userManage.getIdCard());
+		//UserManage originUserManage = userManageRepository.getUserManageByIdCard(userManage.getStoreId(), userManage.getIdCard());
+		UserManage originUserManage = userManageRepository.getUserManageByPhoneNumber(userManage.getStoreId(), userManage.getPhoneNum());
 		// 当前门店的顾客信息如果已经存在就覆盖
 		if(null != originUserManage) {
 			userManage.setId(originUserManage.getId());
@@ -53,8 +54,13 @@ public class UserManageService {
 	}
 	
 	// 根据 storeId + idCard 获取该门店下一条顾客信息
-	public UserManage getUserManageByIdCard(int storeId, String idCard) {
+	/*public UserManage getUserManageByIdCard(int storeId, String idCard) {
 		return userManageRepository.getUserManageByIdCard(storeId, idCard);
+	}*/
+	
+	// 根据 storeId + phoneNum 获取该门店下一条顾客信息
+	public UserManage getUserManageByPhoneNum(int storeId, String phoneNum) {
+		return userManageRepository.getUserManageByPhoneNumber(storeId, phoneNum);
 	}
 	
 	// 根据 storeId 查出该门店下所有顾客信息
@@ -63,8 +69,13 @@ public class UserManageService {
 	}
 	
 	// 根据 storeId + idCard 删除该门店下一条顾客信息
-	public int deleteUserManageByIdCard(int storeId, String idCard) {
+	/*public int deleteUserManageByIdCard(int storeId, String idCard) {
 		return userManageRepository.deleteUserManageByIdCard(storeId, idCard);
+	}*/
+	
+	// 根据 storeId + phoneNum 删除该门店下一条顾客信息
+	public int deleteUserManageByPhoneNum(int storeId, String phoneNum) {
+		return userManageRepository.deleteUserManageByPhoneNum(storeId, phoneNum);
 	}
 	
 	// 根据 storeId + idCard 删除该门店所有顾客信息

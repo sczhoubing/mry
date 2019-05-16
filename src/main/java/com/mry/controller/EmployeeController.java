@@ -53,12 +53,27 @@ public class EmployeeController {
 		return result;
 	}
 	
-	@GetMapping("/delete/{storeId}")
+	/*@GetMapping("/delete/{storeId}")
 	public Map<String, Object> deleteEmployeeInfo(@PathVariable("storeId")Integer storeId, String idCard) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if(null != storeId) {
 			if(!CommonUtils.isBlank(idCard)) {
 				result.put("msg", employeeService.deleteEmployeeByIdCard(storeId, idCard));
+			} else {
+				result.put("msg", employeeService.deleteEmployeeByStoreId(storeId));
+			}
+		} else {
+			result.put("msg", 0);
+		}
+		return result;
+	}*/
+	
+	@GetMapping("/delete/{storeId}")
+	public Map<String, Object> deleteEmployeeInfo(@PathVariable("storeId")Integer storeId, String phoneNum) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if(null != storeId) {
+			if(!CommonUtils.isBlank(phoneNum)) {
+				result.put("msg", employeeService.deleteEmployeeByPhoneNum(storeId, phoneNum));
 			} else {
 				result.put("msg", employeeService.deleteEmployeeByStoreId(storeId));
 			}

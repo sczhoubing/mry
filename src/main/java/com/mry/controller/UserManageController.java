@@ -36,7 +36,7 @@ public class UserManageController {
 		return result;
 	}
 
-	@GetMapping("/store/{storeId}")
+	/*@GetMapping("/store/{storeId}")
 	public Map<String, Object> getUserManageInfo(@PathVariable("storeId")Integer storeId, String userName, String idCard) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if(!CommonUtils.isBlank(userName) && CommonUtils.isBlank(idCard)) {
@@ -47,14 +47,42 @@ public class UserManageController {
 			result.put("userInfo", userManageService.getUserManageByStoreId(storeId));
 		}
 		return result;
+	}*/
+	
+	@GetMapping("/store/{storeId}")
+	public Map<String, Object> getUserManageInfo(@PathVariable("storeId")Integer storeId, String userName, String phoneNum) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if(!CommonUtils.isBlank(userName) && CommonUtils.isBlank(phoneNum)) {
+			result.put("userInfo", userManageService.getUserManageByUserName(storeId, userName));
+		} else if(CommonUtils.isBlank(userName) && !CommonUtils.isBlank(phoneNum)) {
+			result.put("userInfo", userManageService.getUserManageByPhoneNum(storeId, phoneNum));
+		} else {
+			result.put("userInfo", userManageService.getUserManageByStoreId(storeId));
+		}
+		return result;
 	}
 	
-	@GetMapping("/delete/{storeId}")
+	/*@GetMapping("/delete/{storeId}")
 	public Map<String, Object> deleteUserManageInfo(@PathVariable("storeId")Integer storeId, String idCard) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if(null != storeId) {
 			if(!CommonUtils.isBlank(idCard)) {
 				result.put("msg", userManageService.deleteUserManageByIdCard(storeId, idCard));
+			} else {
+				result.put("msg", userManageService.deleteUserManageByStoreId(storeId));
+			}
+		} else {
+			result.put("msg", 0);
+		}
+		return result;
+	}*/
+	
+	@GetMapping("/delete/{storeId}")
+	public Map<String, Object> deleteUserManageInfo(@PathVariable("storeId")Integer storeId, String phoneNum) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if(null != storeId) {
+			if(!CommonUtils.isBlank(phoneNum)) {
+				result.put("msg", userManageService.deleteUserManageByPhoneNum(storeId, phoneNum));
 			} else {
 				result.put("msg", userManageService.deleteUserManageByStoreId(storeId));
 			}

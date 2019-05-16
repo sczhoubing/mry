@@ -10,8 +10,12 @@ import org.springframework.data.repository.query.Param;
 import com.mry.model.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-	@Query(value="select * from employee where store_id=:storeId and id_card=:idCard", nativeQuery=true)
-	public Employee getEmployeeByIdCard(@Param("storeId")int storeId, @Param("idCard")String idCard);
+	/*@Query(value="select * from employee where store_id=:storeId and id_card=:idCard", nativeQuery=true)
+	public Employee getEmployeeByIdCard(@Param("storeId")int storeId, @Param("idCard")String idCard);*/
+	
+	@Query(value="select * from employee where store_id=:storeId and phone_num=:phoneNum", nativeQuery=true)
+	public Employee getEmployeeByPhoneNum(@Param("storeId")int storeId, @Param("phoneNum")String phoneNum);
+	
 	
 	@Query(value="select * from employee where store_id=:storeId and emp_name=:empName", nativeQuery=true)
 	public List<Employee> getEmployeeByEmpName(@Param("storeId")int storeId, @Param("empName")String empName);
@@ -29,9 +33,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 	@Modifying
 	public void markOccupancyTime(@Param("startTime")String startTime, @Param("endTime")String endTime, @Param("id")int id);
 	
-	@Query(value="delete from employee where store_id=:storeId and id_card=:idCard", nativeQuery=true)
+	/*@Query(value="delete from employee where store_id=:storeId and id_card=:idCard", nativeQuery=true)
 	@Modifying
-	public int deleteEmployeeByIdCard(@Param("storeId")int storeId, @Param("idCard")String idCard);
+	public int deleteEmployeeByIdCard(@Param("storeId")int storeId, @Param("idCard")String idCard);*/
+	
+	@Query(value="delete from employee where store_id=:storeId and phone_num=:phoneNum", nativeQuery=true)
+	@Modifying
+	public int deleteEmployeeByPhoneNum(@Param("storeId")int storeId, @Param("phoneNum")String phoneNum);
 	
 	@Query(value="delete from employee where store_id=:storeId", nativeQuery=true)
 	@Modifying
