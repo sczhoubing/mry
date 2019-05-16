@@ -66,4 +66,10 @@ public class ProjectManageService {
 	public int deleteProjectManageByStoreId(int storeId) {
 		return projectManageRepository.deleteProjectManageByStoreId(storeId);
 	}
+	
+	// 根据记录的id修改项目计划信息的状态
+	public int editProjectManageStatus(int id, String status) {
+		projectManageRepository.editProjectManageStatus(id, status);
+		return id;
+	}
 }

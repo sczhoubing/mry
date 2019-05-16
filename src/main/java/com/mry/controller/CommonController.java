@@ -54,12 +54,8 @@ public class CommonController {
 	public Map<String, Object> get(long key) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("value", commonService.getCommonByKey(key));
-		return result;
-	}
-	
-	@GetMapping("/delete")
-	public void remove(long key) {
-		logger.info("remove common resource key: " + key);
+		// 返回信息后，将该记录删除
 		commonService.removeCommon(key);
+		return result;
 	}
 }

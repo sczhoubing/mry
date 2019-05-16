@@ -1,6 +1,8 @@
 package com.mry.config;
 
 import java.util.Arrays;
+
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -9,7 +11,6 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class AppConfig {
-	// 设置跨域访问
 	@Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -21,5 +22,12 @@ public class AppConfig {
         corsConfiguration.setMaxAge(3600L);
         source.registerCorsConfiguration("/**", corsConfiguration); 
         return new CorsFilter(source);
+    }
+	
+	@Bean 
+    public ServletRegistrationBean<Starter> getServletRegistrationBean() { 
+        ServletRegistrationBean<Starter> bean = new ServletRegistrationBean<Starter>(new Starter());
+        bean.addUrlMappings("/hyzx");
+        return bean;
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSONObject;
 import com.mry.model.ProjectManage;
 import com.mry.service.ProjectManageService;
 import com.mry.utils.CommonUtils;
@@ -59,6 +61,13 @@ public class ProjectManageController {
 		} else if(null ==id && null == userId) {
 			result.put("msg", projectManageService.deleteProjectManageByStoreId(storeId));
 		}
+		return result;
+	}
+	
+	@PostMapping("/status")
+	public Map<String, Object> editProjectManageStatus(@RequestBody JSONObject params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("msg", projectManageService.editProjectManageStatus(params.getIntValue("id"), params.getString("status")));
 		return result;
 	}
 }

@@ -32,4 +32,8 @@ public interface ProjectManageRepository extends JpaRepository<ProjectManage, In
 	@Query(value="delete from project_manage where store_id=:storeId", nativeQuery=true)
 	@Modifying
 	public int deleteProjectManageByStoreId(@Param("storeId")int storeId);
+	
+	@Query(value="update project_manage set project_status=:status where id=:id", nativeQuery=true)
+	@Modifying
+	public void editProjectManageStatus(@Param("id")int id, @Param("status")String status);
 }
