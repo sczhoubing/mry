@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="user_card_manage")
+@Data
 public class UserCardManage {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -37,76 +40,4 @@ public class UserCardManage {
 	private String cardDesc;
 	@Transient
 	private Map<String, Object> cardItem = new HashMap<String, Object>();
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-	public String getCardBalance() {
-		return cardBalance;
-	}
-	public void setCardBalance(String cardBalance) {
-		this.cardBalance = cardBalance;
-	}
-	public String getCardType() {
-		return cardType;
-	}
-	public void setCardType(String cardType) {
-		this.cardType = cardType;
-	}
-	public String getCardOption() {
-		return cardOption;
-	}
-	public void setCardOption(String cardOption) {
-		this.cardOption = cardOption;
-	}
-	public String getCardInitDate() {
-		return cardInitDate;
-	}
-	public void setCardInitDate(String cardInitDate) {
-		this.cardInitDate = cardInitDate;
-	}
-	public String getCardExceDate() {
-		return cardExceDate;
-	}
-	public void setCardExceDate(String cardExceDate) {
-		this.cardExceDate = cardExceDate;
-	}
-	public String getCardStatus() {
-		return cardStatus;
-	}
-	public void setCardStatus(String cardStatus) {
-		this.cardStatus = cardStatus;
-	}
-	public String getCardDesc() {
-		return cardDesc;
-	}
-	public void setCardDesc(String cardDesc) {
-		this.cardDesc = cardDesc;
-	}
-	public Map<String, Object> getCardItem() {
-		return cardItem;
-	}
-	public void setCardItem(Map<String, Object> cardItem) {
-		this.cardItem = cardItem;
-	}
-	@Override
-	public String toString() {
-		return "UserCardManage [id=" + id + ", storeId=" + storeId + ", userId=" + userId + ", cardType=" + cardType
-				+ ", cardOption=" + cardOption + ", cardBalance=" + cardBalance + ", cardInitDate=" + cardInitDate
-				+ ", cardExceDate=" + cardExceDate + ", cardStatus=" + cardStatus + ", cardDesc=" + cardDesc + "]";
-	}
 }

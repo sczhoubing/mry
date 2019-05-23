@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="con_forfeit")
+@Data
 public class ConForfeit {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -19,33 +22,4 @@ public class ConForfeit {
 	private String forfeitType;
 	@Column(name="forfeit_money")
 	private String forfeitMoney;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public String getForfeitType() {
-		return forfeitType;
-	}
-	public void setForfeitType(String forfeitType) {
-		this.forfeitType = forfeitType;
-	}
-	public String getForfeitMoney() {
-		return forfeitMoney;
-	}
-	public void setForfeitMoney(String forfeitMoney) {
-		this.forfeitMoney = forfeitMoney;
-	}
-	@Override
-	public String toString() {
-		return "ConForfeit [id=" + id + ", storeId=" + storeId + ", forfeitType=" + forfeitType + ", forfeitMoney="
-				+ forfeitMoney + "]";
-	}
 }

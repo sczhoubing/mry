@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="member")
+@Data
 public class Member {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -29,64 +32,4 @@ public class Member {
 	private String counselor;
 	@Column(name="manager")
 	private String manager;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public String getCosmeTologist() {
-		return cosmeTologist;
-	}
-	public void setCosmeTologist(String cosmeTologist) {
-		this.cosmeTologist = cosmeTologist;
-	}
-	public String getTherapist() {
-		return therapist;
-	}
-	public void setTherapist(String therapist) {
-		this.therapist = therapist;
-	}
-	public String getNurse() {
-		return nurse;
-	}
-	public void setNurse(String nurse) {
-		this.nurse = nurse;
-	}
-	public String getPhysicalTherapist() {
-		return physicalTherapist;
-	}
-	public void setPhysicalTherapist(String physicalTherapist) {
-		this.physicalTherapist = physicalTherapist;
-	}
-	public String getPedicure() {
-		return pedicure;
-	}
-	public void setPedicure(String pedicure) {
-		this.pedicure = pedicure;
-	}
-	public String getCounselor() {
-		return counselor;
-	}
-	public void setCounselor(String counselor) {
-		this.counselor = counselor;
-	}
-	public String getManager() {
-		return manager;
-	}
-	public void setManager(String manager) {
-		this.manager = manager;
-	}
-	@Override
-	public String toString() {
-		return "Member [id=" + id + ", storeId=" + storeId + ", cosmeTologist=" + cosmeTologist + ", therapist="
-				+ therapist + ", nurse=" + nurse + ", physicalTherapist=" + physicalTherapist + ", pedicure=" + pedicure
-				+ ", counselor=" + counselor + ", manager=" + manager + "]";
-	}
 }

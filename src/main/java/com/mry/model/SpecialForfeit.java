@@ -1,5 +1,8 @@
 package com.mry.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,6 +14,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="special_forfeit")
+@Data
+@EqualsAndHashCode(exclude = "id")
 public class SpecialForfeit {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -25,82 +30,7 @@ public class SpecialForfeit {
 	private String highLimit;
 	@Column(name="forfeit_money")
 	private String forfeitMoney;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public String getForfeitType() {
-		return forfeitType;
-	}
-	public void setForfeitType(String forfeitType) {
-		this.forfeitType = forfeitType;
-	}
-	public String getLowLimit() {
-		return lowLimit;
-	}
-	public void setLowLimit(String lowLimit) {
-		this.lowLimit = lowLimit;
-	}
-	public String getHighLimit() {
-		return highLimit;
-	}
-	public void setHighLimit(String highLimit) {
-		this.highLimit = highLimit;
-	}
-	public String getForfeitMoney() {
-		return forfeitMoney;
-	}
-	public void setForfeitMoney(String forfeitMoney) {
-		this.forfeitMoney = forfeitMoney;
-	}
-	@Override
-	public String toString() {
-		return "SpecialForfeit [id=" + id + ", storeId=" + storeId + ", forfeitType=" + forfeitType + ", lowLimit="
-				+ lowLimit + ", highLimit=" + highLimit + ", forfeitMoney=" + forfeitMoney + "]";
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SpecialForfeit other = (SpecialForfeit) obj;
-		if (forfeitMoney == null) {
-			if (other.forfeitMoney != null)
-				return false;
-		} else if (!forfeitMoney.equals(other.forfeitMoney))
-			return false;
-		if (forfeitType == null) {
-			if (other.forfeitType != null)
-				return false;
-		} else if (!forfeitType.equals(other.forfeitType))
-			return false;
-		if (highLimit == null) {
-			if (other.highLimit != null)
-				return false;
-		} else if (!highLimit.equals(other.highLimit))
-			return false;
-		/*if (id != other.id)
-			return false;*/
-		if (lowLimit == null) {
-			if (other.lowLimit != null)
-				return false;
-		} else if (!lowLimit.equals(other.lowLimit))
-			return false;
-		if (storeId != other.storeId)
-			return false;
-		return true;
-	}
+
 	//校验是否除了 id 之外其他的属性相等
 	public static SpecialForfeit validDuplicatePerforForfeit(SpecialForfeit perforForfeit, List<SpecialForfeit> perforForfeits) {
 		SpecialForfeit duplicatePerforForfeit = null;

@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="employee")
+@Data
 public class Employee {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -39,95 +42,4 @@ public class Employee {
 	private String startTime;
 	@Column(name="end_time")
 	private String endTime;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public String getIdCard() {
-		return idCard;
-	}
-	public void setIdCard(String idCard) {
-		this.idCard = idCard;
-	}
-	public String getEmpName() {
-		return empName;
-	}
-	public void setEmpName(String empName) {
-		this.empName = empName;
-	}
-	public String getPhoneNum() {
-		return phoneNum;
-	}
-	public void setPhoneNum(String phoneNum) {
-		this.phoneNum = phoneNum;
-	}
-	public String getEmpType() {
-		return empType;
-	}
-	public void setEmpType(String empType) {
-		this.empType = empType;
-	}
-	public String getServiceDesc() {
-		return serviceDesc;
-	}
-	public void setServiceDesc(String serviceDesc) {
-		this.serviceDesc = serviceDesc;
-	}
-	public String getGradeId() {
-		return gradeId;
-	}
-	public void setGradeId(String gradeId) {
-		this.gradeId = gradeId;
-	}
-	public String getAge() {
-		return age;
-	}
-	public void setAge(String age) {
-		this.age = age;
-	}
-	public String getSex() {
-		return sex;
-	}
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
-	}
-	public String getStartTime() {
-		return startTime;
-	}
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-	public String getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-	@Override
-	public String toString() {
-		return "Employee [id=" + id + ", storeId=" + storeId + ", idCard=" + idCard + ", empName=" + empName
-				+ ", phoneNum=" + phoneNum + ", empType=" + empType + ", serviceDesc=" + serviceDesc + ", gradeId="
-				+ gradeId + ", age=" + age + ", sex=" + sex + ", status=" + status + ", role=" + role + ", startTime="
-				+ startTime + ", endTime=" + endTime + "]";
-	}
 }

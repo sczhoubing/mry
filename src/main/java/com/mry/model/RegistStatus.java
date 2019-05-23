@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="regist_status")
+@Data
 public class RegistStatus {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -17,31 +20,4 @@ public class RegistStatus {
 	private int storeId;
 	@Column(name="regist_item")
 	private int registItem;
-	public RegistStatus() {}
-	public RegistStatus(int storeId, int registItem) {
-		this.storeId = storeId;
-		this.registItem = registItem;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public int getRegistItem() {
-		return registItem;
-	}
-	public void setRegistItem(int registItem) {
-		this.registItem = registItem;
-	}
-	@Override
-	public String toString() {
-		return "RegistStatus [id=" + id + ", storeId=" + storeId + ", registItem=" + registItem + "]";
-	}
 }

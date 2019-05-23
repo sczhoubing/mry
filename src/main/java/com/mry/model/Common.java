@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="common")
+@Data
 public class Common {
 	@Id
 	@Column(name="kiy")
@@ -20,26 +23,4 @@ public class Common {
 	private String value;
 	@Column(name="update_date")
 	private String updateDate;
-	public long getKey() {
-		return key;
-	}
-	public void setKey(long key) {
-		this.key = key;
-	}
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
-	public String getUpdateDate() {
-		return updateDate;
-	}
-	public void setUpdateDate(String updateDate) {
-		this.updateDate = updateDate;
-	}
-	@Override
-	public String toString() {
-		return "Common [key=" + key + ", value=" + value + ", updateDate=" + updateDate + "]";
-	}
 }

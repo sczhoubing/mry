@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +28,8 @@ import com.mry.utils.CommonUtils;
 
 @RestController
 @RequestMapping("/customer")
+@Slf4j
 public class CustomerController {
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource
 	private CustomerIpAddressService customerIpAddressService;
 	@Resource
@@ -89,8 +91,8 @@ public class CustomerController {
 					// 登录成功
 					result.put("msg", 0);
 					result.put("storeId", storeService.getStoreIdByCustomerId(customer.getId()));
-					logger.info("user login system: " + customer);
-					logger.info("user remote ipAddress: " + currentIpAddress);
+					log.info("user login system: " + customer);
+					log.info("user remote ipAddress: " + currentIpAddress);
 				}
 			}
 		}

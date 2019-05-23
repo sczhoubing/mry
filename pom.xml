@@ -14,6 +14,15 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.0.3.RELEASE</version>
 	</parent>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<sfstarter.version>RELEASE-1.0.0</sfstarter.version>
+		<fastjson.version>1.2.47</fastjson.version>
+		<aliyun.sdk.core.version>3.3.1</aliyun.sdk.core.version>
+		<aliyun.sdk.dysmsapi.version>1.0.0</aliyun.sdk.dysmsapi.version>
+
+	</properties>
 	
 	<dependencies>
 		<!-- 添加 springboot web 依赖 -->
@@ -34,24 +43,29 @@
 		<dependency>
 			<groupId>org.springframework.boot.sfstarter</groupId>
 			<artifactId>sfstarter</artifactId>
-			<version>RELEASE-1.0.0</version>
+			<version>${sfstarter.version}</version>
 		</dependency>		
 		<!-- 添加阿里云短信服务依赖包 -->
 		<dependency>
 		  <groupId>com.aliyun</groupId>
 		  <artifactId>aliyun-java-sdk-core</artifactId>
-		  <version>3.3.1</version>
+		  <version>${aliyun.sdk.core.version}</version>
 		</dependency>
 		<dependency>
 		  <groupId>com.aliyun</groupId>
 		  <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
-		  <version>1.0.0</version>
+		  <version>${aliyun.sdk.dysmsapi.version}</version>
 		</dependency>
 		<!-- 阿里的 fastjson 依赖包 -->
 		<dependency>
 		    <groupId>com.alibaba</groupId>
 		    <artifactId>fastjson</artifactId>
-		    <version>1.2.47</version>
+		    <version>${fastjson.version}</version>
+		</dependency>
+		<!-- lombok 依赖 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 		</dependency>
 	</dependencies>
 

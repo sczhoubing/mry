@@ -237,7 +237,10 @@ public class StoreService {
 		memberRepository.save(member);
 		
 		// 更新注册信息
-		updateRegistStatus(new RegistStatus(params.getStoreId(), 2));
+		RegistStatus registStatus = new RegistStatus();
+		registStatus.setStoreId(params.getStoreId());
+		registStatus.setRegistItem(2);
+		updateRegistStatus(registStatus);
 		return params.getStoreId();
 	}
 	
@@ -256,7 +259,10 @@ public class StoreService {
 		waterInfoRepository.saveAll(waterInfos);
 		
 		// 更新注册信息
-		updateRegistStatus(new RegistStatus(params.getStoreId(), 3));
+		RegistStatus registStatus = new RegistStatus();
+		registStatus.setStoreId(params.getStoreId());
+		registStatus.setRegistItem(3);
+		updateRegistStatus(registStatus);
 		return params.getStoreId();
 	}
 	
@@ -291,7 +297,10 @@ public class StoreService {
 		instrumentRepository.saveAll(instruments);
 		
 		// 更新注册信息
-		updateRegistStatus(new RegistStatus(params.getStoreId(), 4));
+		RegistStatus registStatus = new RegistStatus();
+		registStatus.setStoreId(params.getStoreId());
+		registStatus.setRegistItem(4);
+		updateRegistStatus(registStatus);
 		return params.getStoreId();
 	}
 	
@@ -306,7 +315,10 @@ public class StoreService {
 		salaryRepository.save(salary);
 		
 		// 更新注册信息
-		updateRegistStatus(new RegistStatus(params.getStoreId(), 5));
+		RegistStatus registStatus = new RegistStatus();
+		registStatus.setStoreId(params.getStoreId());
+		registStatus.setRegistItem(5);
+		updateRegistStatus(registStatus);
 		return params.getStoreId();
 	}
 	
@@ -345,7 +357,10 @@ public class StoreService {
 		extensionRepository.saveAll(extensions);
 		
 		// 更新注册信息
-		updateRegistStatus(new RegistStatus(params.getStoreId(), 6));
+		RegistStatus registStatus = new RegistStatus();
+		registStatus.setStoreId(params.getStoreId());
+		registStatus.setRegistItem(6);
+		updateRegistStatus(registStatus);
 		return params.getStoreId();
 	}
 	
@@ -360,7 +375,10 @@ public class StoreService {
 		clientRepository.save(client);
 		
 		// 更新注册信息
-		updateRegistStatus(new RegistStatus(params.getStoreId(), 7));
+		RegistStatus registStatus = new RegistStatus();
+		registStatus.setStoreId(params.getStoreId());
+		registStatus.setRegistItem(7);
+		updateRegistStatus(registStatus);
 		return params.getStoreId();
 	}
 	
@@ -375,7 +393,10 @@ public class StoreService {
 		problemRepository.save(problem);
 		
 		// 更新注册信息
-		updateRegistStatus(new RegistStatus(params.getStoreId(), 8));
+		RegistStatus registStatus = new RegistStatus();
+		registStatus.setStoreId(params.getStoreId());
+		registStatus.setRegistItem(8);
+		updateRegistStatus(registStatus);
 		return params.getStoreId();
 	}
 	

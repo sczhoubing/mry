@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +23,13 @@ import com.mry.utils.CommonUtils;
 
 @RestController
 @RequestMapping("/common")
+@Slf4j
 public class CommonController {
-	private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	@Resource
 	private CommonService commonService;
 
 	/**
 	 * @param param 要保存的值
-	 * @param session
 	 * @return 用于前端临时保存一些数据
 	 */
 	@PostMapping("/save")
@@ -41,13 +41,12 @@ public class CommonController {
 		common.setUpdateDate(CommonUtils.formatDate(new Date(), DateFormat.FORMAT1.getFormat()));
 		commonService.saveCommon(common);
 		result.put("data", common);
-		logger.info("set common resource: " + common);
+		log.info("set common resource: " + common);
 		return result;
 	}
 	
 	/**
 	 * @param key 获取值的 key
-	 * @param session
 	 * @return 前端保存的数据
 	 */
 	@GetMapping("/get")

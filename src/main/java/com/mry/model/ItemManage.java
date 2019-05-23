@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="item_manage")
+@Data
 public class ItemManage {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -57,153 +60,4 @@ public class ItemManage {
 	private String fixedOperation;
 	@Column(name="manual_cost")
 	private String manualCost;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public String getSymptom() {
-		return symptom;
-	}
-	public void setSymptom(String symptom) {
-		this.symptom = symptom;
-	}
-	public String getFace() {
-		return face;
-	}
-	public void setFace(String face) {
-		this.face = face;
-	}
-	public String getBody() {
-		return body;
-	}
-	public void setBody(String body) {
-		this.body = body;
-	}
-	public String getItemName() {
-		return itemName;
-	}
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-	public String getItemPrice() {
-		return itemPrice;
-	}
-	public void setItemPrice(String itemPrice) {
-		this.itemPrice = itemPrice;
-	}
-	public String getDesignCourse() {
-		return designCourse;
-	}
-	public void setDesignCourse(String designCourse) {
-		this.designCourse = designCourse;
-	}
-	public String getCourseTimes() {
-		return courseTimes;
-	}
-	public void setCourseTimes(String courseTimes) {
-		this.courseTimes = courseTimes;
-	}
-	public String getCoursePrice() {
-		return coursePrice;
-	}
-	public void setCoursePrice(String coursePrice) {
-		this.coursePrice = coursePrice;
-	}
-	public String getCourseCharges() {
-		return courseCharges;
-	}
-	public void setCourseCharges(String courseCharges) {
-		this.courseCharges = courseCharges;
-	}
-	public String getCourseInterval() {
-		return courseInterval;
-	}
-	public void setCourseInterval(String courseInterval) {
-		this.courseInterval = courseInterval;
-	}
-	public String getHighFreq() {
-		return highFreq;
-	}
-	public void setHighFreq(String highFreq) {
-		this.highFreq = highFreq;
-	}
-	public String getPresents() {
-		return presents;
-	}
-	public void setPresents(String presents) {
-		this.presents = presents;
-	}
-	public String getSuperposition() {
-		return superposition;
-	}
-	public void setSuperposition(String superposition) {
-		this.superposition = superposition;
-	}
-	public String getStrongEfficacy() {
-		return strongEfficacy;
-	}
-	public void setStrongEfficacy(String strongEfficacy) {
-		this.strongEfficacy = strongEfficacy;
-	}
-	public String getGeneralProps() {
-		return generalProps;
-	}
-	public void setGeneralProps(String generalProps) {
-		this.generalProps = generalProps;
-	}
-	public String getResolveProblem() {
-		return resolveProblem;
-	}
-	public void setResolveProblem(String resolveProblem) {
-		this.resolveProblem = resolveProblem;
-	}
-	public String getProDescription() {
-		return proDescription;
-	}
-	public void setProDescription(String proDescription) {
-		this.proDescription = proDescription;
-	}
-	public String getTechnicalPoints() {
-		return technicalPoints;
-	}
-	public void setTechnicalPoints(String technicalPoints) {
-		this.technicalPoints = technicalPoints;
-	}
-	public String getActualOperation() {
-		return actualOperation;
-	}
-	public void setActualOperation(String actualOperation) {
-		this.actualOperation = actualOperation;
-	}
-	public String getFixedOperation() {
-		return fixedOperation;
-	}
-	public void setFixedOperation(String fixedOperation) {
-		this.fixedOperation = fixedOperation;
-	}
-	public String getManualCost() {
-		return manualCost;
-	}
-	public void setManualCost(String manualCost) {
-		this.manualCost = manualCost;
-	}
-	@Override
-	public String toString() {
-		return "ItemManage [id=" + id + ", storeId=" + storeId + ", symptom=" + symptom + ", face=" + face + ", body="
-				+ body + ", itemName=" + itemName + ", itemPrice=" + itemPrice + ", designCourse=" + designCourse
-				+ ", courseTimes=" + courseTimes + ", coursePrice=" + coursePrice + ", courseCharges=" + courseCharges
-				+ ", courseInterval=" + courseInterval + ", highFreq=" + highFreq + ", presents=" + presents
-				+ ", superposition=" + superposition + ", strongEfficacy=" + strongEfficacy + ", generalProps="
-				+ generalProps + ", resolveProblem=" + resolveProblem + ", proDescription=" + proDescription
-				+ ", technicalPoints=" + technicalPoints + ", actualOperation=" + actualOperation + ", fixedOperation="
-				+ fixedOperation + ", manualCost=" + manualCost + "]";
-	}
 }

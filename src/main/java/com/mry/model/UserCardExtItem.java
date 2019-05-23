@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="user_card_ext_item")
+@Data
 public class UserCardExtItem {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,47 +29,7 @@ public class UserCardExtItem {
 	private String itemType;
 	@Column(name="item_time")
 	private String itemTime;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-	public int getCardId() {
-		return cardId;
-	}
-	public void setCardId(int cardId) {
-		this.cardId = cardId;
-	}
-	public String getItemType() {
-		return itemType;
-	}
-	public void setItemType(String itemType) {
-		this.itemType = itemType;
-	}
-	public String getItemTime() {
-		return itemTime;
-	}
-	public void setItemTime(String itemTime) {
-		this.itemTime = itemTime;
-	}
-	@Override
-	public String toString() {
-		return "UserCardExtItem [id=" + id + ", storeId=" + storeId + ", userId=" + userId + ", cardId=" + cardId
-				+ ", itemType=" + itemType + ", itemTime=" + itemTime + "]";
-	}
+
 	// 为用户拓客卡绑定关联项目信息
 	public static List<UserCardExtItem> bindUserCardExtItemInfo(int storeId, int userId, int cardId, List<ExtCardItem> extCardItems) {
 		List<UserCardExtItem> userCardExtItems = new ArrayList<UserCardExtItem>();

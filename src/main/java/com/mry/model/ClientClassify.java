@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="client_classify")
+@Data
 public class ClientClassify {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -38,97 +41,4 @@ public class ClientClassify {
 	private String clientFrozen;
 	@Column(name="client_frozen_times")
 	private String clientFrozenTimes;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public String getActive() {
-		return active;
-	}
-	public void setActive(String active) {
-		this.active = active;
-	}
-	public String getClientLevel() {
-		return clientLevel;
-	}
-	public void setClientLevel(String clientLevel) {
-		this.clientLevel = clientLevel;
-	}
-	public String getClientBig() {
-		return clientBig;
-	}
-	public void setClientBig(String clientBig) {
-		this.clientBig = clientBig;
-	}
-	public String getClientBigMoth() {
-		return clientBigMoth;
-	}
-	public void setClientBigMoth(String clientBigMoth) {
-		this.clientBigMoth = clientBigMoth;
-	}
-	public String getClientBigConsume() {
-		return clientBigConsume;
-	}
-	public void setClientBigConsume(String clientBigConsume) {
-		this.clientBigConsume = clientBigConsume;
-	}
-	public String getClientFrequent() {
-		return clientFrequent;
-	}
-	public void setClientFrequent(String clientFrequent) {
-		this.clientFrequent = clientFrequent;
-	}
-	public String getClientFrequentMoth() {
-		return clientFrequentMoth;
-	}
-	public void setClientFrequentMoth(String clientFrequentMoth) {
-		this.clientFrequentMoth = clientFrequentMoth;
-	}
-	public String getClientFrequentTimes() {
-		return clientFrequentTimes;
-	}
-	public void setClientFrequentTimes(String clientFrequentTimes) {
-		this.clientFrequentTimes = clientFrequentTimes;
-	}
-	public String getClientDormancy() {
-		return clientDormancy;
-	}
-	public void setClientDormancy(String clientDormancy) {
-		this.clientDormancy = clientDormancy;
-	}
-	public String getClientDormancyMoth() {
-		return clientDormancyMoth;
-	}
-	public void setClientDormancyMoth(String clientDormancyMoth) {
-		this.clientDormancyMoth = clientDormancyMoth;
-	}
-	public String getClientFrozen() {
-		return clientFrozen;
-	}
-	public void setClientFrozen(String clientFrozen) {
-		this.clientFrozen = clientFrozen;
-	}
-	public String getClientFrozenTimes() {
-		return clientFrozenTimes;
-	}
-	public void setClientFrozenTimes(String clientFrozenTimes) {
-		this.clientFrozenTimes = clientFrozenTimes;
-	}
-	@Override
-	public String toString() {
-		return "ClientClassify [id=" + id + ", storeId=" + storeId + ", active=" + active + ", clientLevel="
-				+ clientLevel + ", clientBig=" + clientBig + ", clientBigMoth=" + clientBigMoth + ", clientBigConsume="
-				+ clientBigConsume + ", clientFrequent=" + clientFrequent + ", clientFrequentMoth=" + clientFrequentMoth
-				+ ", clientFrequentTimes=" + clientFrequentTimes + ", clientDormancy=" + clientDormancy
-				+ ", clientDormancyMoth=" + clientDormancyMoth + ", clientFrozen=" + clientFrozen
-				+ ", clientFrozenTimes=" + clientFrozenTimes + "]";
-	}
 }

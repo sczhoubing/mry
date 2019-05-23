@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="program_manage")
+@Data
 public class ProgramManage {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -29,48 +32,7 @@ public class ProgramManage {
 	private String programPrice;
 	@Transient
 	private List<ProgramItem> programItems;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public String getSymptom() {
-		return symptom;
-	}
-	public void setSymptom(String symptom) {
-		this.symptom = symptom;
-	}
-	public int getProgramType() {
-		return programType;
-	}
-	public void setProgramType(int programType) {
-		this.programType = programType;
-	}
-	public String getProgramName() {
-		return programName;
-	}
-	public void setProgramName(String programName) {
-		this.programName = programName;
-	}
-	public String getProgramPrice() {
-		return programPrice;
-	}
-	public void setProgramPrice(String programPrice) {
-		this.programPrice = programPrice;
-	}
-	public List<ProgramItem> getProgramItems() {
-		return programItems;
-	}
-	public void setProgramItems(List<ProgramItem> programItems) {
-		this.programItems = programItems;
-	}
+
 	// 将项目与方案关联
 	public List<ProgramItem> setProgramIdAndType() {
 		for(ProgramItem programItem : this.programItems) {
@@ -91,11 +53,5 @@ public class ProgramManage {
 			programManage.setProgramItems(items);
 		}
 		return programManages;
-	}
-	@Override
-	public String toString() {
-		return "ProgramManage [id=" + id + ", storeId=" + storeId + ", symptom=" + symptom + ", programType="
-				+ programType + ", programName=" + programName + ", programPrice=" + programPrice + ", programItems="
-				+ programItems + "]";
 	}
 }

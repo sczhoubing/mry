@@ -1,5 +1,8 @@
 package com.mry.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -11,6 +14,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="project_manage")
+@Data
+@EqualsAndHashCode(exclude = "id")
 public class ProjectManage {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -31,107 +36,7 @@ public class ProjectManage {
 	private String projectStatus;
 	@Column(name="symptom")
 	private String symptom;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public String getProjectType() {
-		return projectType;
-	}
-	public void setProjectType(String projectType) {
-		this.projectType = projectType;
-	}
-	public String getProjectName() {
-		return projectName;
-	}
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-	public String getProjectPrice() {
-		return projectPrice;
-	}
-	public void setProjectPrice(String projectPrice) {
-		this.projectPrice = projectPrice;
-	}
-	public String getProjectDate() {
-		return projectDate;
-	}
-	public void setProjectDate(String projectDate) {
-		this.projectDate = projectDate;
-	}
-	public String getProjectStatus() {
-		return projectStatus;
-	}
-	public void setProjectStatus(String projectStatus) {
-		this.projectStatus = projectStatus;
-	}
-	public String getSymptom() {
-		return symptom;
-	}
-	public void setSymptom(String symptom) {
-		this.symptom = symptom;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ProjectManage other = (ProjectManage) obj;
-		/*if (id != other.id)
-			return false;*/
-		if (projectDate == null) {
-			if (other.projectDate != null)
-				return false;
-		} else if (!projectDate.equals(other.projectDate))
-			return false;
-		if (projectName == null) {
-			if (other.projectName != null)
-				return false;
-		} else if (!projectName.equals(other.projectName))
-			return false;
-		if (projectPrice == null) {
-			if (other.projectPrice != null)
-				return false;
-		} else if (!projectPrice.equals(other.projectPrice))
-			return false;
-		if (projectStatus == null) {
-			if (other.projectStatus != null)
-				return false;
-		} else if (!projectStatus.equals(other.projectStatus))
-			return false;
-		if (projectType == null) {
-			if (other.projectType != null)
-				return false;
-		} else if (!projectType.equals(other.projectType))
-			return false;
-		if (storeId != other.storeId)
-			return false;
-		if (symptom == null) {
-			if (other.symptom != null)
-				return false;
-		} else if (!symptom.equals(other.symptom))
-			return false;
-		if (userId != other.userId)
-			return false;
-		return true;
-	}
+
 	// 校验是否除了 id 之外其他属性相等的对象 
 	public static List<ProjectManage> removeDuplicateProjectManages(List<ProjectManage> originProjectManages, List<ProjectManage> targetProjectManages) {
 		List<ProjectManage> resultProjectManages = new ArrayList<ProjectManage>();
@@ -144,11 +49,5 @@ public class ProjectManage {
 			}
 		}
 		return resultProjectManages;
-	}
-	@Override
-	public String toString() {
-		return "ProjectManage [id=" + id + ", userId=" + userId + ", storeId=" + storeId + ", projectType="
-				+ projectType + ", projectName=" + projectName + ", projectPrice=" + projectPrice + ", projectDate="
-				+ projectDate + ", projectStatus=" + projectStatus + ", symptom=" + symptom + "]";
 	}
 }

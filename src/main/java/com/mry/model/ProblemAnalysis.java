@@ -1,5 +1,8 @@
 package com.mry.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,8 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="problem_analysis")
+@Data
+@EqualsAndHashCode(exclude = "id")
 public class ProblemAnalysis {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -31,91 +36,7 @@ public class ProblemAnalysis {
 	private String addDate;
 	@Transient
 	private List<UserSolutions> userSolutions;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-	public String getScheme() {
-		return scheme;
-	}
-	public void setScheme(String scheme) {
-		this.scheme = scheme;
-	}
-	public String getDescribes() {
-		return describes;
-	}
-	public void setDescribes(String describes) {
-		this.describes = describes;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public String getAddDate() {
-		return addDate;
-	}
-	public void setAddDate(String addDate) {
-		this.addDate = addDate;
-	}
-	public List<UserSolutions> getUserSolutions() {
-		return userSolutions;
-	}
-	public void setUserSolutions(List<UserSolutions> userSolutions) {
-		this.userSolutions = userSolutions;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ProblemAnalysis other = (ProblemAnalysis) obj;
-		if (addDate == null) {
-			if (other.addDate != null)
-				return false;
-		} else if (!addDate.equals(other.addDate))
-			return false;
-		if (describes == null) {
-			if (other.describes != null)
-				return false;
-		} else if (!describes.equals(other.describes))
-			return false;
-		/*if (id != other.id)
-			return false;*/
-		if (scheme == null) {
-			if (other.scheme != null)
-				return false;
-		} else if (!scheme.equals(other.scheme))
-			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
-			return false;
-		if (storeId != other.storeId)
-			return false;
-		if (userId != other.userId)
-			return false;
-		return true;
-	}
+
 	// 检查是否有除了 id 以外其他属性都相等的记录
 	public static ProblemAnalysis validDuplicateProblemAnalysis(List<ProblemAnalysis> problemAnalysiss, ProblemAnalysis problemAnalysis) {
 		ProblemAnalysis duplicateProblemAnalysis = null;

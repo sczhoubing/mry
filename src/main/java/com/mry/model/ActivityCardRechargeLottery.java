@@ -1,5 +1,8 @@
 package com.mry.model;
 
+import lombok.Data;
+import lombok.ToString;
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,6 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="activity_card_recharge_lottery")
+@Data
 public class ActivityCardRechargeLottery {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -23,41 +27,7 @@ public class ActivityCardRechargeLottery {
 	private String rechargeMoney;
 	@Column(name="recharge_times")
 	private String rechargeTimes;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public int getActCardId() {
-		return actCardId;
-	}
-	public void setActCardId(int actCardId) {
-		this.actCardId = actCardId;
-	}
-	public String getRechargeMoney() {
-		return rechargeMoney;
-	}
-	public void setRechargeMoney(String rechargeMoney) {
-		this.rechargeMoney = rechargeMoney;
-	}
-	public String getRechargeTimes() {
-		return rechargeTimes;
-	}
-	public void setRechargeTimes(String rechargeTimes) {
-		this.rechargeTimes = rechargeTimes;
-	}
-	@Override
-	public String toString() {
-		return "ActivityCardRechargeLottery [id=" + id + ", storeId=" + storeId + ", actCardId=" + actCardId
-				+ ", rechargeMoney=" + rechargeMoney + ", rechargeTimes=" + rechargeTimes + "]";
-	}
+
 	// 为活动卡充值摇奖绑定 storeId 和 actCardId
 	public static List<ActivityCardRechargeLottery> setActivityCardRechargeLotteryStoreIdAndActCardId(List<ActivityCardRechargeLottery> activityCardRechargeLotteries, int storeId, int actCardId) {
 		for(ActivityCardRechargeLottery activityCardRechargeLottery : activityCardRechargeLotteries) {

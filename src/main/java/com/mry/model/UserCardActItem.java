@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="user_card_act_item")
+@Data
 public class UserCardActItem {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,47 +29,7 @@ public class UserCardActItem {
 	private String presentItem;
 	@Column(name="present_money")
 	private String presentMoney;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-	public int getCardId() {
-		return cardId;
-	}
-	public void setCardId(int cardId) {
-		this.cardId = cardId;
-	}
-	public String getPresentItem() {
-		return presentItem;
-	}
-	public void setPresentItem(String presentItem) {
-		this.presentItem = presentItem;
-	}
-	public String getPresentMoney() {
-		return presentMoney;
-	}
-	public void setPresentMoney(String presentMoney) {
-		this.presentMoney = presentMoney;
-	}
-	@Override
-	public String toString() {
-		return "UserCardActItem [id=" + id + ", storeId=" + storeId + ", userId=" + userId + ", cardId=" + cardId
-				+ ", presentItem=" + presentItem + ", presentMoney=" + presentMoney + "]";
-	}
+
 	// 为用户活动卡绑定关联项目信息
 	public static List<UserCardActItem> bindUserCardActItemInfo(int storeId, int userId, int cardId, List<ActivityCardRechargeItem> actCardItems) {
 		List<UserCardActItem> userCardActItems = new ArrayList<UserCardActItem>();
