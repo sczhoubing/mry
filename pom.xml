@@ -21,7 +21,6 @@
 		<fastjson.version>1.2.47</fastjson.version>
 		<aliyun.sdk.core.version>3.3.1</aliyun.sdk.core.version>
 		<aliyun.sdk.dysmsapi.version>1.0.0</aliyun.sdk.dysmsapi.version>
-
 	</properties>
 	
 	<dependencies>
