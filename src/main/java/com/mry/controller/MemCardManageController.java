@@ -46,7 +46,7 @@ public class MemCardManageController {
 		} else if(CommonUtils.isBlank(cardName) && !CommonUtils.isBlank(cardStatus)) {
 			result.put("memCardManageInfo", memCardMangeService.getMemCardManageInfoByCardStatus(storeId, cardStatus));
 		} else if(CommonUtils.isBlank(cardName) && CommonUtils.isBlank(cardStatus)) {
-			result.put("memCardManageInfo", memCardMangeService.getMemCardManageInfoByStoreId(storeId));
+			result.put("memCardManageInfo", memCardMangeService.getMemCardManageInfoByCardStatus(storeId, null));
 		}
 		return result;
 	}

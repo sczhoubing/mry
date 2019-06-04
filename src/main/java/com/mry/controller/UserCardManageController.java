@@ -3,6 +3,8 @@ package com.mry.controller;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Resource;
+
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +32,17 @@ public class UserCardManageController {
 	public Map<String, Object> editUserCardManageInfo(@RequestBody UserCardManage userCardManage) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("msg", userCardManageService.editUserCardManageInfo(userCardManage));
+		return result;
+	}
+
+	@PostMapping("/balance")
+	public Map<String, Object> editUserCardBalance(@RequestBody JSONObject params) {
+		Map<String, Object> result = new HashMap<>();
+		int cardId = params.getInteger("id");
+		double money = params.getDouble("money");
+		String discount = params.getString("discount");
+		String consDesc = params.getString("consDesc");
+		result.put("cardBalance", userCardManageService.editUserCardBalance(cardId, money, discount, consDesc));
 		return result;
 	}
 	

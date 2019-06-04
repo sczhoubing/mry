@@ -11,10 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import com.mry.model.MemCardItems;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name="user_card_mem_item")
 @Data
+@EqualsAndHashCode(exclude = {"id", "updateDate"})
 public class UserCardMemItem {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -31,6 +33,8 @@ public class UserCardMemItem {
 	private String itemTime;
 	@Column(name="item_exce")
 	private String itemExce;
+	@Column(name="update_date")
+	private String updateDate;
 
 	// 为用户会员卡项目绑定关联项目信息
 	public static List<UserCardMemItem> bindUserCardMemItemInfo(int storeId, int userId, int cardId, List<MemCardItems> memCardItems) {
@@ -46,5 +50,15 @@ public class UserCardMemItem {
 			userCardMemItems.add(userCardMemItem);
 		}
 		return userCardMemItems;
+	}
+
+	// 校验是否有除了 id 之外重复的记录
+	public static UserCardMemItem validUserCardMemItem(UserCardMemItem userCardMemItem, List<UserCardMemItem> userCardMemItems) {
+		for(UserCardMemItem tempCardMemItem : userCardMemItems) {
+			if(tempCardMemItem.equals(userCardMemItem)) {
+				return tempCardMemItem;
+			}
+		}
+		return userCardMemItem;
 	}
 }

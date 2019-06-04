@@ -1,6 +1,10 @@
 package com.mry.utils;
 
+import com.mry.enums.DateFormat;
+import com.mry.exception.CommonException;
+
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -56,7 +60,46 @@ public class CommonUtils {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
 		return simpleDateFormat.format(date);
 	}
-	
+
+	// 返回指定格式的当前时间
+	public static String currentDate(String format) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+		return simpleDateFormat.format(new Date());
+	}
+
+	// 校验传递的时间是否在当前时间之后(判断是否过期)
+	public static boolean validExpireDate(String date) {
+		String dataFormat = getDateFormat(date);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
+		Date date1 = null;
+		Date date2 = null;
+		try {
+			date1 = simpleDateFormat.parse(date);
+			date2 = simpleDateFormat.parse(currentDate(dataFormat));
+		} catch (ParseException e) {
+			throw new CommonException(500, e.getMessage());
+		}
+		return date1.after(date2);
+	}
+
+	// 根据传递的日期，判断其日期格式
+	public static String getDateFormat(String date) {
+		if(date.contains("-") && date.contains(":")) {
+			return DateFormat.FORMAT1.getFormat();
+		} else if(date.contains("-") && !date.contains(":")) {
+			return DateFormat.FORMAT4.getFormat();
+		} else if(date.contains("/") && date.contains(":")) {
+			return DateFormat.FORMAT2.getFormat();
+		} else if(date.contains("/") && !date.contains(":")) {
+			return DateFormat.FORMAT5.getFormat();
+		}
+		return DateFormat.FORMAT1.getFormat();
+	}
+
+	public static void main(String[] args) {
+		System.out.println(validExpireDate("2019-06-03"));
+	}
+
 	/** 
      * 获取用户真实IP地址，不使用request.getRemoteAddr()的原因是有可能用户使用了代理软件方式避免真实IP地址, 
      * 可是，如果通过了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP值 

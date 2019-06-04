@@ -2,28 +2,15 @@ package com.mry.service;
 
 import java.util.List;
 import javax.annotation.Resource;
+
+import com.mry.enums.DateFormat;
+import com.mry.enums.UserCardTypes;
+import com.mry.model.*;
+import com.mry.repository.*;
+import com.mry.utils.CommonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mry.model.ActivityCard;
-import com.mry.model.ActivityCardRechargeItem;
-import com.mry.model.ExtCard;
-import com.mry.model.ExtCardItem;
-import com.mry.model.MemCardItems;
-import com.mry.model.MemCardManage;
-import com.mry.model.UserCardActItem;
-import com.mry.model.UserCardExtItem;
-import com.mry.model.UserCardManage;
-import com.mry.model.UserCardMemItem;
-import com.mry.repository.ActivityCardRechargeItemRepository;
-import com.mry.repository.ActivityCardRepository;
-import com.mry.repository.ExtCardItemRepository;
-import com.mry.repository.ExtCardRepository;
-import com.mry.repository.MemCardItemsRepository;
-import com.mry.repository.MemCardManageRepository;
-import com.mry.repository.UserCardActItemRepository;
-import com.mry.repository.UserCardExtItemRepository;
-import com.mry.repository.UserCardManageRepository;
-import com.mry.repository.UserCardMemItemRepository;
+import org.springframework.util.StringUtils;
 
 @Service
 @Transactional
@@ -48,10 +35,8 @@ public class UserCardManageService {
 	private UserCardExtItemRepository userCardExtItemRepository;
 	@Resource
 	private UserCardActItemRepository userCardActItemRepository;
-	// 定义全局用户卡类型
-	private String memCardType1 = "1", memCardType2 = "会员卡";
-	private String extCardType1 = "2", extCardType2 = "拓客卡";
-	private String actCardType1 = "3", actCardType2 = "活动卡";
+	@Resource
+	private UserCardManageRecordsRepository userCardManageRecordsRepository;
 
 	// 添加一条用户卡管理记录
 	public int addUserCardManageInfo(UserCardManage userCardManage) {
@@ -61,11 +46,10 @@ public class UserCardManageService {
 			userCardManage.setId(originUserCardManage.getId());
 		}
 		userCardManageRepository.save(userCardManage);
-		
 		// 查出关于用户卡的详情，初始化为用户关联卡项目
 		String cardType = userCardManage.getCardType();
 		// 卡类型是 会员卡
-		if(cardType.equals(memCardType1) || cardType.equals(memCardType2)) {
+		if(UserCardTypes.equals(cardType, UserCardTypes.memCardType)) {
 			MemCardManage memCardManage = memCardManageRepository.getMemCardManageByCardName(userCardManage.getStoreId(), userCardManage.getCardOption());
 			if(null != memCardManage) {
 				List<MemCardItems> memCardItems = memCardItemsRepository.getMemCardItemsByMemCardId(memCardManage.getStoreId(), memCardManage.getId());
@@ -76,7 +60,7 @@ public class UserCardManageService {
 				userCardMemItemRepository.saveAll(userCardMemItems);
 			}
 		// 卡类型是 拓客卡
-		} else if(cardType.equals(extCardType1) || cardType.equals(extCardType2)) {
+		} else if(UserCardTypes.equals(cardType, UserCardTypes.extCardType)) {
 			ExtCard extCard = extCardRepository.getExtCardByName(userCardManage.getStoreId(), userCardManage.getCardOption());
 			if(null != extCard) {
 				List<ExtCardItem> extCardItems = extCardItemRepository.getExtCardItemsByExtCardId(extCard.getStoreId(), extCard.getId());
@@ -86,7 +70,7 @@ public class UserCardManageService {
 				userCardExtItemRepository.saveAll(userCardExtItems);
 			}
 		// 卡类型是 活动卡
-		} else if(cardType.equals(actCardType1) || cardType.equals(actCardType2)) {
+		} else if(UserCardTypes.equals(cardType, UserCardTypes.actCardType)) {
 			ActivityCard activityCard = activityCardRepository.getActivityCardByActiName(userCardManage.getStoreId(), userCardManage.getCardOption());
 			if(null != activityCard) {
 				List<ActivityCardRechargeItem> actCardItems = activityCardRechargeItemRepository.getActivityCardRechargeItemByActCardId(activityCard.getStoreId(), activityCard.getId());
@@ -104,7 +88,87 @@ public class UserCardManageService {
 		userCardManageRepository.save(userCardManage);
 		return userCardManage.getId();
 	}
-	
+
+	// 修改卡余额
+	public double editUserCardBalance(int id, double money, String discount, String consDesc) {
+		// 获取卡的余额
+		UserCardManage userCardManage = userCardManageRepository.getUserCardManageById(id);
+		// 没有卡的记录
+		if(null == userCardManage) {
+			return -1;
+		}
+		// 卡的状态不可用(不为1)
+		if(!userCardManage.getCardStatus().equals("1")) {
+			return -2;
+		}
+		// 卡是否过期
+		if(!CommonUtils.validExpireDate(userCardManage.getCardExceDate())) {
+			return -3;
+		}
+		String sCardBalance = userCardManage.getCardBalance();
+		// 卡的余额为空
+		if(StringUtils.isEmpty(sCardBalance)) {
+			return -4;
+		} else {
+			// 卡上余额
+			Double dCardBalance = Double.parseDouble(sCardBalance);
+			// 卡的余额不足
+			if(dCardBalance <= 0) {
+				return -5;
+			}
+			// 计算要扣除的金额
+			// 先处理克扣格式
+			Double dDiscount = parseDiscount(discount);
+			Double dedMoney = money;
+			// 如果有折扣
+			if(dDiscount > 0.0) {
+				// 折扣的钱
+				Double disCountMoney = CommonUtils.doubleCalculation(money, dDiscount, "*");
+				// 要扣除的钱
+				dedMoney = CommonUtils.doubleCalculation(dedMoney, disCountMoney, "-");
+				// 需要记录到卡扣历史记录中
+				UserCardManageRecords userCardManageRecords = recordCardConsumption(userCardManage, dedMoney, consDesc);
+				userCardManageRecordsRepository.save(userCardManageRecords);
+			}
+			// 扣除完毕后，卡上的余额
+			Double balance = CommonUtils.doubleCalculation(dCardBalance, dedMoney, "-");
+			// 更新卡的余额
+			userCardManageRepository.editUserCardBalance(id, Double.toString(balance));
+			return balance;
+		}
+	}
+
+	// 生成消费记录
+	public UserCardManageRecords recordCardConsumption(UserCardManage userCardManage, Double dedMoney, String consDesc) {
+		UserCardManageRecords userCardManageRecords = new UserCardManageRecords();
+		userCardManageRecords.setStoreId(userCardManage.getStoreId());
+		userCardManageRecords.setUserId(userCardManage.getUserId());
+		userCardManageRecords.setCardId(userCardManage.getId());
+		userCardManageRecords.setCardItemId(0);
+		userCardManageRecords.setCardType(userCardManage.getCardType());
+		userCardManageRecords.setCardOption(userCardManage.getCardOption());
+		userCardManageRecords.setConsType(UserCardTypes.consType1.type());
+		userCardManageRecords.setConsMoney(String.valueOf(dedMoney));
+		userCardManageRecords.setConsDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
+		userCardManageRecords.setConsDesc(consDesc);
+		userCardManageRecords.setCardItem("");
+		return userCardManageRecords;
+	}
+
+	// 处理折扣的格式
+	public static Double parseDiscount(String disCount) {
+		if(disCount.contains("%")) {
+			disCount = disCount.replace("%", "");
+			return CommonUtils.doubleCalculation(Double.parseDouble(disCount), 100, "/");
+		}
+		return CommonUtils.doubleCalculation(Double.parseDouble(disCount), 100, "/");
+	}
+
+	public static void main(String[] args) {
+		Double o = parseDiscount("0");
+		System.out.println(o);
+	}
+
 	// 根据 storeId + id 查询一条用户卡管理记录
 	public UserCardManage getUserCardManageById(int storeId, int id) {
 		return getUserCardItem(userCardManageRepository.getUserCardManageById(storeId, id));
@@ -175,15 +239,15 @@ public class UserCardManageService {
 		// 查出关于用户卡的详情，获取用户关联卡项目
 		String cardType = userCardManage.getCardType();
 		// 卡类型是 会员卡
-		if(cardType.equals(memCardType1) || cardType.equals(memCardType2)) {
+		if(UserCardTypes.equals(cardType, UserCardTypes.memCardType)) {
 			List<UserCardMemItem> userCardMemItems = userCardMemItemRepository.getUserCardMemItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
 			userCardManage.getCardItem().put("userCardMemItem", userCardMemItems);
 		// 卡类型是 拓客卡
-		} else if(cardType.equals(extCardType1) || cardType.equals(extCardType2)) {
+		} else if(UserCardTypes.equals(cardType, UserCardTypes.extCardType)) {
 			List<UserCardExtItem> userCardExtItems = userCardExtItemRepository.getUserCardExtItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
 			userCardManage.getCardItem().put("userCardExtItem", userCardExtItems);
 		// 卡类型是 活动卡
-		} else if(cardType.equals(actCardType1) || cardType.equals(actCardType2)) {
+		} else if(UserCardTypes.equals(cardType, UserCardTypes.actCardType)) {
 			List<UserCardActItem> userCardActItems = userCardActItemRepository.getUserCardActItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
 			userCardManage.getCardItem().put("userCardActItem", userCardActItems);
 		}
@@ -196,13 +260,13 @@ public class UserCardManageService {
 		String cardType = userCardManage.getCardType();
 		int userCardItemNum = 0;
 		// 卡类型是 会员卡
-		if(cardType.equals(memCardType1) || cardType.equals(memCardType2)) {
+		if(UserCardTypes.equals(cardType, UserCardTypes.memCardType)) {
 			userCardItemNum = userCardMemItemRepository.deleteUserCardMemItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
 		// 卡类型是 拓客卡
-		} else if(cardType.equals(extCardType1) || cardType.equals(extCardType2)) {
+		} else if(UserCardTypes.equals(cardType, UserCardTypes.extCardType)) {
 			userCardItemNum = userCardExtItemRepository.deleteUserCardExtItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
 		// 卡类型是 活动卡
-		} else if(cardType.equals(actCardType1) || cardType.equals(actCardType2)) {
+		} else if(UserCardTypes.equals(cardType, UserCardTypes.actCardType)) {
 			userCardItemNum = userCardActItemRepository.deleteUserCardActItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
 		}
 		return userCardItemNum;

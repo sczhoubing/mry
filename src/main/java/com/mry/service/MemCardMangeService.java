@@ -13,6 +13,7 @@ import com.mry.param.MemCardManageParam;
 import com.mry.repository.MemCardItemsRepository;
 import com.mry.repository.MemCardManageRepository;
 import com.mry.utils.CommonUtils;
+import org.springframework.util.StringUtils;
 
 @Service
 @Transactional
@@ -52,8 +53,10 @@ public class MemCardMangeService {
 		if(!originMemCardItems.isEmpty()) {
 			memCardItemsRepository.deleteAll(originMemCardItems);
 		}
+		// 关联会员卡对应的id
+		List<MemCardItems> memCardItemsList = MemCardItems.bindMemCard(memCardManage.getId(), memCardItems);
 		// 保存会员卡尊享项目
-		memCardItemsRepository.saveAll(memCardItems);
+		memCardItemsRepository.saveAll(memCardItemsList);
 		return memCardManage.getId();
 	}
 	
@@ -69,25 +72,15 @@ public class MemCardMangeService {
 		return null;
 	}
 	
-	// 根据 storeId 查询所有会员卡记录, 以及与会员卡关联的尊享项目记录
-	public List<MemCardManage> getMemCardManageInfoByStoreId(int storeId) {
-		// 获取会员卡基本信息
-		List<MemCardManage> memCardManages = memCardManageRepository.getMemCardManageByStoreId(storeId);
-		if(!memCardManages.isEmpty()) {
-			// 取出查询出的会员卡的 id
-			List<Integer> memCardIds = memCardManages.stream().map(MemCardManage::getId).collect(Collectors.toList());
-			// 获取会员卡尊享项目
-			List<MemCardItems> memCardItems = memCardItemsRepository.getMemCardItemsByMemCardIds(storeId, memCardIds);
-			// 绑定会员卡和对应的尊享项目
-			return MemCardManage.bindMemCardItems(memCardManages, memCardItems);
-		}
-		return null;
-	}
-	
-	// 根据 storeId + 会员卡状态查询一组会员卡记录，以及与会员卡关联的尊享项目记录
+	// 根据 storeId 或 storeId + 会员卡状态查询一组会员卡记录，以及与会员卡关联的尊享项目记录
 	public List<MemCardManage> getMemCardManageInfoByCardStatus(int storeId, String cardStatus) {
 		// 获取会员卡基本信息
-		List<MemCardManage> memCardManages = memCardManageRepository.getMemCardManageInfoByCardStatus(storeId, cardStatus);
+		List<MemCardManage> memCardManages;
+		if(!StringUtils.isEmpty(cardStatus)) {
+			memCardManages = memCardManageRepository.getMemCardManageInfoByCardStatus(storeId, cardStatus);
+		} else {
+			memCardManages = memCardManageRepository.getMemCardManageByStoreId(storeId);
+		}
 		if(!memCardManages.isEmpty()) {
 			// 取出查询出的会员卡的 id
 			List<Integer> memCardIds = memCardManages.stream().map(MemCardManage::getId).collect(Collectors.toList());

@@ -8,12 +8,19 @@ import org.springframework.data.repository.query.Param;
 import com.mry.model.UserCardManage;
 
 public interface UserCardManageRepository extends JpaRepository<UserCardManage, Integer> {
+	@Query(value="select * from user_card_manage where id=:id", nativeQuery=true)
+	public UserCardManage getUserCardManageById(@Param("id")int id);
+
 	@Query(value="select * from user_card_manage where store_id=:storeId and id=:id", nativeQuery=true)
 	public UserCardManage getUserCardManageById(@Param("storeId")int storeId, @Param("id")int id);
 	
 	@Query(value="select * from user_card_manage where store_id=:storeId and user_id=:userId and card_type=:cardType", nativeQuery=true)
 	public UserCardManage getUserCardManageByCardType(@Param("storeId")int storeId, @Param("userId")int userId, @Param("cardType")String cardType);
-	
+
+	@Query(value="update user_card_manage set card_balance=:cardBalance where id=:id", nativeQuery=true)
+	@Modifying
+	public void editUserCardBalance(@Param("id")int id, @Param("cardBalance")String cardBalance);
+
 	@Query(value="select * from user_card_manage where store_id=:storeId and user_id=:userId", nativeQuery=true)
 	public List<UserCardManage> getUserCardManageByUserId(@Param("storeId")int storeId, @Param("userId")int userId);
 	
