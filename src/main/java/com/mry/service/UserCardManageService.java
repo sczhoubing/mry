@@ -56,7 +56,7 @@ public class UserCardManageService {
 				// 创建与用户卡关联的项目
 				List<UserCardMemItem> userCardMemItems = UserCardMemItem.bindUserCardMemItemInfo(userCardManage.getStoreId(), userCardManage.getUserId(), userCardManage.getId(), memCardItems);
 				// 如果已经有关于卡关联的卡项目信息，将其删除，重新添加
-				userCardMemItemRepository.deleteUserCardMemItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
+				userCardMemItemRepository.deleteUserCardMemItemByScuId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
 				userCardMemItemRepository.saveAll(userCardMemItems);
 			}
 		// 卡类型是 拓客卡
@@ -261,7 +261,7 @@ public class UserCardManageService {
 		int userCardItemNum = 0;
 		// 卡类型是 会员卡
 		if(UserCardTypes.equals(cardType, UserCardTypes.memCardType)) {
-			userCardItemNum = userCardMemItemRepository.deleteUserCardMemItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
+			userCardItemNum = userCardMemItemRepository.deleteUserCardMemItemByScuId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());
 		// 卡类型是 拓客卡
 		} else if(UserCardTypes.equals(cardType, UserCardTypes.extCardType)) {
 			userCardItemNum = userCardExtItemRepository.deleteUserCardExtItemByUserId(userCardManage.getStoreId(), userCardManage.getId(), userCardManage.getUserId());

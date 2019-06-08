@@ -9,7 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.mry.enums.DateFormat;
 import com.mry.model.MemCardItems;
+import com.mry.utils.CommonUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -47,6 +50,7 @@ public class UserCardMemItem {
 			userCardMemItem.setItemName(item.getItemName());
 			userCardMemItem.setItemTime(item.getItemTimes());
 			userCardMemItem.setItemExce(item.getItemExpiry());
+			userCardMemItem.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
 			userCardMemItems.add(userCardMemItem);
 		}
 		return userCardMemItems;

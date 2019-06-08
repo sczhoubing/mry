@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import com.mry.enums.DateFormat;
+import com.mry.utils.CommonUtils;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class UserCardActItem {
 	private String presentItem;
 	@Column(name="present_money")
 	private String presentMoney;
+	@Column(name="update_date")
+	private String updateDate;
 
 	// 为用户活动卡绑定关联项目信息
 	public static List<UserCardActItem> bindUserCardActItemInfo(int storeId, int userId, int cardId, List<ActivityCardRechargeItem> actCardItems) {
@@ -40,6 +44,7 @@ public class UserCardActItem {
 			userCardActItem.setCardId(cardId);
 			userCardActItem.setPresentItem(item.getPresentItem());
 			userCardActItem.setPresentMoney(item.getPresentMoney());
+			userCardActItem.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
 			userCardActItems.add(userCardActItem);
 		}
 		return userCardActItems;

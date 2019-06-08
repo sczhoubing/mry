@@ -117,4 +117,24 @@ public class UserCardMemItemService {
     public List<UserCardMemItem> getUserCardMemItemByUserId(int storeId, int cardId, int userId) {
         return userCardMemItemRepository.getUserCardMemItemByUserId(storeId, cardId, userId);
     }
+
+    // 根据 id 删除一条卡项记录
+    public int deleteUserCardMemItemById(int id) {
+        return userCardMemItemRepository.deleteUserCardMemItemById(id);
+    }
+
+    // 根据 storeId + cardId 删除一组卡项记录
+    public int deleteUserCardMemItemByCardId(int storeId, int cardId) {
+        return userCardMemItemRepository.deleteUserCardMemItemByCardId(storeId, cardId);
+    }
+
+    // 根据 storeId + userId 删除一组卡项记录
+    public int deleteUserCardMemItemByUserId(int storeId, int userId) {
+        return userCardMemItemRepository.deleteUserCardMemItemByUserId(storeId, userId);
+    }
+
+    // 根据 storeId 删除该门店下所有卡项记录
+    public int deleteUserCardMemItemByStoreId(int storeId) {
+        return userCardMemItemRepository.deleteUserCardMemItemByStoreId(storeId);
+    }
 }

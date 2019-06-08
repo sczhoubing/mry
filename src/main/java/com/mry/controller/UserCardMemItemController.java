@@ -64,4 +64,25 @@ public class UserCardMemItemController {
         result.put("itemInfo", userCardMemItemService.getUserCardMemItemByUserId(storeId, cardId, userId));
         return result;
     }
+
+    @GetMapping("/delete/id/{id}")
+    public Map<String, Object> deleteUserCardMemItem(@PathVariable("id") int id) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("msg", userCardMemItemService.deleteUserCardMemItemById(id));
+        return result;
+    }
+
+    @GetMapping("/delete/store/{storeId}")
+    public Map<String, Object> deleteUserCardMemItem(@PathVariable("storeId") int storeId, Integer cardId, Integer userId) {
+        Map<String, Object> result = new HashMap<>();
+        if(null != cardId && null == userId) {
+            result.put("msg", userCardMemItemService.deleteUserCardMemItemByCardId(storeId, cardId));
+        } else if(null == cardId && null != userId) {
+            result.put("msg", userCardMemItemService.deleteUserCardMemItemByUserId(storeId, userId));
+        } else if(null == cardId && null == userId) {
+            result.put("msg", userCardMemItemService.deleteUserCardMemItemByStoreId(storeId));
+        }
+        return result;
+    }
+
 }

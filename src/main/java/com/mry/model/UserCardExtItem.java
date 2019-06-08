@@ -1,5 +1,7 @@
 package com.mry.model;
 
+import com.mry.enums.DateFormat;
+import com.mry.utils.CommonUtils;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class UserCardExtItem {
 	private String itemType;
 	@Column(name="item_time")
 	private String itemTime;
+	@Column(name="update_date")
+	private String updateDate;
 
 	// 为用户拓客卡绑定关联项目信息
 	public static List<UserCardExtItem> bindUserCardExtItemInfo(int storeId, int userId, int cardId, List<ExtCardItem> extCardItems) {
@@ -40,6 +44,7 @@ public class UserCardExtItem {
 			userCardExtItem.setCardId(cardId);
 			userCardExtItem.setItemType(item.getItemType());
 			userCardExtItem.setItemTime(item.getItemTimes());
+			userCardExtItem.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
 			userCardExtItems.add(userCardExtItem);
 		}
 		return userCardExtItems;

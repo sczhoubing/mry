@@ -14,7 +14,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
 	List<Transaction> getTransactionByStoreId(@Param("storeId")int storeId);
 	
 	@Query(value="select * from transaction where store_id=:storeId and user_id=:userId", nativeQuery=true)
-	Transaction getTransactionByUserId(@Param("storeId")int storeId, @Param("userId")int userId);
+	List<Transaction> getTransactionByUserId(@Param("storeId")int storeId, @Param("userId")int userId);
 	
 	@Query(value="delete from transaction where store_id=:storeId", nativeQuery=true)
 	@Modifying

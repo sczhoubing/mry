@@ -20,7 +20,23 @@ public interface UserCardMemItemRepository extends JpaRepository<UserCardMemItem
 	@Modifying
 	void editUserCardMemItemTimes(@Param("id")int id, @Param("times")String times, @Param("updateDate")String updateDate);
 
+	@Query(value = "delete from user_card_mem_item where id=:id", nativeQuery = true)
+	@Modifying
+	int deleteUserCardMemItemById(@Param("id")int id);
+
 	@Query(value = "delete from user_card_mem_item where store_id=:storeId and card_id=:cardId and user_id=:userId", nativeQuery = true)
 	@Modifying
-	int deleteUserCardMemItemByUserId(@Param("storeId")int storeId, @Param("cardId")int cardId, @Param("userId")int userId);
+	int deleteUserCardMemItemByScuId(@Param("storeId")int storeId, @Param("cardId")int cardId, @Param("userId")int userId);
+
+	@Query(value = "delete from user_card_mem_item where store_id=:storeId and card_id=:cardId", nativeQuery = true)
+	@Modifying
+	int deleteUserCardMemItemByCardId(@Param("storeId")int storeId, @Param("cardId")int cardId);
+
+	@Query(value = "delete from user_card_mem_item where store_id=:storeId and user_id=:userId", nativeQuery = true)
+	@Modifying
+	int deleteUserCardMemItemByUserId(@Param("storeId")int storeId, @Param("userId")int userId);
+
+	@Query(value = "delete from user_card_mem_item where store_id=:storeId", nativeQuery = true)
+	@Modifying
+	int deleteUserCardMemItemByStoreId(@Param("storeId")int storeId);
 }

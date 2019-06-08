@@ -34,6 +34,13 @@ public class TransactionController {
 		result.put("msg", transactionService.editTransaction(transaction));
 		return result;
 	}
+
+	@GetMapping("/id/{id}")
+	public Map<String, Object> getTransaction(@PathVariable("id") int id) {
+		Map<String, Object> result = new HashMap<>();
+		result.put("transactionInfo", transactionService.getTransactionById(id));
+		return result;
+	}
 	
 	@GetMapping("/store/{storeId}")
 	public Map<String, Object> getTransaction(@PathVariable("storeId")Integer storeId, Integer userId) {
