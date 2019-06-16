@@ -22,11 +22,11 @@ public class UserCardManageRecordsController {
     private UserCardManageRecordsService userCardManageRecordsService;
 
     @GetMapping("/get")
-    public Map<String, Object> getUserCardManageRecords(int storeId, int userId) {
+    public Map<String, Object> getUserCardManageRecords(Integer storeId, Integer userId) {
         Map<String, Object> result = new HashMap<>();
         if(!StringUtils.isEmpty(storeId) && StringUtils.isEmpty(userId)) {
             result.put("userCardManageRecordsInfo", userCardManageRecordsService.getUserCardManageRecordsByStoreId(storeId));
-        } else {
+        } else if(StringUtils.isEmpty(storeId) && !StringUtils.isEmpty(userId)) {
             result.put("userCardManageRecordsInfo", userCardManageRecordsService.getUserCardManageRecordsByUserId(userId));
         }
         return result;
