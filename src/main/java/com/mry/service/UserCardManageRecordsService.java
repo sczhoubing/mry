@@ -28,4 +28,18 @@ public class UserCardManageRecordsService {
     public List<UserCardManageRecords>  getUserCardManageRecordsByUserId(int userId) {
         return userCardManageRecordsRepository.getUserCardManageRecordsByUserId(userId);
     }
+
+    // 根据 storeId + userId 删除一组用户消费记录
+    public int deleteUserCardManageRecordsByUserId(int storeId, int userId) {
+        return userCardManageRecordsRepository.deleteUserCardManageRecordsByUserId(storeId, userId);
+    }
+
+    // 根据 storeId + id 删除一条用户消费记录
+    public int deleteUserCardManageRecordsById(int storeId, int id) {
+        return userCardManageRecordsRepository.deleteUserCardManageRecordsById(storeId, id);
+    }
+
+    public int deleteUserCardManageRecordsStoreId(int storeId) {
+        return userCardManageRecordsRepository.deleteUserCardManageRecordsByStoreId(storeId);
+    }
 }

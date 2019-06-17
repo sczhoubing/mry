@@ -3,6 +3,7 @@ package com.mry.controller;
 import com.mry.service.UserCardManageRecordsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +29,19 @@ public class UserCardManageRecordsController {
             result.put("userCardManageRecordsInfo", userCardManageRecordsService.getUserCardManageRecordsByStoreId(storeId));
         } else if(StringUtils.isEmpty(storeId) && !StringUtils.isEmpty(userId)) {
             result.put("userCardManageRecordsInfo", userCardManageRecordsService.getUserCardManageRecordsByUserId(userId));
+        }
+        return result;
+    }
+
+    @GetMapping("/delete/{storeId}")
+    public Map<String, Object> deleteUserCardManageRecords(@PathVariable("storeId") Integer storeId, Integer userId, Integer id) {
+        Map<String, Object> result = new HashMap<>();
+        if(!StringUtils.isEmpty(userId) && StringUtils.isEmpty(id)) {
+            result.put("msg", userCardManageRecordsService.deleteUserCardManageRecordsByUserId(storeId, userId));
+        } else if(StringUtils.isEmpty(userId) && !StringUtils.isEmpty(id)) {
+            result.put("msg", userCardManageRecordsService.deleteUserCardManageRecordsById(storeId, id));
+        } else if(StringUtils.isEmpty(userId) && StringUtils.isEmpty(id)) {
+            result.put("msg", userCardManageRecordsService.deleteUserCardManageRecordsStoreId(storeId));
         }
         return result;
     }
