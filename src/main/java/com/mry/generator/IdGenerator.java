@@ -7,6 +7,7 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 import java.io.Serializable;
+import java.util.Random;
 
 /**
  * @author: cddufu@cn.ibm.com
@@ -17,8 +18,11 @@ public class IdGenerator implements IdentifierGenerator {
     @Override
     public Serializable generate(SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException {
         synchronized(this) {
-            String currentTime = CommonUtils.currentDate(DateFormat.FORMAT6.getFormat());
-            return Long.valueOf(currentTime);
+            long millis = System.currentTimeMillis();
+            long weight = Math.abs(new Random().nextInt());
+            String base = millis + "" + weight;
+            String pkid = base.substring(base.length()-15, base.length());
+            return Long.valueOf(pkid);
         }
     }
 }
