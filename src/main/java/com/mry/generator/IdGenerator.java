@@ -1,7 +1,5 @@
 package com.mry.generator;
 
-import com.mry.enums.DateFormat;
-import com.mry.utils.CommonUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;

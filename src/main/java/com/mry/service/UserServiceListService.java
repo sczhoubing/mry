@@ -27,11 +27,23 @@ public class UserServiceListService {
     private UserManageRepository userManageRepository;
 
     // 添加一条用户服务单记录
-    public long addUserServiceList(UserServiceList userServiceList) {
+    public Long addUserServiceList(UserServiceList userServiceList) {
         // 设置当前时间
-        userServiceList.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
-        UserServiceList resultUserServiceList = userServiceListRepository.save(userServiceList);
-        return resultUserServiceList.getId();
+        try {
+            userServiceList.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
+            UserServiceList resultUserServiceList = userServiceListRepository.save(userServiceList);
+            return resultUserServiceList.getId();
+        } catch (RuntimeException e) {
+            // 有可能生成的主键重复导致插入失败，
+            // 发现异常包含 "Duplicate entry xxxx" 表示是主键的问题
+            // 那么就重新插入一次，否则将异常继续抛出
+            if(e.getMessage().contains("Duplicate entry")) {
+                addUserServiceList(userServiceList);
+            } else {
+                throw e;
+            }
+        }
+        return null;
     }
 
     // 编辑一条用户服务单号
