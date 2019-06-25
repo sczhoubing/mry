@@ -16,7 +16,7 @@ public class ComplaintManage {
     @Column(name = "user_id")
     private int userId;
     @Column(name = "service_id")
-    private int serviceId;
+    private String serviceId;
     @Column(name = "content")
     private String content;
     @Column(name = "update_date")
