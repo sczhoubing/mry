@@ -13,7 +13,7 @@ import java.util.List;
  * @date:
  * @desc:
  */
-public interface UserServiceListRepository extends JpaRepository<UserServiceList, Long> {
+public interface UserServiceListRepository extends JpaRepository<UserServiceList, String> {
     @Query(value = "select * from user_service_list where store_id = :storeId and (id like %:param% or technician like %:param%)", nativeQuery = true)
     List<UserServiceList> getUserServiceListByIdOrTechnician(@Param("storeId") int storeId, @Param("param") String param);
 
@@ -22,7 +22,7 @@ public interface UserServiceListRepository extends JpaRepository<UserServiceList
 
     @Query(value = "delete from user_service_list where store_id = :storeId and id = :id", nativeQuery = true)
     @Modifying
-    int deleteUserServiceListById(@Param("storeId") int storeId, @Param("id") long id);
+    int deleteUserServiceListById(@Param("storeId") int storeId, @Param("id") String id);
 
     @Query(value = "delete from user_service_list where store_id = :storeId and user_id = :userId", nativeQuery = true)
     @Modifying

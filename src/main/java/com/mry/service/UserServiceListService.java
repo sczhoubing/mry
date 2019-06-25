@@ -27,7 +27,7 @@ public class UserServiceListService {
     private UserManageRepository userManageRepository;
 
     // 添加一条用户服务单记录
-    public Long addUserServiceList(UserServiceList userServiceList) {
+    public String addUserServiceList(UserServiceList userServiceList) {
         // 设置当前时间
         try {
             userServiceList.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
@@ -72,7 +72,7 @@ public class UserServiceListService {
     }
 
     // 以服务单号删除一条用户服务单
-    public int delteUserServiceListById(int storeId, long id) {
+    public int deleteUserServiceListById(int storeId, String id) {
         return userServiceListRepository.deleteUserServiceListById(storeId, id);
     }
 

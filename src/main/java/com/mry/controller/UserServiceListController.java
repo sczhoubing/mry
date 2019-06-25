@@ -42,10 +42,10 @@ public class UserServiceListController {
     }
 
     @GetMapping("/delete/{storeId}")
-    public Map<String, Object> deleteUserServiceList(@PathVariable("storeId")int storeId, Long id, Integer userId) {
+    public Map<String, Object> deleteUserServiceList(@PathVariable("storeId")int storeId, String id, Integer userId) {
         Map<String, Object> result = new HashMap<>();
         if(!StringUtils.isEmpty(id) && StringUtils.isEmpty(userId)) {
-            result.put("msg", userServiceListService.delteUserServiceListById(storeId, id));
+            result.put("msg", userServiceListService.deleteUserServiceListById(storeId, id));
         } else if (StringUtils.isEmpty(id) && !StringUtils.isEmpty(userId)) {
             result.put("msg", userServiceListService.deleteUserServiceListsByUserId(storeId, userId));
         } else if(StringUtils.isEmpty(id) && StringUtils.isEmpty(userId)) {

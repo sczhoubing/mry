@@ -54,7 +54,7 @@ public class MemCardMangeService {
 			memCardItemsRepository.deleteAll(originMemCardItems);
 		}
 		// 关联会员卡对应的id
-		List<MemCardItems> memCardItemsList = MemCardItems.bindMemCard(memCardManage.getId(), memCardItems);
+		List<MemCardItems> memCardItemsList = MemCardItems.bindMemCard(memCardManage, memCardItems);
 		// 保存会员卡尊享项目
 		memCardItemsRepository.saveAll(memCardItemsList);
 		return memCardManage.getId();

@@ -6,7 +6,9 @@ import com.mry.exception.CommonException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
@@ -61,6 +63,21 @@ public class CommonUtils {
 		return simpleDateFormat.format(date);
 	}
 
+	// 将传递的日期字符串转化为日期格式
+	public static Date parseDate(String date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateFormat.FORMAT1.getFormat());
+		try {
+			return simpleDateFormat.parse(date);
+		} catch (ParseException e) {
+			throw new CommonException(500, e.getMessage());
+		}
+	}
+
+	public static void main(String[] args) {
+		Date date = parseDate("2019-06-12 11:22:33");
+		System.out.println(calculateDate(date, 2, 3));
+	}
+
 	// 返回指定格式的当前时间
 	public static String currentDate(String format) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
@@ -96,8 +113,12 @@ public class CommonUtils {
 		return DateFormat.FORMAT1.getFormat();
 	}
 
-	public static void main(String[] args) {
-		System.out.println(validExpireDate("2019-06-03"));
+	// 日期计算
+	public static String calculateDate(Date date, Integer flag, Integer bounds) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		calendar.add(flag, bounds);
+		return CommonUtils.formatDate(calendar.getTime(), DateFormat.FORMAT1.getFormat());
 	}
 
 	/** 

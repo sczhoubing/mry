@@ -41,7 +41,7 @@ public class UserCardMemItem {
 
 	// 为用户会员卡项目绑定关联项目信息
 	public static List<UserCardMemItem> bindUserCardMemItemInfo(int storeId, int userId, int cardId, List<MemCardItems> memCardItems) {
-		List<UserCardMemItem> userCardMemItems = new ArrayList<UserCardMemItem>();
+		List<UserCardMemItem> userCardMemItems = new ArrayList<>();
 		for(MemCardItems item : memCardItems) {
 			UserCardMemItem userCardMemItem = new UserCardMemItem();
 			userCardMemItem.setStoreId(storeId);

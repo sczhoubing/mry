@@ -20,7 +20,7 @@ public class IdGenerator implements IdentifierGenerator {
             long weight = Math.abs(new Random().nextInt());
             String base = millis + "" + weight;
             String pkid = base.substring(base.length()-15, base.length());
-            return Long.valueOf(pkid);
+            return pkid;
         }
     }
 }

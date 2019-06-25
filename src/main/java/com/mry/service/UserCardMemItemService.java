@@ -2,6 +2,7 @@ package com.mry.service;
 
 import com.mry.enums.DateFormat;
 import com.mry.enums.UserCardTypes;
+import com.mry.exception.CommonException;
 import com.mry.model.UserCardManage;
 import com.mry.model.UserCardManageRecords;
 import com.mry.model.UserCardMemItem;
@@ -81,6 +82,9 @@ public class UserCardMemItemService {
         userCardMemItemRepository.editUserCardMemItemTimes(id, String.valueOf(residualTimes), updateDate);
         // 需要记录到卡扣历史记录中
         UserCardManage userCardManage = userCardManageRepository.getUserCardManageById(userCardMemItem.getCardId());
+        if(null == userCardManage) {
+            throw new CommonException(500, "userCardManage info is not exist, cardId --> " + userCardMemItem.getCardId());
+        }
         UserCardManageRecords userCardManageRecords = recordCardConsumption(userCardManage, userCardMemItem, consDesc);
         userCardManageRecordsRepository.save(userCardManageRecords);
         return residualTimes;

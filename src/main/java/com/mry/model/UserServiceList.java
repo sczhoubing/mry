@@ -16,7 +16,7 @@ public class UserServiceList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "idGenerator")
     @GenericGenerator(name = "idGenerator", strategy = "com.mry.generator.IdGenerator")
-    private long id;
+    private String id;
     @Column(name = "store_id")
     private int storeId;
     @Column(name = "user_id")

@@ -1,5 +1,6 @@
 package com.mry.model;
 
+import com.mry.utils.CommonUtils;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -8,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +33,13 @@ public class MemCardItems {
 	private String itemExpiry;
 
 	// 绑定关联会员卡对应的id
-	public static List<MemCardItems> bindMemCard(int memCardId, List<MemCardItems> memCardItems) {
-		return memCardItems.stream().peek(e -> e.setMemCardId(memCardId)).collect(Collectors.toList());
+	public static List<MemCardItems> bindMemCard(MemCardManage memCardManage, List<MemCardItems> memCardItems) {
+		for(MemCardItems memCardItem : memCardItems) {
+			memCardItem.setMemCardId(memCardManage.getId());
+			Date cardCreateDate = CommonUtils.parseDate(memCardManage.getCreateDate());
+			String expireDate = CommonUtils.calculateDate(cardCreateDate, Calendar.MONTH, Integer.parseInt(memCardItem.getItemExpiry()));
+			memCardItem.setItemExpiry(expireDate);
+		}
+		return memCardItems;
 	}
 }
