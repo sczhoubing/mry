@@ -1,5 +1,6 @@
 package com.mry.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mry.model.ComplaintManage;
 import com.mry.service.ComplaintManageService;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,15 @@ public class ComplaintManageController {
     public Map<String, Object> addComplaintManage(@RequestBody ComplaintManage complaintManage) {
         Map<String, Object> result = new HashMap<>();
         result.put("msg", complaintManageService.addComplaintManage(complaintManage));
+        return result;
+    }
+
+    @PostMapping("/status")
+    public Map<String, Object> editComplaintManageStatus(@RequestBody JSONObject params) {
+        Map<String, Object> result = new HashMap<>();
+        int id = params.getInteger("id");
+        String status = params.getString("status");
+        result.put("msg", complaintManageService.editComplaintManegeStatus(id, status));
         return result;
     }
 

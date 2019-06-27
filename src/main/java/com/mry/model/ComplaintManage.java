@@ -21,4 +21,6 @@ public class ComplaintManage {
     private String content;
     @Column(name = "update_date")
     private String updateDate;
+    @Column(name = "status")
+    private String status;
 }
