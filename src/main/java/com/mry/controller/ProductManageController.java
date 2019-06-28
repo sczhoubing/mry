@@ -34,11 +34,11 @@ public class ProductManageController {
     @GetMapping("/store/{storeId}")
     public Map<String, Object> getProductManage(@PathVariable("storeId")int storeId, Integer id, String productName) {
         Map<String, Object> result = new HashMap<>();
-        if(!StringUtils.isEmpty("id") && StringUtils.isEmpty(productName)) {
+        if(!StringUtils.isEmpty(id) && StringUtils.isEmpty(productName)) {
             result.put("productManageInfo", productManageService.getProductManageById(id, storeId));
-        } else if(StringUtils.isEmpty("id") && !StringUtils.isEmpty(productName)) {
+        } else if(StringUtils.isEmpty(id) && !StringUtils.isEmpty(productName)) {
             result.put("productManageInfo", productManageService.getProductManageByProductName(storeId, productName));
-        } else if(!StringUtils.isEmpty("id") && !StringUtils.isEmpty(productName)) {
+        } else if(StringUtils.isEmpty(id) && StringUtils.isEmpty(productName)) {
             result.put("productManageInfo", productManageService.getProductManageByStoreId(storeId));
         }
         return result;
@@ -62,11 +62,11 @@ public class ProductManageController {
     @GetMapping("/delete/{storeId}")
     public Map<String, Object> deleteProductManage(@PathVariable("storeId")int storeId, Integer id, String productName) {
         Map<String, Object> result = new HashMap<>();
-        if(!StringUtils.isEmpty("id") && StringUtils.isEmpty(productName)) {
+        if(!StringUtils.isEmpty(id) && StringUtils.isEmpty(productName)) {
             result.put("msg", productManageService.deleteProductManageById(id, storeId));
-        } else if(StringUtils.isEmpty("id") && !StringUtils.isEmpty(productName)) {
+        } else if(StringUtils.isEmpty(id) && !StringUtils.isEmpty(productName)) {
             result.put("msg", productManageService.deleteProductManageByProductName(storeId, productName));
-        } else if(!StringUtils.isEmpty("id") && !StringUtils.isEmpty(productName)) {
+        } else if(StringUtils.isEmpty(id) && StringUtils.isEmpty(productName)) {
             result.put("msg", productManageService.deleteProductManageByStoreId(storeId));
         }
         return result;

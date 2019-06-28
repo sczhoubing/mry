@@ -14,8 +14,9 @@ import java.util.List;
  * @desc:
  */
 public interface UserServiceListRepository extends JpaRepository<UserServiceList, String> {
-    @Query(value = "select * from user_service_list where store_id = :storeId and (id like %:param% or technician like %:param%)", nativeQuery = true)
-    List<UserServiceList> getUserServiceListByIdOrTechnician(@Param("storeId") int storeId, @Param("param") String param);
+    @Query(value = "select * from user_service_list where store_id = :storeId and (id like %:param% or technician " +
+            "like %:param% or status like %:param%)", nativeQuery = true)
+    List<UserServiceList> getUserServiceListByLike(@Param("storeId") int storeId, @Param("param") String param);
 
     @Query(value = "select * from user_service_list where store_id = :storeId and user_id in (:userIds)", nativeQuery = true)
     List<UserServiceList> getUserServiceListByUserId(@Param("storeId") int storeId, @Param("userIds") List<Integer> userIds);

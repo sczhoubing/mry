@@ -2,6 +2,7 @@ package com.mry.service;
 
 import com.mry.model.ProductManage;
 import com.mry.repository.ProductManageRepository;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,23 +19,19 @@ public class ProductManageService {
 
     // 添加一条库存记录
     public int addProductManage(ProductManage productManage) {
-        ProductManage tempProductManage = productManageRepository.existProductManage(productManage.getStoreId(),
+        ProductManage tempProductManage = productManageRepository.exist(productManage.getStoreId(),
                 productManage.getProductName(), productManage.getProductNumber(), productManage.getProductSource(),
                 productManage.getExpireDate());
-        // 数据库已经有相同的数据，应将其覆盖
         if(null != tempProductManage) {
             productManage.setId(tempProductManage.getId());
-            // todo 要同时更新小库存的关联信息
-
         }
         productManageRepository.save(productManage);
-        return productManage.getStoreId();
+        return productManage.getId();
     }
 
     // 编辑一条库存记录
     public int editProductManage(ProductManage productManage) {
         productManageRepository.save(productManage);
-        // todo 要同时更新小库存的关联信息
         return productManage.getId();
     }
 

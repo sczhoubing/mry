@@ -4,6 +4,8 @@ import com.mry.enums.DateFormat;
 import com.mry.model.ProductList;
 import com.mry.repository.ProductListRepository;
 import com.mry.utils.CommonUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,16 @@ public class ProductListService {
         productList.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
         productListRepository.save(productList);
         return productList.getId();
+    }
+
+    // 根据条件分页查询
+    public Page<ProductList> getProductListByPage(Pageable pageable, String condition) {
+        return productListRepository.getProductListByPage(pageable, condition);
+    }
+
+    // 分页查询
+    public Page<ProductList> getProductListByPage(Pageable pageable) {
+        return productListRepository.findAll(pageable);
     }
 
     // 根据 storeId 返回一组产品具体信息

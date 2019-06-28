@@ -2,12 +2,9 @@ package com.mry.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="item_manage")
@@ -60,4 +57,20 @@ public class ItemManage {
 	private String fixedOperation;
 	@Column(name="manual_cost")
 	private String manualCost;
+	@Transient
+	private List<Product> products;
+
+	// 将项目和对应的产品关联起来
+	public static List<ItemManage> bindProducts(List<ItemManage> itemManages, List<Product> products) {
+		for(ItemManage itemManage : itemManages) {
+			List<Product> resultProducts = new ArrayList<>();
+			for(Product product : products) {
+				if(itemManage.getId() == product.getItemId()) {
+					resultProducts.add(product);
+				}
+			}
+			itemManage.setProducts(resultProducts);
+		}
+		return itemManages;
+	}
 }

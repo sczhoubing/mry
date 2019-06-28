@@ -3,6 +3,8 @@ package com.mry.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.mry.model.ProductList;
 import com.mry.service.ProductListService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,21 @@ public class ProductListController {
         int id = params.getInteger("id");
         String status = params.getString("status");
         result.put("msg", productListService.editProductListStatus(id, status));
+        return result;
+    }
+
+    @GetMapping("/page/{currentPageNum}")
+    public Map<String, Object> getProductListByPage(@PathVariable("currentPageNum")int currentPageNum, Integer pageSize, String condition) {
+        Map<String, Object> result = new HashMap<>();
+        if(StringUtils.isEmpty(pageSize)) {
+            pageSize = 10;
+        }
+        Pageable pageable = PageRequest.of(currentPageNum - 1 , pageSize);
+        if(!StringUtils.isEmpty(condition)) {
+            result.put("productList", productListService.getProductListByPage(pageable, condition));
+        } else {
+            result.put("productList", productListService.getProductListByPage(pageable));
+        }
         return result;
     }
 

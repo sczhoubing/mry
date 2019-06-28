@@ -72,7 +72,7 @@ public class UserServiceListService {
     // 以单号，顾客，技师 任意条件查询
     public List<UserServiceList> getUserServiceList(int storeId, String param) {
         // 根据单号或技师查询
-        List<UserServiceList> list1 = userServiceListRepository.getUserServiceListByIdOrTechnician(storeId, param);
+        List<UserServiceList> list1 = userServiceListRepository.getUserServiceListByLike(storeId, param);
         // 根据用户姓名查询所有用户
         List<UserManage> userManages = userManageRepository.getUserManageByUserName(storeId, param);
         if(!userManages.isEmpty()) {

@@ -1,14 +1,11 @@
 package com.mry.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "product_manage")
 @Data
-@EqualsAndHashCode(exclude = "id")
 public class ProductManage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

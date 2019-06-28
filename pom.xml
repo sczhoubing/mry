@@ -21,6 +21,7 @@
 		<fastjson.version>1.2.47</fastjson.version>
 		<aliyun.sdk.core.version>3.3.1</aliyun.sdk.core.version>
 		<aliyun.sdk.dysmsapi.version>1.0.0</aliyun.sdk.dysmsapi.version>
+		<guava.version>18.0</guava.version>
 	</properties>
 	
 	<dependencies>
@@ -65,6 +66,11 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 		<!-- start
 			JDK 版本太高(12.0)导致项目启动失败；

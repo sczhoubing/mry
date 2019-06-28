@@ -11,11 +11,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProductManageRepository extends JpaRepository<ProductManage, Integer> {
-    @Query(value = "select * from product_manage where store_id = :storeId and product_name = :productName and " +
-            "product_number =:productNumber and product_source = :productSource and expire_date = :expireDate", nativeQuery = true)
-    ProductManage existProductManage(@Param("storeId")int storeId, @Param("productName") String productName,
-                                     @Param("productNumber") int productNumber, @Param("productSource") String productSource,
-                                     @Param("expireDate") String expireDate);
+    @Query(value = "select * from product_manage where store_id = :storeId and product_name = :productName" +
+            " and product_number = :productNumber and product_source = :productSource and expire_date = :expireDate", nativeQuery = true)
+    ProductManage exist(@Param("storeId")int storeId, @Param("productName")String productName, @Param("productNumber")int productNumber,
+                        @Param("productSource")String productSource, @Param("expireDate")String expireDate);
 
     @Query(value = "select * from product_manage where store_id = :storeId", nativeQuery = true)
     List<ProductManage> getProductManageByStoreId(@Param("storeId")int storeId);
@@ -26,8 +25,8 @@ public interface ProductManageRepository extends JpaRepository<ProductManage, In
     @Query(value = "select * from product_manage where store_id = :storeId and product_name = :productName", nativeQuery = true)
     List<ProductManage> getProductManageByProductName(@Param("storeId")int storeId, @Param("productName")String productName);
 
-    @Query(value="select * from product_manage where product_name like '%:condition%' or product_source like '%:condition%'",
-           countQuery="select count(*) from product_manage where product_name like '%:condition%' or product_source like '%:condition%'",
+    @Query(value="select * from product_manage where product_name like %:condition% or product_source like %:condition%",
+           countQuery="select count(*) from product_manage where product_name like %:condition% or product_source like %:condition%",
            nativeQuery=true)
     Page<ProductManage> getProductManageByPage(Pageable pageable, @Param("condition") String condition);
 
