@@ -1,5 +1,6 @@
 package com.mry.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mry.model.UserServiceList;
 import com.mry.service.UserServiceListService;
 import org.springframework.util.StringUtils;
@@ -31,6 +32,15 @@ public class UserServiceListController {
     public Map<String, Object> editUserServiceList(@RequestBody UserServiceList userServiceList) {
         Map<String, Object> result = new HashMap<>();
         result.put("msg", userServiceListService.editUserServiceList(userServiceList));
+        return result;
+    }
+
+    @PostMapping("/status")
+    public Map<String, Object> editUserServiceListStatus(@RequestBody JSONObject params) {
+        Map<String, Object> result = new HashMap<>();
+        String id = params.getString("id");
+        String status = params.getString("status");
+        result.put("msg", userServiceListService.editUserServiceListStatus(id, status));
         return result;
     }
 

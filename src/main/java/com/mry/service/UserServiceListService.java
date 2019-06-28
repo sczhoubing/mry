@@ -1,6 +1,7 @@
 package com.mry.service;
 
 import com.mry.enums.DateFormat;
+import com.mry.model.Common;
 import com.mry.model.UserManage;
 import com.mry.model.UserServiceList;
 import com.mry.repository.UserManageRepository;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,12 +48,25 @@ public class UserServiceListService {
         return null;
     }
 
-    // 编辑一条用户服务单号
+    // 编辑一条用户服务单
     public int editUserServiceList(UserServiceList userServiceList) {
         // 设置修改时间
         userServiceList.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
         UserServiceList resultUserServiceList = userServiceListRepository.save(userServiceList);
         return resultUserServiceList.getStoreId();
+    }
+
+    // 根据 id 修改一条用户服务单的状态
+    public String editUserServiceListStatus(String id, String status) {
+         Optional<UserServiceList> optional = userServiceListRepository.findById(id);
+         if(!optional.isPresent()) {
+             return null;
+         }
+         UserServiceList userServiceList = optional.get();
+         userServiceList.setStatus(status);
+         userServiceList.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
+         userServiceListRepository.save(userServiceList);
+         return id;
     }
 
     // 以单号，顾客，技师 任意条件查询
