@@ -93,13 +93,13 @@ public class ProductManageService {
     }
 
     // 分页模糊查询
-    public Page<ProductManage> getProductManageByPage(Pageable pageable, String condition) {
-        return productManageRepository.getProductManageByPage(pageable, condition);
+    public Page<ProductManage> getProductManageByPage(Pageable pageable, int storeId, String condition) {
+        return productManageRepository.getProductManageByPage(pageable, storeId, condition);
     }
 
     // 分页查询
-    public Page<ProductManage> getProductManageByPage(Pageable pageable) {
-        return productManageRepository.findAll(pageable);
+    public Page<ProductManage> getProductManageByPage(Pageable pageable, int storeId) {
+        return productManageRepository.getProductManageByPage(pageable, storeId);
     }
 
     // 根据 storeId + id 删除一条库存记录

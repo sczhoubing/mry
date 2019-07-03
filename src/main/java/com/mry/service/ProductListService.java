@@ -39,13 +39,13 @@ public class ProductListService {
     }
 
     // 根据条件分页查询
-    public Page<ProductList> getProductListByPage(Pageable pageable, String condition) {
-        return productListRepository.getProductListByPage(pageable, condition);
+    public Page<ProductList> getProductListByPage(Pageable pageable, int storeId, String condition) {
+        return productListRepository.getProductListByPage(pageable, storeId, condition);
     }
 
     // 分页查询
-    public Page<ProductList> getProductListByPage(Pageable pageable) {
-        return productListRepository.findAll(pageable);
+    public Page<ProductList> getProductListByPage(Pageable pageable, int storeId) {
+        return productListRepository.getProductListByPage(pageable, storeId);
     }
 
     // 根据 storeId 返回一组产品具体信息

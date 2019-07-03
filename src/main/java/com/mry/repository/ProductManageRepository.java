@@ -25,10 +25,16 @@ public interface ProductManageRepository extends JpaRepository<ProductManage, In
     @Query(value = "select * from product_manage where store_id = :storeId and product_name = :productName", nativeQuery = true)
     List<ProductManage> getProductManageByProductName(@Param("storeId")int storeId, @Param("productName")String productName);
 
-    @Query(value="select * from product_manage where product_name like %:condition% or product_source like %:condition%",
-           countQuery="select count(*) from product_manage where product_name like %:condition% or product_source like %:condition%",
+    @Query(value="select * from product_manage where store_id = :storeId and (product_name like %:condition% or product_source like %:condition%)",
+           countQuery="select count(*) from product_manage where store_id = :storeId and (product_name like %:condition% or product_source like %:condition%)",
            nativeQuery=true)
-    Page<ProductManage> getProductManageByPage(Pageable pageable, @Param("condition") String condition);
+    Page<ProductManage> getProductManageByPage(Pageable pageable, @Param("storeId")int storeId, @Param("condition") String condition);
+
+    @Query(value="select * from product_manage where store_id = :storeId",
+            countQuery="select count(*) from product_manage where store_id = :storeId",
+            nativeQuery=true)
+    Page<ProductManage> getProductManageByPage(Pageable pageable, @Param("storeId")int storeId);
+
 
     @Query(value = "delete from product_manage where id = :id and store_id = :storeId", nativeQuery = true)
     @Modifying

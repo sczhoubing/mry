@@ -23,10 +23,16 @@ public interface ProductListRepository extends JpaRepository<ProductList, Intege
     @Query(value = "select * from product_list where store_id = :storeId and product_name = :productName", nativeQuery = true)
     List<ProductList> getProductListByProductName(@Param("storeId")int storeId, @Param("productName")String productName);
 
-    @Query(value = "select * from product_list where product_name like %:condition%",
-           countQuery = "select count(*) from product_list where product_name like %:condition%",
+    @Query(value = "select * from product_list where store_id = :storeId and product_name like %:condition%",
+           countQuery = "select count(*) from product_list where store_id = :storeId and product_name like %:condition%",
            nativeQuery = true)
-    Page<ProductList> getProductListByPage(Pageable pageable, @Param("condition")String condition);
+    Page<ProductList> getProductListByPage(Pageable pageable, @Param("storeId")int storeId, @Param("condition")String condition);
+
+    @Query(value = "select * from product_list where store_id = :storeId",
+            countQuery = "select count(*) from product_list where store_id = :storeId",
+            nativeQuery = true)
+    Page<ProductList> getProductListByPage(Pageable pageable, @Param("storeId")int storeId);
+
 
     @Query(value = "delete from product_list where store_id = :storeId", nativeQuery = true)
     @Modifying

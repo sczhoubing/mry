@@ -62,16 +62,17 @@ public class ProductManageController {
     }
 
     @GetMapping("/page/{currentPage}")
-    public Map<String, Object> getProductManageByPage(@PathVariable("currentPage")int currentPage, Integer pageSize, String condition) {
+    public Map<String, Object> getProductManageByPage(@PathVariable("currentPage")int currentPage, Integer pageSize, int storeId,
+                                                      String condition) {
         Map<String, Object> result = new HashMap<>();
         if(StringUtils.isEmpty(pageSize)) {
             pageSize = 10;
         }
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         if(!StringUtils.isEmpty(condition)) {
-            result.put("productManageInfo", productManageService.getProductManageByPage(pageable, condition));
+            result.put("productManageInfo", productManageService.getProductManageByPage(pageable, storeId, condition));
         } else {
-            result.put("productManageInfo", productManageService.getProductManageByPage(pageable));
+            result.put("productManageInfo", productManageService.getProductManageByPage(pageable, storeId));
         }
         return result;
     }

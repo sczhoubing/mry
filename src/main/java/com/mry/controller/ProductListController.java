@@ -35,16 +35,17 @@ public class ProductListController {
     }
 
     @GetMapping("/page/{currentPageNum}")
-    public Map<String, Object> getProductListByPage(@PathVariable("currentPageNum")int currentPageNum, Integer pageSize, String condition) {
+    public Map<String, Object> getProductListByPage(@PathVariable("currentPageNum")int currentPageNum, Integer pageSize,
+                                                    int storeId, String condition) {
         Map<String, Object> result = new HashMap<>();
         if(StringUtils.isEmpty(pageSize)) {
             pageSize = 10;
         }
         Pageable pageable = PageRequest.of(currentPageNum - 1 , pageSize);
         if(!StringUtils.isEmpty(condition)) {
-            result.put("productList", productListService.getProductListByPage(pageable, condition));
+            result.put("productList", productListService.getProductListByPage(pageable, storeId, condition));
         } else {
-            result.put("productList", productListService.getProductListByPage(pageable));
+            result.put("productList", productListService.getProductListByPage(pageable, storeId));
         }
         return result;
     }
