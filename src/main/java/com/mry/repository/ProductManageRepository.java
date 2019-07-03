@@ -41,4 +41,8 @@ public interface ProductManageRepository extends JpaRepository<ProductManage, In
     @Query(value = "delete from product_manage where store_id = :storeId and product_name = :productName", nativeQuery = true)
     @Modifying
     int deleteProductManageByProductName(@Param("storeId")int storeId, @Param("productName")String productName);
+
+    @Query(value = "update product_manage set product_number = :numbers where id = :id", nativeQuery = true)
+    @Modifying
+    void subtractManage(@Param("numbers")int numbers, @Param("id")int id);
 }

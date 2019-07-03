@@ -1,5 +1,6 @@
 package com.mry.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mry.model.ProductManage;
 import com.mry.service.ProductManageService;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,22 @@ public class ProductManageController {
     public Map<String, Object> editProductManage(@RequestBody ProductManage productManage) {
         Map<String, Object> result = new HashMap<>();
         result.put("msg", productManageService.editProductManage(productManage));
+        return result;
+    }
+
+    @PostMapping("/subtract")
+    public Map<String, Object> subtractProductManage(@RequestBody JSONObject params) {
+        Map<String, Object> result = new HashMap<>();
+        Integer id = params.getInteger("id");
+        Integer number = params.getInteger("number");
+        String status = params.getString("status");
+        if(StringUtils.isEmpty(number)) {
+            number = 1;
+        }
+        if(StringUtils.isEmpty(status)) {
+            status = "1";
+        }
+        result.put("msg", productManageService.subtractProductManage(id, number, status));
         return result;
     }
 

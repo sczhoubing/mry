@@ -1,12 +1,8 @@
 package com.mry.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
-
 import com.google.common.collect.Lists;
 import com.mry.model.Product;
 import com.mry.repository.ProductRepository;

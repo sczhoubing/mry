@@ -21,7 +21,7 @@
 		<fastjson.version>1.2.47</fastjson.version>
 		<aliyun.sdk.core.version>3.3.1</aliyun.sdk.core.version>
 		<aliyun.sdk.dysmsapi.version>1.0.0</aliyun.sdk.dysmsapi.version>
-		<guava.version>18.0</guava.version>
+		<guava.version>19.0</guava.version>
 	</properties>
 	
 	<dependencies>
@@ -67,6 +67,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>

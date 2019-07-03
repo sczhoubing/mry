@@ -88,8 +88,7 @@ public class CommonUtils {
 	public static boolean validExpireDate(String date) {
 		String dataFormat = getDateFormat(date);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
-		Date date1 = null;
-		Date date2 = null;
+		Date date1 = null, date2 = null;
 		try {
 			date1 = simpleDateFormat.parse(date);
 			date2 = simpleDateFormat.parse(currentDate(dataFormat));
