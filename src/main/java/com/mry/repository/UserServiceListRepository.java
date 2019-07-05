@@ -21,6 +21,9 @@ public interface UserServiceListRepository extends JpaRepository<UserServiceList
     @Query(value = "select * from user_service_list where store_id = :storeId and user_id in (:userIds)", nativeQuery = true)
     List<UserServiceList> getUserServiceListByUserId(@Param("storeId") int storeId, @Param("userIds") List<Integer> userIds);
 
+    @Query(value = "select * from user_service_list where store_id = :storeId and status = :status", nativeQuery = true)
+    List<UserServiceList> getUserServiceListByStatus(@Param("storeId") int storeId, @Param("status") String status);
+
     @Query(value = "delete from user_service_list where store_id = :storeId and id = :id", nativeQuery = true)
     @Modifying
     int deleteUserServiceListById(@Param("storeId") int storeId, @Param("id") String id);

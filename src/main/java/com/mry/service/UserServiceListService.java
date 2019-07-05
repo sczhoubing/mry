@@ -86,6 +86,11 @@ public class UserServiceListService {
         return list1;
     }
 
+    // 以 storeId + 服务单状态查询
+    public List<UserServiceList> getUserServiceListByStatus(int storeId, String status) {
+        return userServiceListRepository.getUserServiceListByStatus(storeId, status);
+    }
+
     // 以服务单号删除一条用户服务单
     public int deleteUserServiceListById(int storeId, String id) {
         return userServiceListRepository.deleteUserServiceListById(storeId, id);

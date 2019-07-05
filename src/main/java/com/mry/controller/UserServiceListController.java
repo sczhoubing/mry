@@ -51,6 +51,13 @@ public class UserServiceListController {
         return result;
     }
 
+    @GetMapping("/status/{storeId}")
+    public Map<String, Object> getUserServiceListByStatus(@PathVariable("storeId")int storeId, String status) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("userServiceListInfo", userServiceListService.getUserServiceListByStatus(storeId, status));
+        return result;
+    }
+
     @GetMapping("/delete/{storeId}")
     public Map<String, Object> deleteUserServiceList(@PathVariable("storeId")int storeId, String id, Integer userId) {
         Map<String, Object> result = new HashMap<>();
