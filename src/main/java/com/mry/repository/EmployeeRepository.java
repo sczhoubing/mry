@@ -19,6 +19,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 	
 	@Query(value="select * from employee where store_id=:storeId and emp_name=:empName", nativeQuery=true)
 	public List<Employee> getEmployeeByEmpName(@Param("storeId")int storeId, @Param("empName")String empName);
+
+	@Query(value="select * from employee where store_id=:storeId and emp_name like :empName", nativeQuery=true)
+	public List<Employee> getEmployeeByLikeEmpName(@Param("storeId")int storeId, @Param("empName")String empName);
 	
 	@Query(value="select * from employee where store_id=:storeId and id=:id", nativeQuery=true)
 	public Employee getEmployeeById(@Param("storeId")int storeId, @Param("id")int id);

@@ -36,5 +36,11 @@ public interface UserServiceListRepository extends JpaRepository<UserServiceList
     @Modifying
     int deleteUserServiceListsByStoreId(@Param("storeId") int storeId);
 
+    @Query(value = "select * from user_service_list where store_id = :storeId and update_date like :updateDate", nativeQuery = true)
+    List<UserServiceList> getUserServiceListByStoreIdAndUpdateDate(@Param("storeId") int storeId, @Param("updateDate") String updateDate);
 
+    @Query(value = "select * from user_service_list where store_id = :storeId and update_date like :updateDate" +
+            " and technician = :technician", nativeQuery = true)
+    List<UserServiceList> getUserServiceListByStoreIdAndUpdateDateAndTechnicianId(@Param("storeId") int storeId,
+            @Param("updateDate") String updateDate, @Param("technician") String technician);
 }

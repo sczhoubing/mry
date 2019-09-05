@@ -39,4 +39,8 @@ public class UserServiceList {
     private String status;
     @Column(name = "update_date")
     private String updateDate;
+    @Column(name = "pay_type")
+    private String payType;
+    @Column(name = "pay_money")
+    private String payMoney;
 }

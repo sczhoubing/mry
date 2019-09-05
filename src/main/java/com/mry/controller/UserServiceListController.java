@@ -40,7 +40,9 @@ public class UserServiceListController {
         Map<String, Object> result = new HashMap<>();
         String id = params.getString("id");
         String status = params.getString("status");
-        result.put("msg", userServiceListService.editUserServiceListStatus(id, status));
+        String payType = params.getString("payType");
+        String payMoney = params.getString("payMoney");
+        result.put("msg", userServiceListService.editUserServiceListStatus(id, status, payType, payMoney));
         return result;
     }
 

@@ -2,6 +2,7 @@ package com.mry.utils;
 
 import com.mry.enums.DateFormat;
 import com.mry.exception.CommonException;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -73,9 +74,20 @@ public class CommonUtils {
 		}
 	}
 
+	// 将传递的日期字符串转化为日期格式
+	public static Date parseDate(String date, String format) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+		try {
+			return simpleDateFormat.parse(date);
+		} catch (ParseException e) {
+			throw new CommonException(500, e.getMessage());
+		}
+	}
+
 	public static void main(String[] args) {
-		Date date = parseDate("2019-06-12 11:22:33");
-		System.out.println(calculateDate(date, 2, 3));
+		String date1 = "2019-09-04";
+		String date2 = "2019-09-04";
+		System.out.println(afterDate(date1, date2));
 	}
 
 	// 返回指定格式的当前时间
@@ -92,6 +104,20 @@ public class CommonUtils {
 		try {
 			date1 = simpleDateFormat.parse(date);
 			date2 = simpleDateFormat.parse(currentDate(dataFormat));
+		} catch (ParseException e) {
+			throw new CommonException(500, e.getMessage());
+		}
+		return date1.after(date2);
+	}
+
+	// 判断 DateA 是否在 DateB 之后
+	public static boolean afterDate(String DateA, String DateB) {
+		String dataFormat = getDateFormat(DateA);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
+		Date date1 = null, date2 = null;
+		try {
+			date1 = simpleDateFormat.parse(DateA);
+			date2 = simpleDateFormat.parse(DateB);
 		} catch (ParseException e) {
 			throw new CommonException(500, e.getMessage());
 		}
@@ -118,6 +144,11 @@ public class CommonUtils {
 		calendar.setTime(date);
 		calendar.add(flag, bounds);
 		return CommonUtils.formatDate(calendar.getTime(), DateFormat.FORMAT1.getFormat());
+	}
+
+	// 校验字符串是否为空且不为 undefined
+	public static boolean validStr(String str) {
+		return !StringUtils.isEmpty(str) && !"undefined".equals(str) ? true : false;
 	}
 
 	/** 
