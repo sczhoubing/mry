@@ -1,4 +1,6 @@
 .idea/
+*gitignore
 target/
 *.properties
 *.log
+*.iml
