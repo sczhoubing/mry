@@ -1,12 +1,14 @@
 package com.mry.service;
 
 import com.mry.enums.DateFormat;
-import com.mry.model.Common;
 import com.mry.model.UserManage;
 import com.mry.model.UserServiceList;
 import com.mry.repository.UserManageRepository;
 import com.mry.repository.UserServiceListRepository;
 import com.mry.utils.CommonUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,21 +77,28 @@ public class UserServiceListService {
     }
 
     // 以单号，顾客，技师 任意条件查询
-    public List<UserServiceList> getUserServiceList(int storeId, String param) {
+    // 2019-09-08 修改为只能以员工姓名查询
+    public Page<UserServiceList> getUserServiceList(int storeId, String userName, PageRequest pageRequest) {
         // 根据单号或技师查询
-        List<UserServiceList> list1 = userServiceListRepository.getUserServiceListByLike(storeId, param);
-        // 根据用户姓名查询所有用户
-        List<UserManage> userManages = userManageRepository.getUserManageByUserName(storeId, param);
+        // List<UserServiceList> list1 = userServiceListRepository.getUserServiceListByLike(storeId, param);
+        // 根据用户姓名查询模糊所有用户
+        List<UserManage> userManages = userManageRepository.getUserManageLikeUserName(storeId, "%" + userName + "%");
         if(!userManages.isEmpty()) {
             // 取出所有用户的 id 属性值
             List<Integer> userIds = userManages.stream().map(u -> u.getId()).collect(Collectors.toList());
-            // 根据用户 id 获取所有服务单记录
-            List<UserServiceList> list2 = userServiceListRepository.getUserServiceListByUserId(storeId, userIds);
-            // 将两个结果集合并
-            list1.addAll(list2);
+            // 根据用户 id 获取所有服务单记录，分页
+            Page<UserServiceList> userServiceLists = userServiceListRepository.getUserServiceListByUserId(pageRequest, storeId, userIds);
+            return userServiceLists;
         }
-        return list1;
+        return null;
     }
+
+    // 分页查询最近所有的服务单
+    public Page<UserServiceList> getUserServiceList(int storeId, PageRequest pageRequest) {
+        Page<UserServiceList> userServiceLists = userServiceListRepository.getUserServiceListByStoreId(pageRequest, storeId);
+        return userServiceLists;
+    }
+
 
     // 以 storeId + 服务单状态查询
     public List<UserServiceList> getUserServiceListByStatus(int storeId, String status) {

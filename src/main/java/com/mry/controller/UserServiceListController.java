@@ -3,6 +3,7 @@ package com.mry.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.mry.model.UserServiceList;
 import com.mry.service.UserServiceListService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,9 +48,15 @@ public class UserServiceListController {
     }
 
     @GetMapping("/store/{storeId}")
-    public Map<String, Object> getUserServiceList(@PathVariable("storeId")int storeId, String param) {
+    public Map<String, Object> getUserServiceList(@PathVariable("storeId")int storeId, String userName, Integer pageNum, Integer pageSize) {
         Map<String, Object> result = new HashMap<>();
-        result.put("userServiceListInfo", userServiceListService.getUserServiceList(storeId, param));
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
+        if(!StringUtils.isEmpty(userName)) {
+            result.put("userServiceListInfo", userServiceListService.getUserServiceList(storeId, userName, pageRequest));
+        } else {
+            result.put("userServiceListInfo", userServiceListService.getUserServiceList(storeId, pageRequest));
+        }
+
         return result;
     }
 

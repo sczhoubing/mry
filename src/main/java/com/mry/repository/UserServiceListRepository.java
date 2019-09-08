@@ -1,6 +1,8 @@
 package com.mry.repository;
 
 import com.mry.model.UserServiceList;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,8 +20,16 @@ public interface UserServiceListRepository extends JpaRepository<UserServiceList
             "like %:param% or status like %:param%)", nativeQuery = true)
     List<UserServiceList> getUserServiceListByLike(@Param("storeId") int storeId, @Param("param") String param);
 
-    @Query(value = "select * from user_service_list where store_id = :storeId and user_id in (:userIds)", nativeQuery = true)
-    List<UserServiceList> getUserServiceListByUserId(@Param("storeId") int storeId, @Param("userIds") List<Integer> userIds);
+    @Query(value="select * from user_service_list where store_id = :storeId and user_id in (:userIds) order by update_date desc",
+            countQuery="select count(*) from user_service_list where store_id = :storeId and user_id in (:userIds) order by update_date desc",
+            nativeQuery=true)
+    Page<UserServiceList> getUserServiceListByUserId(Pageable pageRequest, @Param("storeId") int storeId, @Param("userIds") List<Integer> userIds);
+
+    @Query(value="select * from user_service_list where store_id = :storeId order by update_date desc",
+            countQuery="select count(*) from user_service_list where store_id = :storeId order by update_date desc",
+            nativeQuery=true)
+    Page<UserServiceList> getUserServiceListByStoreId(Pageable pageRequest, @Param("storeId") int storeId);
+
 
     @Query(value = "select * from user_service_list where store_id = :storeId and status = :status", nativeQuery = true)
     List<UserServiceList> getUserServiceListByStatus(@Param("storeId") int storeId, @Param("status") String status);
