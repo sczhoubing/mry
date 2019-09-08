@@ -7,6 +7,10 @@ import lombok.Data;
 public class StoreDailyReport implements Comparable<StoreDailyReport> {
     /* 日期 */
     private String time;
+    /* 员工姓名 */
+    private String empName;
+    /* 员工电话 */
+    private String phoneNum;
     /* 顾客姓名 */
     private String clientName;
     /* 面部指定 */
@@ -34,7 +38,7 @@ public class StoreDailyReport implements Comparable<StoreDailyReport> {
 
     @Override
     public int compareTo(StoreDailyReport o) {
-        if(CommonUtils.afterDate(this.time, o.getTime())) {
+        if(this.empName.equals(o.empName)) {
             return 0;
         }
         return -1;

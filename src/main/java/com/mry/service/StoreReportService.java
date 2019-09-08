@@ -384,8 +384,10 @@ public class StoreReportService {
             List<ItemTypeManage> itemTypeManages = itemTypeManageRepository.getItemTypeManageByStoreId(storeId);
             // 4. 查询出该门店下服务过的所有顾客信息，后面会用到
             List<UserManage> userManages = userManageRepository.getUserManageByStoreId(storeId);
-            // 4. 将记录生成门店当天报表信息
-            List<StoreDailyReport> dailyReports = generateStoreDailyReport(userServiceLists, itemTypeManages, userManages);
+            // 5. 查询出该门店下所有员工姓名, 后面会用到
+            List<Employee> employees = employeeRepository.getEmployeeByStoreId(storeId);
+            // 6. 将记录生成门店当天报表信息
+            List<StoreDailyReport> dailyReports = generateStoreDailyReport(userServiceLists, itemTypeManages, userManages, employees);
             dailyReport.put("date", date);
             dailyReport.put("storeId", storeId);
             // 将记录排序，因为前面集合使用了 Map，导致顺序混乱，所以需要按照日期重新排序
@@ -396,12 +398,16 @@ public class StoreReportService {
     }
 
     // 将门店服务信息生成记录
-    public List<StoreDailyReport> generateStoreDailyReport(List<UserServiceList> userServiceLists, List<ItemTypeManage> itemTypeManages, List<UserManage> userManages) {
+    public List<StoreDailyReport> generateStoreDailyReport(List<UserServiceList> userServiceLists, List<ItemTypeManage> itemTypeManages, List<UserManage> userManages, List<Employee> employees) {
         List<StoreDailyReport> storeDailyReports = new ArrayList<>();
         for(UserServiceList userServiceList : userServiceLists) {
             StoreDailyReport storeDailyReport = new StoreDailyReport();
             // 报表日期
             String time = userServiceList.getUpdateDate();
+            // 员工姓名
+            String empName = null;
+            // 员工电话号码
+            String phoneNum = null;
             // 顾客姓名
             String clientName = getClientNameById(userServiceList.getUserId(), userManages);
             // 面部，身体，指定和非指定
@@ -418,6 +424,15 @@ public class StoreReportService {
             Double preSaleAchievement = 0.0;
             // 售后现金金额
             Double afterSaleAchievement = 0.0;
+
+            String empId = userServiceList.getTechnician();
+            if(!StringUtils.isEmpty(empId)) {
+                Map<String, String> empInfo = getEmployeeInfo(empId, employees);
+                if(!empInfo.isEmpty()) {
+                    empName = empInfo.get("empName");
+                    phoneNum = empInfo.get("empPhoneNum");
+                }
+            }
 
             String payType = userServiceList.getPayType();
             // payType = 1 表示现金支付， payType = 2 表示卡扣
@@ -457,6 +472,8 @@ public class StoreReportService {
             }
 
             storeDailyReport.setTime(time);
+            storeDailyReport.setEmpName(empName);
+            storeDailyReport.setPhoneNum(phoneNum);
             storeDailyReport.setClientName(clientName);
             storeDailyReport.setFaceAppoint(operationCapabilities.get("faceAppoint"));
             storeDailyReport.setFaceNotAppoint(operationCapabilities.get("faceNotAppoint"));
@@ -473,6 +490,19 @@ public class StoreReportService {
             storeDailyReports.add(storeDailyReport);
         }
         return storeDailyReports;
+    }
+
+    // 根据员工 id 匹配出员工信息，包括员工姓名，电话号码
+    public Map<String, String> getEmployeeInfo(String employeeId, List<Employee> employees) {
+        Map<String, String> empInfo = new HashMap<>();
+        for(Employee employee : employees) {
+            if(employeeId.equals(employee.getId() + "")) {
+                empInfo.put("empName", employee.getEmpName());
+                empInfo.put("empPhoneNum", employee.getPhoneNum());
+                break;
+            }
+        }
+        return empInfo;
     }
 
     // 根据 userId 找出对应的顾客姓名
