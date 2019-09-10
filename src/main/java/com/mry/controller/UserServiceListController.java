@@ -61,9 +61,10 @@ public class UserServiceListController {
     }
 
     @GetMapping("/status/{storeId}")
-    public Map<String, Object> getUserServiceListByStatus(@PathVariable("storeId")int storeId, String status) {
+    public Map<String, Object> getUserServiceListByStatus(@PathVariable("storeId")int storeId, String status, Integer pageNum, Integer pageSize) {
         Map<String, Object> result = new HashMap<>();
-        result.put("userServiceListInfo", userServiceListService.getUserServiceListByStatus(storeId, status));
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
+        result.put("userServiceListInfo", userServiceListService.getUserServiceListByStatus(pageRequest, storeId, status));
         return result;
     }
 

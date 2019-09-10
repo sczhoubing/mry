@@ -31,8 +31,10 @@ public interface UserServiceListRepository extends JpaRepository<UserServiceList
     Page<UserServiceList> getUserServiceListByStoreId(Pageable pageRequest, @Param("storeId") int storeId);
 
 
-    @Query(value = "select * from user_service_list where store_id = :storeId and status = :status", nativeQuery = true)
-    List<UserServiceList> getUserServiceListByStatus(@Param("storeId") int storeId, @Param("status") String status);
+    @Query(value="select * from user_service_list where store_id = :storeId and status = :status order by update_date desc",
+            countQuery="select count(*) from user_service_list where store_id = :storeId and status = :status order by update_date desc",
+            nativeQuery=true)
+    Page<UserServiceList> getUserServiceListByStatus(Pageable pageRequest, @Param("storeId") int storeId, @Param("status") String status);
 
     @Query(value = "delete from user_service_list where store_id = :storeId and id = :id", nativeQuery = true)
     @Modifying
