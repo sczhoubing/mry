@@ -35,6 +35,8 @@ public class UserServiceList {
     private String bedNumber;
     @Column(name = "project")
     private String project;
+    @Column(name = "child_project")
+    private String childProject;
     @Column(name = "status")
     private String status;
     @Column(name = "update_date")
