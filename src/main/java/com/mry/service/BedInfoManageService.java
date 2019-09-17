@@ -1,7 +1,10 @@
 package com.mry.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +50,27 @@ public class BedInfoManageService {
 	}
 	
 	// 根据 storeId + startTime + endTime 返回可用的床位信息
+	// 不可用的床位信息也需要
 	public List<BedInfoManage> getBedInfoManageByStartTimeAndEndTime(int storeId, String startTime, String endTime) {
-		return bedInfoManageRepository.getBedInfoManageByStartTimeAndEndTime(storeId, startTime, endTime);
+		List<BedInfoManage> allBedInfos = bedInfoManageRepository.getBedInfoManageByStoreId(storeId);
+		List<BedInfoManage> availableBedInfos = bedInfoManageRepository.getBedInfoManageByStartTimeAndEndTime(storeId, startTime, endTime);
+		List<BedInfoManage> bedInfos = new ArrayList<>();
+		for(BedInfoManage bedInfo : allBedInfos) {
+			BedInfoManage bedInfoManage = new BedInfoManage();
+			BeanUtils.copyProperties(bedInfo, bedInfoManage);
+			String bedName = bedInfo.getBedName();
+			String occupyTime = bedInfo.getStartTime() + " ~ " + bedInfo.getEndTime();
+			bedInfoManage.setBedName(bedName + "(不可用: " + occupyTime + ")");
+
+			for(BedInfoManage availableBedInfo : availableBedInfos) {
+				if(bedInfo.getId() == availableBedInfo.getId()) {
+					bedInfoManage.setBedName(bedName + "(可用)");
+				}
+			}
+
+			bedInfos.add(bedInfoManage);
+		}
+		return bedInfos;
 	}
 	
 	// 根据 storeId + bedNum 返回一组床位信息

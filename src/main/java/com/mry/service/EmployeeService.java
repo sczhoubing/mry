@@ -3,6 +3,8 @@ package com.mry.service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.mry.config.SmsSetting;
@@ -86,8 +88,25 @@ public class EmployeeService {
 	}
 	
 	// 根据 storeId + startTime + endTime 返回不在该时间段的员工信息
+	// 需要把吧不可用的员工也列出来
 	public List<Employee> getEmployeeByStartTimeAndEndTime(int storeId, String startTime, String endTime) {
-		return employeeRepository.getEmployeeByStartTimeAndEndTime(storeId, startTime, endTime);
+		List<Employee> allEmployees = employeeRepository.getEmployeeByStoreId(storeId);
+		List<Employee> availableEmployees = employeeRepository.getEmployeeByStartTimeAndEndTime(storeId, startTime, endTime);
+		List<Employee> employees = new ArrayList<>();
+		for(Employee allEmployee : allEmployees) {
+			Employee employee = new Employee();
+			BeanUtils.copyProperties(allEmployee, employee);
+			String empName = allEmployee.getEmpName();
+			String occupyTime = allEmployee.getStartTime() + " ~ " + allEmployee.getEndTime();
+			employee.setEmpName(empName + "(不可用: " + occupyTime + ")");
+			for(Employee availableEmployee : availableEmployees) {
+				if(allEmployee.getId() == availableEmployee.getId()) {
+					employee.setEmpName(empName + "(可用)");
+				}
+			}
+			employees.add(employee);
+		}
+		return employees;
 	}
 	
 	// 根据 idCard 删除一条员工信息

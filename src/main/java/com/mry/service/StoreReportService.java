@@ -2,12 +2,8 @@ package com.mry.service;
 
 import com.mry.enums.DateFormat;
 import com.mry.model.*;
-import com.mry.repository.EmployeeRepository;
-import com.mry.repository.ItemTypeManageRepository;
-import com.mry.repository.UserManageRepository;
-import com.mry.repository.UserServiceListRepository;
+import com.mry.repository.*;
 import com.mry.utils.CommonUtils;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -24,6 +20,8 @@ public class StoreReportService {
     private EmployeeRepository employeeRepository;
     @Resource
     private ItemTypeManageRepository itemTypeManageRepository;
+    @Resource
+    private ItemManageRepository itemManageRepository;
     @Resource
     private UserManageRepository userManageRepository;
 
@@ -386,8 +384,10 @@ public class StoreReportService {
             List<UserManage> userManages = userManageRepository.getUserManageByStoreId(storeId);
             // 5. 查询出该门店下所有员工姓名, 后面会用到
             List<Employee> employees = employeeRepository.getEmployeeByStoreId(storeId);
+            // 6. 查询出该门店下所有的服务子项目，后面要用
+            List<ItemManage> itemManages = itemManageRepository.getItemManagesByStoreId(storeId);
             // 6. 将记录生成门店当天报表信息
-            List<StoreDailyReport> dailyReports = generateStoreDailyReport(userServiceLists, itemTypeManages, userManages, employees);
+            List<StoreDailyReport> dailyReports = generateStoreDailyReport(userServiceLists, itemTypeManages, itemManages, userManages, employees);
             dailyReport.put("date", date);
             dailyReport.put("storeId", storeId);
             // 将记录排序，因为前面集合使用了 Map，导致顺序混乱，所以需要按照日期重新排序
@@ -398,7 +398,7 @@ public class StoreReportService {
     }
 
     // 将门店服务信息生成记录
-    public List<StoreDailyReport> generateStoreDailyReport(List<UserServiceList> userServiceLists, List<ItemTypeManage> itemTypeManages, List<UserManage> userManages, List<Employee> employees) {
+    public List<StoreDailyReport> generateStoreDailyReport(List<UserServiceList> userServiceLists, List<ItemTypeManage> itemTypeManages, List<ItemManage> itemManages, List<UserManage> userManages, List<Employee> employees) {
         List<StoreDailyReport> storeDailyReports = new ArrayList<>();
         for(UserServiceList userServiceList : userServiceLists) {
             StoreDailyReport storeDailyReport = new StoreDailyReport();
@@ -454,6 +454,13 @@ public class StoreReportService {
                 operationCapability = project.split(",").length;
                 // 具体服务项目
                 project = getProjectName(project, itemTypeManages);
+            }
+
+            // 具体服务项目子项目
+            String childProject = userServiceList.getChildProject();
+            if(!StringUtils.isEmpty(childProject)) {
+                String itemName = getItemName(childProject, itemManages);
+                project += "[" + itemName + "]";
             }
             // 服务项目金额
             String payMoney = userServiceList.getPayMoney();
@@ -523,6 +530,20 @@ public class StoreReportService {
             for(ItemTypeManage itemTypeManage : itemTypeManages) {
                 if(CommonUtils.validStr(p) && p.equals(itemTypeManage.getId() + "")) {
                     projects.append(itemTypeManage.getTypeName()).append(";");
+                }
+            }
+        }
+        return projects.toString();
+    }
+
+    // 根据 child_project 字符串，拿到具体的服务项目
+    public String getItemName(String childProject, List<ItemManage> itemManages) {
+        StringBuilder projects = new StringBuilder();
+        String[] childProjects = childProject.split(",");
+        for(String child : childProjects) {
+            for(ItemManage itemManage : itemManages) {
+                if(CommonUtils.validStr(child) && child.equals(itemManage.getId() + "")) {
+                    projects.append(itemManage.getItemName()).append(";");
                 }
             }
         }

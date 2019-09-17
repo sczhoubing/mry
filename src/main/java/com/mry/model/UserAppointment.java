@@ -28,6 +28,10 @@ public class UserAppointment {
 	private int bedId;
 	@Column(name="technician_id")
 	private int technicianId;
+	// 新建预约前面的下拉框选项
+	@Column(name = "project")
+	private String project;
+	// 新建预约后面的下拉框选项
 	@Column(name="service_projects")
 	private String serviceProjects;
 	@Column(name="start_time")
