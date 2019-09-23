@@ -5,6 +5,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.mry.utils.CommonUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,12 +47,13 @@ public class TransactionController {
 	}
 	
 	@GetMapping("/store/{storeId}")
-	public Map<String, Object> getTransaction(@PathVariable("storeId")Integer storeId, Integer userId) {
+	public Map<String, Object> getTransaction(@PathVariable("storeId")Integer storeId, Integer userId, Integer pageNum, Integer pageSize) {
 		Map<String, Object> result = new HashMap<>();
+		Pageable pageable = CommonUtils.initPage(pageNum, pageSize);
 		if(null != userId) {
-			result.put("transactionInfo", transactionService.getTransactionByUserId(storeId, userId));
+			result.put("transactionInfo", transactionService.getTransactionByUserId(pageable, storeId, userId));
 		} else {
-			result.put("transactionInfo", transactionService.getTransactionByStoreId(storeId));
+			result.put("transactionInfo", transactionService.getTransactionByStoreId(pageable, storeId));
 		}
 		return result;
 	}

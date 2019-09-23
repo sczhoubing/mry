@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,14 +52,15 @@ public class UserManageController {
 	}*/
 	
 	@GetMapping("/store/{storeId}")
-	public Map<String, Object> getUserManageInfo(@PathVariable("storeId")Integer storeId, String userName, String phoneNum) {
-		Map<String, Object> result = new HashMap<String, Object>();
+	public Map<String, Object> getUserManageInfo(@PathVariable("storeId")Integer storeId, String userName, String phoneNum, Integer pageNum, Integer pageSize) {
+		Map<String, Object> result = new HashMap<>();
+		Pageable pageable = CommonUtils.initPage(pageNum, pageSize);
 		if(!CommonUtils.isBlank(userName) && CommonUtils.isBlank(phoneNum)) {
-			result.put("userInfo", userManageService.getUserManageByUserName(storeId, userName));
+			result.put("userInfo", userManageService.getUserManageByUserName(pageable, storeId, userName));
 		} else if(CommonUtils.isBlank(userName) && !CommonUtils.isBlank(phoneNum)) {
 			result.put("userInfo", userManageService.getUserManageByPhoneNum(storeId, phoneNum));
 		} else {
-			result.put("userInfo", userManageService.getUserManageByStoreId(storeId));
+			result.put("userInfo", userManageService.getUserManageByStoreId(pageable, storeId));
 		}
 		return result;
 	}

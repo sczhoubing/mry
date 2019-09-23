@@ -2,6 +2,9 @@ package com.mry.service;
 
 import java.util.List;
 import javax.annotation.Resource;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +52,8 @@ public class UserManageService {
 	}
 	
 	// 根据 storeId + userName 获取该门店下一条顾客信息
-	public List<UserManage> getUserManageByUserName(int storeId, String userName) {
-		return userManageRepository.getUserManageByUserName(storeId, userName);
+	public Page<UserManage> getUserManageByUserName(Pageable pageable, int storeId, String userName) {
+		return userManageRepository.getUserManageByUserName(pageable, storeId, userName);
 	}
 	
 	// 根据 storeId + idCard 获取该门店下一条顾客信息
@@ -64,8 +67,8 @@ public class UserManageService {
 	}
 	
 	// 根据 storeId 查出该门店下所有顾客信息
-	public List<UserManage> getUserManageByStoreId(int storeId) {
-		return userManageRepository.getUserManageByStoreId(storeId);
+	public Page<UserManage> getUserManageByStoreId(Pageable pageable, int storeId) {
+		return userManageRepository.getUserManageByStoreId(pageable, storeId);
 	}
 	
 	// 根据 storeId + idCard 删除该门店下一条顾客信息

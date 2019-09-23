@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,13 +42,13 @@ public class TransactionService {
 	}
 
 	// 根据 storeId 返回一组交易记录
-	public List<Transaction> getTransactionByStoreId(int storeId) {
-		return transactionRepository.getTransactionByStoreId(storeId);
+	public Page<Transaction> getTransactionByStoreId(Pageable pageable, int storeId) {
+		return transactionRepository.getTransactionByStoreId(pageable, storeId);
 	}
 
 	// 根据 storeId + userId 返回该用户所有交易记录
-	public List<Transaction> getTransactionByUserId(int storeId, int userId) {
-		return transactionRepository.getTransactionByUserId(storeId, userId);
+	public Page<Transaction> getTransactionByUserId(Pageable pageable, int storeId, int userId) {
+		return transactionRepository.getTransactionByUserId(pageable, storeId, userId);
 	}
 	
 	// 根据 storeId 删除一组交易记录

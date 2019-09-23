@@ -2,6 +2,8 @@ package com.mry.utils;
 
 import com.mry.enums.DateFormat;
 import com.mry.exception.CommonException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -184,4 +186,16 @@ public class CommonUtils {
         } 
         return ip;  
     }
+
+    // 初始化 Pageable 对象
+    public static Pageable initPage(Integer pageNum, Integer pageSize) {
+    	if(StringUtils.isEmpty(pageNum)) {
+    		pageNum = 1;
+		}
+    	if(StringUtils.isEmpty(pageSize)) {
+    		pageSize = 10;
+		}
+    	Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+    	return pageable;
+	}
 }
