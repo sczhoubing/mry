@@ -21,8 +21,13 @@ public class UserServiceList {
     private int storeId;
     @Column(name = "user_id")
     private int userId;
+    /* 1. 服务单(默认), 2. 现金单 */
     @Column(name = "type")
     private int type;
+    @Column(name = "ad_type")
+    private int adType;
+    @Column(name = "sd_type")
+    private int sdType;
     @Column(name = "technician")
     private String technician;
     @Column(name = "is_anonymous")

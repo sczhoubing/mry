@@ -35,6 +35,10 @@ public class StoreDailyReport implements Comparable<StoreDailyReport> {
     private Double preSaleAchievement;
     /* 售后业绩 */
     private Double afterSaleAchievement;
+    /* 高端项目 */
+    private Integer adProject;
+    /* 超扣项目 */
+    private Integer sdProject;
 
     @Override
     public int compareTo(StoreDailyReport o) {

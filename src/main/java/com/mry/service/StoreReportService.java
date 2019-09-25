@@ -101,16 +101,21 @@ public class StoreReportService {
             Integer preSaleDealCustomer = 0;
             // 售前业绩
             Double preSaleAchievement = 0.0;
+            // 高端项目个数
+            Integer adProject = 0;
+            // 超扣项目个数
+            Integer sdProject = 0;
             // 备注信息，记录某些不正确的数据，用于错误排查
             StringBuilder remarks = new StringBuilder();
 
             for(UserServiceList userServiceList : userServiceLists) {
+                System.out.println("moth --> " + userServiceList);
                 // 当前服务状态
                 String status = userServiceList.getStatus();
                 // 计算总业绩
                 String payMoney = userServiceList.getPayMoney();
                 if(CommonUtils.validStr(payMoney) && status.equals("1")) {
-                    Double money = Double.parseDouble(payMoney);
+                    Double money = CommonUtils.parseDouble(payMoney);
                     achievement = CommonUtils.doubleCalculation(achievement, money, "+");
                 }
                 // 计算总实操
@@ -120,15 +125,14 @@ public class StoreReportService {
                 }
                 // 计算产品现金
                 String payType = userServiceList.getPayType();
-                String payMent = userServiceList.getPayMoney();
-                if(CommonUtils.validStr(payType) && status.equals("1")) {
+                if(CommonUtils.validStr(payType, payMoney) && status.equals("1")) {
                     // payType = 1 表示现金
                     if(payType.equals("1")) {
-                        productMoney = CommonUtils.doubleCalculation(productMoney, Double.parseDouble(payMent), "+");
+                        productMoney = CommonUtils.doubleCalculation(productMoney, CommonUtils.parseDouble(payMoney), "+");
                     }
                     // payType = 2 表示卡扣
                     if(payType.equals("2")) {
-                        productCardDeduction = CommonUtils.doubleCalculation(productCardDeduction, Double.parseDouble(payMent), "+");
+                        productCardDeduction = CommonUtils.doubleCalculation(productCardDeduction, CommonUtils.parseDouble(payMoney), "+");
                     }
                 }
                 // 统计卡扣项目，可忽略服务状态
@@ -144,8 +148,18 @@ public class StoreReportService {
                     if(status.equals("1")) {
                         preSaleDealCustomer ++;
                         // 计算售前业绩
-                        preSaleAchievement = CommonUtils.doubleCalculation(preSaleAchievement, Double.parseDouble(payMent), "+");
+                        preSaleAchievement = CommonUtils.doubleCalculation(preSaleAchievement, CommonUtils.parseDouble(payMoney), "+");
                     }
+                }
+                // 判断是否是高端项目
+                Integer adType = userServiceList.getAdType();
+                if(adType == 1) {
+                    adProject ++;
+                }
+                // 判断是否是超扣项目
+                Integer sdType = userServiceList.getSdType();
+                if(sdType == 1) {
+                    sdProject ++;
                 }
             }
             storeMothReport.setDate(date);
@@ -158,6 +172,8 @@ public class StoreReportService {
             storeMothReport.setPreSaleNewCustomer(preSaleNewCustomer);
             storeMothReport.setPreSaleDealCustomer(preSaleDealCustomer);
             storeMothReport.setPreSaleAchievement(preSaleAchievement);
+            storeMothReport.setAdProject(adProject);
+            storeMothReport.setSdProject(sdProject);
             storeMothReport.setRemarks(remarks.toString());
             dailyReports.add(storeMothReport);
         }
@@ -256,24 +272,30 @@ public class StoreReportService {
             Double preSaleAchievement = 0.0;
             // 卡扣项目
             Integer cardDeductionProjects = 0;
+            // 高端项目
+            Integer adProject = 0;
+            // 超扣项目
+            Integer sdProject = 0;
             // 备注信息
             StringBuilder remarks = new StringBuilder();
 
             for(UserServiceList userServiceList : userServiceLists) {
+                System.out.println("technical --> " + userServiceList);
                 // 计算技师每天项目数
                 String project = userServiceList.getProject();
                 if(!StringUtils.isEmpty(project)) {
                     projectNumber += project.split(",").length;
                 }
                 // 计算业绩
+                String payType = userServiceList.getPayType();
                 String payMoney = userServiceList.getPayMoney();
-                if(CommonUtils.validStr(payMoney) && userServiceList.getStatus().equals("1")) {
+                if(CommonUtils.validStr(payType, payMoney) && userServiceList.getStatus().equals("1")) {
                     // 现金业绩
-                    if(userServiceList.getPayType().equals("1")) {
-                        cashAchievement = CommonUtils.doubleCalculation(cashAchievement, Double.parseDouble(payMoney), "+");
+                    if(payType.equals("1")) {
+                        cashAchievement = CommonUtils.doubleCalculation(cashAchievement, CommonUtils.parseDouble(payMoney), "+");
                     // 卡扣业绩
-                    } else if(userServiceList.getPayType().equals("2")) {
-                        cardDeduction = CommonUtils.doubleCalculation(cardDeduction, Double.parseDouble(payMoney), "+");
+                    } else if(payType.equals("2")) {
+                        cardDeduction = CommonUtils.doubleCalculation(cardDeduction, CommonUtils.parseDouble(payMoney), "+");
                     }
                 }
                 // 计算售前
@@ -284,13 +306,22 @@ public class StoreReportService {
                         // 售前成交人数，即 status = 1 的
                         dealCustomer ++;
                         // 售前业绩，status = 1 的才是已经做完了的项目
-                        preSaleAchievement = CommonUtils.doubleCalculation(preSaleAchievement, Double.parseDouble(payMoney), "+");
+                        preSaleAchievement = CommonUtils.doubleCalculation(preSaleAchievement, CommonUtils.parseDouble(payMoney), "+");
                     }
                 }
                 // 计算卡扣项目, payType = 2 的表示卡扣项目
-                String payType = userServiceList.getPayType();
                 if(!StringUtils.isEmpty(payType) && payType.equals("2")) {
                     cardDeductionProjects += project.split(",").length;
+                }
+                // 判断是否是高端项目
+                Integer adType = userServiceList.getAdType();
+                if(adType == 1) {
+                    adProject ++;
+                }
+                // 判断是否是超扣项目
+                Integer sdType = userServiceList.getSdType();
+                if(sdType == 1) {
+                    sdProject ++;
                 }
             }
 
@@ -308,6 +339,8 @@ public class StoreReportService {
             technicianMothReport.setDealCustomer(dealCustomer);
             technicianMothReport.setPreSaleAchievement(preSaleAchievement);
             technicianMothReport.setCardDeductionProjects(cardDeductionProjects);
+            technicianMothReport.setAdProject(adProject);
+            technicianMothReport.setSdProject(sdProject);
             technicianMothReport.setRemarks(remarks.toString());
 
             dailyReport.add(technicianMothReport);
@@ -424,6 +457,10 @@ public class StoreReportService {
             Double preSaleAchievement = 0.0;
             // 售后现金金额
             Double afterSaleAchievement = 0.0;
+            // 高端项目
+            Integer adProject = 0;
+            // 超扣项目
+            Integer sdProject = 0;
 
             String empId = userServiceList.getTechnician();
             if(!StringUtils.isEmpty(empId)) {
@@ -439,7 +476,7 @@ public class StoreReportService {
             if(!StringUtils.isEmpty(payType)) {
                 String payMoney = userServiceList.getPayMoney();
                 if(CommonUtils.validStr(payMoney)) {
-                    Double doublePayMoney = Double.parseDouble(payMoney);
+                    Double doublePayMoney = CommonUtils.parseDouble(payMoney);
                     if(payType.equals("1")) {
                         productCash = doublePayMoney;
                     } else if(payType.equals("2")) {
@@ -465,7 +502,7 @@ public class StoreReportService {
             // 服务项目金额
             String payMoney = userServiceList.getPayMoney();
             if(CommonUtils.validStr(payMoney)) {
-                projectMoney = Double.parseDouble(payMoney);
+                projectMoney = CommonUtils.parseDouble(payMoney);
                 // 确定是现金支付
                 if(payType.equals("1")) {
                     String isPreSale = userServiceList.getIsPreSale();
@@ -476,6 +513,16 @@ public class StoreReportService {
                         afterSaleAchievement = projectMoney;
                     }
                 }
+            }
+            // 判断是否是高端项目
+            Integer adType = userServiceList.getAdType();
+            if(adType == 1) {
+                adProject ++;
+            }
+            // 判断是否是超扣项目
+            Integer sdType = userServiceList.getSdType();
+            if(sdType == 1) {
+                sdProject ++;
             }
 
             storeDailyReport.setTime(time);
@@ -493,6 +540,8 @@ public class StoreReportService {
             storeDailyReport.setOperationCapability(operationCapability);
             storeDailyReport.setPreSaleAchievement(preSaleAchievement);
             storeDailyReport.setAfterSaleAchievement(afterSaleAchievement);
+            storeDailyReport.setAdProject(adProject);
+            storeDailyReport.setSdProject(sdProject);
 
             storeDailyReports.add(storeDailyReport);
         }

@@ -61,8 +61,10 @@ public class UserServiceListService {
     /**
      * 1. 根据 id 修改一条用户服务单的状态, status = 1 表示已经支付， status = -1 表示还未支付
      * 2. payType = 1 表示现金支付，payType = 2 表示卡扣支付
+     * 3. adType = 1 表示是高端项目，默认值应为 0
+     * 4. sdType = 1 表示是超扣项目，默认值应为 0
      */
-    public String editUserServiceListStatus(String id, String status, String payType, String payMoney) {
+    public String editUserServiceListStatus(String id, String status, String payType, String payMoney, Integer adType, Integer sdType) {
          Optional<UserServiceList> optional = userServiceListRepository.findById(id);
          if(!optional.isPresent()) {
              return null;
@@ -71,6 +73,8 @@ public class UserServiceListService {
          userServiceList.setStatus(status);
          userServiceList.setPayType(payType);
          userServiceList.setPayMoney(payMoney);
+         userServiceList.setAdType(adType);
+         userServiceList.setSdType(sdType);
          userServiceList.setUpdateDate(CommonUtils.currentDate(DateFormat.FORMAT1.getFormat()));
          userServiceListRepository.save(userServiceList);
          return id;

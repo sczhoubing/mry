@@ -43,7 +43,10 @@ public class UserServiceListController {
         String status = params.getString("status");
         String payType = params.getString("payType");
         String payMoney = params.getString("payMoney");
-        result.put("msg", userServiceListService.editUserServiceListStatus(id, status, payType, payMoney));
+        // 2019-09-25 修改接口，添加高端项目和超扣项目选项值
+        Integer adType = params.getInteger("adType");
+        Integer sdType = params.getInteger("sdType");
+        result.put("msg", userServiceListService.editUserServiceListStatus(id, status, payType, payMoney, adType, sdType));
         return result;
     }
 

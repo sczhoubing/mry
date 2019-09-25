@@ -35,6 +35,18 @@ public class CommonUtils {
 		} 
 		return true;
 	}
+
+	// 将字符串转化为 double 型数字，转化前需要先判断
+	public static Double parseDouble(String str) {
+		try {
+			if(validStr(str)) {
+				return Double.parseDouble(str);
+			}
+		} catch (Exception e) {
+			System.out.println("parse str( " + str + " ) to double error: " + e.getMessage());
+		}
+		return 0.0;
+	}
 	
 	// 双精度四则运算
 	public static double doubleCalculation(double numA, double numB, String operate){
@@ -151,6 +163,16 @@ public class CommonUtils {
 	// 校验字符串是否为空且不为 undefined
 	public static boolean validStr(String str) {
 		return !StringUtils.isEmpty(str) && !"undefined".equals(str) ? true : false;
+	}
+
+	// 校验字符串是否为空且不为 undefined
+	public static boolean validStr(String ... strs) {
+		for(String str : strs) {
+			if(StringUtils.isEmpty(str) || "undefined".equals(str)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/** 

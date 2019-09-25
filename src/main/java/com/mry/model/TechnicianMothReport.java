@@ -33,6 +33,10 @@ public class TechnicianMothReport implements Comparable<TechnicianMothReport> {
     private Double preSaleAchievement;
     // 卡扣项目
     private Integer cardDeductionProjects;
+    // 高端项目
+    private Integer adProject;
+    // 超扣项目
+    private Integer sdProject;
     // 备注信息
     private String remarks;
 

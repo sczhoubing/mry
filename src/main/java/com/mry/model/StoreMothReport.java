@@ -25,6 +25,10 @@ public class StoreMothReport implements Comparable<StoreMothReport> {
     private Integer preSaleDealCustomer;
     /* 售前业绩 */
     private Double preSaleAchievement;
+    /* 高端项目 */
+    private Integer adProject;
+    /* 超扣项目 */
+    private Integer sdProject;
     /* 备注 */
     private String remarks;
 
