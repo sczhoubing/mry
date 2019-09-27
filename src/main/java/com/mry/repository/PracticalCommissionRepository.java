@@ -9,13 +9,16 @@ import com.mry.model.PracticalCommission;
 
 public interface PracticalCommissionRepository extends JpaRepository<PracticalCommission, Integer> {
 	@Query(value="select * from practical_commission where store_id=:storeId", nativeQuery=true)
-	public List<PracticalCommission> getPracticalCommissionByStoreId(@Param("storeId")int storeId);
+	List<PracticalCommission> getPracticalCommissionByStoreId(@Param("storeId")int storeId);
+
+	@Query(value="select * from practical_commission where store_id = :storeId and practical_range = :practicalRange", nativeQuery=true)
+	List<PracticalCommission> getPracticalCommissionByStoreIdAndPracticalRange(@Param("storeId")Integer storeId, @Param("practicalRange")String practicalRange);
 	
 	@Query(value="delete from practical_commission where store_id=:storeId", nativeQuery=true)
 	@Modifying
-	public int deletePracticalCommissionByStoreId(@Param("storeId")int storeId);
+	int deletePracticalCommissionByStoreId(@Param("storeId")int storeId);
 	
 	@Query(value="delete from practical_commission where store_id=:storeId and id=:id", nativeQuery=true)
 	@Modifying
-	public int deletePracticalCommissionById(@Param("storeId")int storeId, @Param("id")int id);
+	int deletePracticalCommissionById(@Param("storeId")int storeId, @Param("id")int id);
 }

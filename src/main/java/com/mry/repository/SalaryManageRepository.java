@@ -9,9 +9,9 @@ import com.mry.model.SalaryManage;
 
 public interface SalaryManageRepository extends JpaRepository<SalaryManage, Integer> {
 	@Query(value="select * from salary_manage where store_id=:storeId", nativeQuery=true)
-	public SalaryManage getSalaryManageByStoreId(@Param("storeId")int storeId);
+	SalaryManage getSalaryManageByStoreId(@Param("storeId")int storeId);
 	
 	@Query(value="delete from salary_manage where store_id=:storeId", nativeQuery=true)
 	@Modifying
-	public int deleteSalaryMangeByStoreId(@Param("storeId")int storeId);
+	int deleteSalaryMangeByStoreId(@Param("storeId")int storeId);
 }

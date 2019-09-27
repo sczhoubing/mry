@@ -18,11 +18,11 @@ public class PerformanceService {
 	
 	// 添加一条绩效记录
 	public int addPerformanceInfo(Performance performance) {
-		List<Performance> performances = performanceRepository.getPerformanceByStoreId(performance.getStoreId());
+		Performance originPerformance = performanceRepository.getPerformanceByStoreId(performance.getStoreId());
 		// 如果有相同的记录就将其覆盖
-		Performance duplicatePerformance = Performance.validDuplicatePerformance(performance, performances);
-		if(null != duplicatePerformance) {
-			performance.setId(duplicatePerformance.getId());
+		//Performance duplicatePerformance = Performance.validDuplicatePerformance(performance, performances);
+		if(null != originPerformance) {
+			performance.setId(originPerformance.getId());
 		}
 		performanceRepository.save(performance);
 		return performance.getStoreId();
@@ -35,7 +35,7 @@ public class PerformanceService {
 	}
 	
 	// 根据 storeId 返回该门店下所有的绩效记录
-	public List<Performance> getPerformanceByStoreId(int storeId) {
+	public Performance getPerformanceByStoreId(int storeId) {
 		return performanceRepository.getPerformanceByStoreId(storeId);
 	}
 	

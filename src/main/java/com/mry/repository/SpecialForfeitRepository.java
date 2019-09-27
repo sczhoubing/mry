@@ -11,19 +11,19 @@ import com.mry.model.SpecialForfeit;
 
 public interface SpecialForfeitRepository extends JpaRepository<SpecialForfeit, Integer> {
 	@Query(value="select * from special_forfeit where store_id=:storeId", nativeQuery=true)
-	public List<SpecialForfeit> getSpecialForfeitByStoreId(@Param("storeId")int storeId);
+	List<SpecialForfeit> getSpecialForfeitByStoreId(@Param("storeId")int storeId);
 	
 	@Query(value="select * from special_forfeit where store_id=:storeId and forfeit_type=:forfeitType", nativeQuery=true)
-	public List<SpecialForfeit> getSpecialForfeitByForfeitType(@Param("storeId")int storeId, @Param("forfeitType")String forfeitType);
+	List<SpecialForfeit> getSpecialForfeitByForfeitType(@Param("storeId")int storeId, @Param("forfeitType")String forfeitType);
 	
 	@Query(value="delete from special_forfeit where store_id=:storeId and forfeit_type=:forfeitType", nativeQuery=true)
-	public int deleteSpecialForfeitByForfeitType(@Param("storeId")int storeId, @Param("forfeitType")String forfeitType);
+	int deleteSpecialForfeitByForfeitType(@Param("storeId")int storeId, @Param("forfeitType")String forfeitType);
 	
 	@Query(value="delete from special_forfeit where store_id=:storeId and id=:id", nativeQuery=true)
 	@Modifying
-	public int deleteSpecialForfeitById(@Param("storeId")int storeId, @Param("id")int id);
+	int deleteSpecialForfeitById(@Param("storeId")int storeId, @Param("id")int id);
 	
 	@Query(value="delete from special_forfeit where store_id=:storeId", nativeQuery=true)
 	@Modifying
-	public int deleteSpecialForfeitByStoreId(@Param("storeId")int storeId);
+	int deleteSpecialForfeitByStoreId(@Param("storeId")int storeId);
 }

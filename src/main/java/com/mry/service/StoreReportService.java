@@ -249,15 +249,15 @@ public class StoreReportService {
             Integer projectNumber = 0;
 
             // 计算实操(面部，身体，指定和非指定)
-            Map<String, Integer> operationCapabilities = calculationOperationCapability(userServiceLists, itemTypeManages);
+            Map<String, Object> operationCapabilities = calculationOperationCapability(userServiceLists, itemTypeManages);
             // 技师每天面部指定实操
-            Integer faceAppoint = operationCapabilities.get("faceAppoint");
+            Integer faceAppoint = (Integer)operationCapabilities.get("faceAppoint");
             // 技师每天面部非指定实操
-            Integer faceNotAppoint = operationCapabilities.get("faceNotAppoint");
+            Integer faceNotAppoint = (Integer)operationCapabilities.get("faceNotAppoint");
             // 技师每天身体实操指定
-            Integer bodyAppoint = operationCapabilities.get("bodyAppoint");
+            Integer bodyAppoint = (Integer)operationCapabilities.get("bodyAppoint");
             // 技师每天身体实操非指定
-            Integer bodyNotAppoint = operationCapabilities.get("bodyNotAppoint");
+            Integer bodyNotAppoint = (Integer)operationCapabilities.get("bodyNotAppoint");
             // 实操总计
             Integer operationCapability = faceAppoint + faceNotAppoint + bodyAppoint + bodyNotAppoint;
             // 现金业绩
@@ -349,8 +349,8 @@ public class StoreReportService {
     }
 
     // 实操计算
-    public Map<String, Integer> calculationOperationCapability(List<UserServiceList> userServiceLists, List<ItemTypeManage> itemTypeManages) {
-        Map<String, Integer> operationCapabilities = new HashMap<>();
+    public Map<String, Object> calculationOperationCapability(List<UserServiceList> userServiceLists, List<ItemTypeManage> itemTypeManages) {
+        Map<String, Object> operationCapabilities = new HashMap<>();
         // 技师每天面部指定实操
         Integer faceAppoint = 0;
         // 技师每天面部非指定实操
@@ -359,6 +359,14 @@ public class StoreReportService {
         Integer bodyAppoint = 0;
         // 技师每天身体实操非指定
         Integer bodyNotAppoint = 0;
+        // 面部指定总业绩
+        Double faceAppointMoney = 0.0;
+        // 面部非指定总业绩
+        Double faceNotAppointMoney = 0.0;
+        // 身体指定总业绩
+        Double bodyAppointMoney = 0.0;
+        // 身体非指定总业绩
+        Double bodyNotAppointMoney = 0.0;
         for(UserServiceList userServiceList : userServiceLists) {
             for(ItemTypeManage itemTypeManage : itemTypeManages) {
                 String project = userServiceList.getProject();
@@ -371,18 +379,22 @@ public class StoreReportService {
                             // 项目的类别为面部
                             if (itemTypeManage.getItemType().equals("1")) {
                                 faceNotAppoint ++;
+                                faceNotAppointMoney = CommonUtils.doubleCalculation(faceNotAppointMoney, CommonUtils.parseDouble(userServiceList.getPayMoney()), "+");
                                 // 项目的类别为身体
                             } else if (itemTypeManage.getItemType().equals("2")) {
                                 bodyNotAppoint ++;
+                                bodyNotAppointMoney = CommonUtils.doubleCalculation(bodyNotAppointMoney, CommonUtils.parseDouble(userServiceList.getPayMoney()), "+");
                             }
                         // 指定项目
                         } else if (userServiceList.getIsAppoint().equals("1")) {
                             // 项目的类别为面部
                             if (itemTypeManage.getItemType().equals("1")) {
-                                faceNotAppoint ++;
+                                faceAppoint ++;
+                                faceAppointMoney = CommonUtils.doubleCalculation(faceAppointMoney, CommonUtils.parseDouble(userServiceList.getPayMoney()), "+");
                                 // 项目的类别为身体
                             } else if (itemTypeManage.getItemType().equals("2")) {
-                                bodyNotAppoint ++;
+                                bodyAppoint ++;
+                                bodyAppointMoney = CommonUtils.doubleCalculation(bodyAppointMoney, CommonUtils.parseDouble(userServiceList.getPayMoney()), "+");
                             }
                         }
 
@@ -391,9 +403,16 @@ public class StoreReportService {
             }
         }
         operationCapabilities.put("faceAppoint", faceAppoint);
+        operationCapabilities.put("faceAppointMoney", faceAppointMoney);
+
         operationCapabilities.put("faceNotAppoint", faceNotAppoint);
+        operationCapabilities.put("faceNotAppointMoney", faceNotAppointMoney);
+
         operationCapabilities.put("bodyAppoint", bodyAppoint);
+        operationCapabilities.put("bodyAppointMoney", bodyAppointMoney);
+
         operationCapabilities.put("bodyNotAppoint", bodyNotAppoint);
+        operationCapabilities.put("bodyNotAppointMoney", bodyNotAppointMoney);
         return operationCapabilities;
     }
 
@@ -444,7 +463,7 @@ public class StoreReportService {
             // 顾客姓名
             String clientName = getClientNameById(userServiceList.getUserId(), userManages);
             // 面部，身体，指定和非指定
-            Map<String, Integer> operationCapabilities = calculationOperationCapability(Arrays.asList(userServiceList), itemTypeManages);
+            Map<String, Object> operationCapabilities = calculationOperationCapability(Arrays.asList(userServiceList), itemTypeManages);
             // 产品现金
             Double productCash = 0.0;
             // 卡扣金额
@@ -529,10 +548,10 @@ public class StoreReportService {
             storeDailyReport.setEmpName(empName);
             storeDailyReport.setPhoneNum(phoneNum);
             storeDailyReport.setClientName(clientName);
-            storeDailyReport.setFaceAppoint(operationCapabilities.get("faceAppoint"));
-            storeDailyReport.setFaceNotAppoint(operationCapabilities.get("faceNotAppoint"));
-            storeDailyReport.setBodyAppoint(operationCapabilities.get("bodyAppoint"));
-            storeDailyReport.setBodyNotAppoint(operationCapabilities.get("bodyNotAppoint"));
+            storeDailyReport.setFaceAppoint((Integer)operationCapabilities.get("faceAppoint"));
+            storeDailyReport.setFaceNotAppoint((Integer)operationCapabilities.get("faceNotAppoint"));
+            storeDailyReport.setBodyAppoint((Integer)operationCapabilities.get("bodyAppoint"));
+            storeDailyReport.setBodyNotAppoint((Integer)operationCapabilities.get("bodyNotAppoint"));
             storeDailyReport.setProductCash(productCash);
             storeDailyReport.setProductCardDeduction(productCardDeduction);
             storeDailyReport.setProjects(project);

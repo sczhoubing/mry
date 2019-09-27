@@ -55,4 +55,7 @@ public interface UserServiceListRepository extends JpaRepository<UserServiceList
             " and technician = :technician", nativeQuery = true)
     List<UserServiceList> getUserServiceListByStoreIdAndUpdateDateAndTechnicianId(@Param("storeId") int storeId,
             @Param("updateDate") String updateDate, @Param("technician") String technician);
+
+    @Query(value = "select * from user_service_list where store_id = :storeId and update_date like :updateDate and status = '1'", nativeQuery = true)
+    List<UserServiceList> getCompletedUserServiceListByStoreIdAndUpdateDate(@Param("storeId")Integer storeId, @Param("updateDate")String updateDate);
 }
